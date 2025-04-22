@@ -9,8 +9,8 @@ const isValidSongId = (songId: string): boolean => {
     return regex.test(songId);
 };
 
-const profileUrl = process.env.PROFILE_URL;
-const lastUrl = process.env.LAST_URL;
+// const profileUrl = process.env.PROFILE_URL;
+// const lastUrl = process.env.LAST_URL;
 const clip_url = process.env.CLIP_URL;
 const gen_url = process.env.GEN_URL;
 

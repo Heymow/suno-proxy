@@ -61,3 +61,9 @@ Thumbs.db
 # Docker
 docker-compose.override.yml
 *.local.yml
+
+# Frontend React (monitoring-ui)
+monitoring-ui/node_modules/
+monitoring-ui/dist/
+monitoring-ui/.vite/
+monitoring-ui/.DS_Store

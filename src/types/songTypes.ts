@@ -1,17 +1,5 @@
-export interface ClipMetadata {
-    tags: string;
-    prompt: string;
-    edited_clip_id: string;
-    type: string;
-    duration: number;
-    edit_session_id?: string;
-    task?: string;
-    can_remix: boolean;
-    refund_credits?: boolean;
-    stream?: boolean;
-    upsample_clip_id?: string;
-    priority?: number;
-}
+import { SongClipMetadata } from './clipTypes';
+
 
 export interface ClipDetails {
     id: string;
@@ -23,7 +11,7 @@ export interface ClipDetails {
     image_large_url: string;
     major_model_version: string;
     model_name: string;
-    metadata: ClipMetadata;
+    metadata: SongClipMetadata;
     is_liked: boolean;
     user_id: string;
     display_name: string;

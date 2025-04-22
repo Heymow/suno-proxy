@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { Request, Response } from 'express';
 import { getCachedPlaylistInfo, setCachePlaylistInfo } from '../services/playlistService.js';
-import { PlaylistData } from '../types/playlistTypes.js';
+import type { PlaylistData } from '../types/';
 import { PlaylistResponseSchema } from '../schemas/playlistSchema.js';
 import { fetchWithRetry } from '../utils/fetchWithRetry.js';
 
@@ -51,7 +51,6 @@ export const getPlaylistInfo = async (
         const parseResult = PlaylistResponseSchema.safeParse(firstPageResponse.data);
         if (!parseResult.success) {
             console.error('Invalid API response for page 1:', parseResult.error.format());
-            console.log('API keys:', Object.keys(firstPageResponse.data));
             res.status(502).json({ error: 'Invalid playlist response from API' });
             return;
         }

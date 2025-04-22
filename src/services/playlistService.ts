@@ -6,7 +6,7 @@ interface CacheEntry {
 }
 
 const userCache: { [key: string]: CacheEntry } = {};
-const CACHE_EXPIRY_TIME = 60 * 60 * 1000; // 1 hour
+const CACHE_EXPIRY_TIME = 60 * 60 * 1000;
 const MAX_CACHE_SIZE = 1000;
 
 export async function getCachedPlaylistInfo(handle: string, forceRefresh = false): Promise<PlaylistData | null> {

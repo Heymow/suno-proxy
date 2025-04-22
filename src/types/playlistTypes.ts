@@ -1,12 +1,4 @@
-export interface ClipMetadata {
-    tags: string;
-    prompt: string;
-    edited_clip_id?: string;
-    type: string;
-    duration: number;
-    edit_session_id?: string;
-    can_remix: boolean;
-}
+import { PlaylistClipMetadata } from './clipTypes.js';
 
 export interface Clip {
     id: string;
@@ -17,7 +9,7 @@ export interface Clip {
     image_large_url: string;
     major_model_version: string;
     model_name: string;
-    metadata: ClipMetadata;
+    metadata: PlaylistClipMetadata;
     is_liked: boolean;
     user_id: string;
     display_name: string;

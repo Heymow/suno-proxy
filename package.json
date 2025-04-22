@@ -5,7 +5,12 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon dist/app.js",
-    "dev": "tsc --watch"
+    "build": "tsc && npm run copy:public",
+    "copy:public": "cpx2 \"src/public/**/*\" dist/public --clean",
+    "dev:copy": "cpx2 \"src/public/monitoring/**/*\" dist/public/monitoring --watch",
+    "dev": "concurrently -n BACK,FRONT -c green,blue \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "tsc-watch --onSuccess \"nodemon dist/app.js --ignore dist/public/**\" --noClear",
+    "dev:frontend": "cd monitoring-ui && npm run dev"
   },
   "dependencies": {
     "axios": "^1.8.4",
@@ -19,6 +24,12 @@
   "devDependencies": {
     "@types/express": "^5.0.1",
     "@types/node": "^22.14.1",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.1.2",
+    "cpx2": "^8.0.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4",
+    "tsc-watch": "^6.2.1",
     "typescript": "^5.8.3"
   }
 }

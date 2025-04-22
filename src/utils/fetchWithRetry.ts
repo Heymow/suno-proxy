@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { logApiCall } from '../monitoring/apiMonitor.js';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -11,13 +12,20 @@ export async function fetchWithRetry<T = any>(
 
     while (attempt < maxRetries) {
         try {
-            return await axios.get<T>(url, { timeout: 15000, ...config });
+            const response = await axios.get<T>(url, { timeout: 15000, ...config });
+            logApiCall(url, response.status);
+            return response;
         } catch (error: any) {
             attempt++;
 
             if (axios.isAxiosError(error)) {
-                if (error.response?.status === 429) {
-                    const retryAfter = parseInt(error.response.headers['retry-after']) || 60;
+                const status = error.response?.status || 500;
+                const message = error.message;
+
+                logApiCall(url, status, message);
+
+                if (status === 429) {
+                    const retryAfter = parseInt(error.response?.headers['retry-after']) || 60;
                     console.warn(`Rate limit reached. Retrying after ${retryAfter}s...`);
                     await sleep(retryAfter * 1000);
                 } else if (error.code === 'ETIMEDOUT') {
@@ -27,10 +35,12 @@ export async function fetchWithRetry<T = any>(
                     throw error;
                 }
             } else {
+                logApiCall(url, 500, 'Non-Axios error');
                 throw error;
             }
         }
     }
 
+    logApiCall(url, 500, `Failed after ${maxRetries} retries`);
     throw new Error(`Failed to fetch ${url} after ${maxRetries} retries`);
 }
