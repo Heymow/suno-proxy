@@ -1,3 +1,9 @@
+import fs from 'fs';
+import path from 'path';
+
+const statsFilePath = path.join(__dirname, 'api-stats.json');
+
+
 type ApiStats = {
     success: number;
     errors: number;
@@ -20,6 +26,8 @@ const apiStats: ApiStats = {
     lastErrors: []
 };
 
+loadApiStats();
+
 export function logApiCall(url: string, status: number, message?: string): void {
     apiStats.total++;
 
@@ -41,6 +49,8 @@ export function logApiCall(url: string, status: number, message?: string): void 
 
         console.warn(`[API ERROR] ${status} | ${url}${message ? ` | ${message}` : ''}`);
     }
+
+    saveApiStats();
 }
 
 export function getApiStats(): ApiStats {
@@ -58,4 +68,26 @@ export function resetApiStats(): void {
     apiStats.lastErrors = [];
 
     console.log('API stats have been reset.');
+}
+
+function saveApiStats(): void {
+    try {
+        fs.mkdirSync(path.dirname(statsFilePath), { recursive: true });
+        fs.writeFileSync(statsFilePath, JSON.stringify(apiStats, null, 2));
+    } catch (error) {
+        console.error('Error saving API stats:', error);
+    }
+}
+
+function loadApiStats(): void {
+    try {
+        if (fs.existsSync(statsFilePath)) {
+            const data = fs.readFileSync(statsFilePath, 'utf-8');
+            const parsed = JSON.parse(data);
+            Object.assign(apiStats, parsed);
+            console.log('API stats loaded from file.');
+        }
+    } catch (error) {
+        console.error('Error loading API stats:', error);
+    }
 }

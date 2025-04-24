@@ -1,20 +1,15 @@
+@import "tailwindcss";
 @import "tw-animate-css";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
 
-/* @custom-variant dark (&:is(.dark *)); */
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color: rgb(201, 218, 250);
-  /* ou une couleur Tailwind explicite */
-
-  /* color-scheme: light dark; */
-  /* color: rgba(255, 255, 255, 0.87); */
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
   font-synthesis: none;
@@ -79,15 +74,15 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
+  /* border-radius: 8px;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  cursor: pointer; */
+  border: 1px solid #7c7a7a52;
+  transition: border-color 0.5s;
 }
 
 button:hover {
@@ -187,13 +182,20 @@ button:focus-visible {
 }
 
 @layer base {
-  body {
-    @apply bg-background;
-  }
-
-  *,
-  *::before,
-  *::after {
+  * {
     @apply border-border outline-ring/50;
   }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }

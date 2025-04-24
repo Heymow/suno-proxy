@@ -1,14 +1,7 @@
-import './App.css'
-import MonitoringDashboard from './components/MonitoringDashboard'
+import MonitoringDashboard from './MonitoringDashboard.tsx';
 
 function App() {
-
-
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <MonitoringDashboard />
-    </div>
-  )
+  return <MonitoringDashboard />;
 }
 
-export default App
+export default App;
