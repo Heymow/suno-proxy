@@ -27,12 +27,16 @@ export default function MainView(
     };
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 transition-opacity duration-300 min-w-100 flex-wrap">
-            <Stat label="Total Calls" value={total} icon={<RefreshCcw />} />
+        <div className="grid grid-cols-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4 transition-opacity duration-300 min-w-100 flex-wrap">
+            <div className="hidden md:block">
+                <Stat label="Total Calls" value={total} icon={<RefreshCcw />} />
+            </div>
             <Stat label="Success" value={success} icon={<CheckCircle className="text-green-500" />} />
             <Stat label="Errors" value={errors} icon={<XCircle className="text-red-500" />} />
             <Stat label="Rate Limits" value={rateLimits} icon={<AlertTriangle className="text-yellow-500" />} />
-            <Stat label="Timeouts" value={timeouts} icon={<Clock className="text-blue-400" />} />
-        </div >
+            <div className="hidden xl:block 2xl:hidden 3xl:block">
+                <Stat label="Timeouts" value={timeouts} icon={<Clock className="text-blue-400" />} />
+            </div>
+        </div>
     )
 }

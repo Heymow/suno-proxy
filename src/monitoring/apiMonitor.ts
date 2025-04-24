@@ -1,7 +1,12 @@
 import fs from 'fs';
 import path from 'path';
+import { normalizeUrl } from '../utils/normaizeUrl.js';
 
-const statsFilePath = path.join(__dirname, 'api-stats.json');
+const isProd = process.env.NODE_ENV === 'production';
+
+const statsFilePath = isProd
+    ? path.join('/tmp', 'api-stats.json')
+    : path.resolve(process.cwd(), 'data', 'api-stats.json');
 
 
 type ApiStats = {
@@ -30,10 +35,9 @@ loadApiStats();
 
 export function logApiCall(url: string, status: number, message?: string): void {
     apiStats.total++;
-
     apiStats.perStatus[status] = (apiStats.perStatus[status] || 0) + 1;
-
-    apiStats.perEndpoint[url] = (apiStats.perEndpoint[url] || 0) + 1;
+    const normalizedUrl = normalizeUrl(url);
+    apiStats.perEndpoint[normalizedUrl] = (apiStats.perEndpoint[normalizedUrl] || 0) + 1;
 
     if (status >= 200 && status < 300) {
         apiStats.success++;
@@ -42,12 +46,18 @@ export function logApiCall(url: string, status: number, message?: string): void 
         if (status === 429) apiStats.rateLimits++;
         if (message?.toLowerCase().includes('timeout')) apiStats.timeouts++;
 
-        apiStats.lastErrors.push({ url, status, message, timestamp: Date.now() });
+        apiStats.lastErrors.push({
+            url: normalizedUrl,
+            status,
+            message,
+            timestamp: Date.now(),
+        });
+
         if (apiStats.lastErrors.length > 20) {
             apiStats.lastErrors.shift();
         }
 
-        console.warn(`[API ERROR] ${status} | ${url}${message ? ` | ${message}` : ''}`);
+        console.warn(`[API ERROR] ${status} | ${normalizedUrl}${message ? ` | ${message}` : ''}`);
     }
 
     saveApiStats();

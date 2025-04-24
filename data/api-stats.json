@@ -1,0 +1,32 @@
+{
+  "success": 7,
+  "errors": 2,
+  "timeouts": 0,
+  "rateLimits": 0,
+  "total": 9,
+  "perStatus": {
+    "200": 7,
+    "404": 2
+  },
+  "perEndpoint": {
+    "/api/playlist/:uuid": 2,
+    "/api/profiles/:slug": 1,
+    "/api/profiles/:slug/recent_clips": 4,
+    "/api/clip/:uuid": 1,
+    "/api/gen/:uuid/comments": 1
+  },
+  "lastErrors": [
+    {
+      "url": "/api/profiles/:slug/recent_clips",
+      "status": 404,
+      "message": "Request failed with status code 404",
+      "timestamp": 1745487669204
+    },
+    {
+      "url": "/api/profiles/:slug/recent_clips",
+      "status": 404,
+      "message": "Request failed with status code 404",
+      "timestamp": 1745529010864
+    }
+  ]
+}

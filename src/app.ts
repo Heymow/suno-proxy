@@ -8,6 +8,7 @@ import adminMonitoringRoutes from './routes/systemRoutes.js';
 import { retryOnRateLimit } from './middlewares/retryOnRateLimit.js';
 import dotenv from 'dotenv';
 dotenv.config();
+import cors from 'cors';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -15,6 +16,13 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'x-monitor-token'],
+}));
+
 
 const monitoringUiPath = path.join(__dirname, '../monitoring-ui/dist');
 app.use('/monitoring-ui', express.static(monitoringUiPath));

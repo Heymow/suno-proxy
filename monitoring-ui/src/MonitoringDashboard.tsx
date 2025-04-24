@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { RefreshCcw, TimerReset } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { handleWithBlur, toggleDarkMode } from '@/utils/theme';
 import SidebarDrawer from "@/components/ui/SidebarDrawer";
 import MainView from "@/components/ui/mainView";
@@ -9,6 +10,7 @@ import LastUpdated from './components/ui/lastUpdated';
 import LeftMenu from '@/components/ui/leftMenu';
 import RightMenu from './components/ui/rightMenu';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 export interface ApiStats {
   success: number;
@@ -21,6 +23,7 @@ export interface ApiStats {
   lastErrors: { url: string; status: number; message?: string; timestamp: number }[];
 }
 
+const baseUrl = typeof import.meta.env !== 'undefined' && import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL : 'http://localhost:3000';
 const API_URL = '/api/internal/monitoring';
 const RESET_URL = '/api/internal/monitoring/reset';
 const TOKEN = typeof import.meta.env !== 'undefined' && import.meta.env.VITE_MONITOR_TOKEN ? import.meta.env.VITE_MONITOR_TOKEN : '';
@@ -29,6 +32,9 @@ export default function MonitoringDashboard() {
   const [stats, setStats] = useState<ApiStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const refreshInterval = 1_000;
+
   const {
     success = 0,
     errors = 0,
@@ -43,7 +49,7 @@ export default function MonitoringDashboard() {
   const fetchStats = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(API_URL, {
+      const res = await axios.get(baseUrl + API_URL, {
         headers: { 'x-monitor-token': TOKEN },
       });
       if (JSON.stringify(res.data) !== JSON.stringify(stats)) {
@@ -59,8 +65,9 @@ export default function MonitoringDashboard() {
 
   const resetStats = async () => {
     try {
+      setAutoRefresh(false);
       await axios.post(
-        RESET_URL,
+        baseUrl + RESET_URL,
         {},
         {
           headers: { 'x-monitor-token': TOKEN },
@@ -75,6 +82,16 @@ export default function MonitoringDashboard() {
   useEffect(() => {
     fetchStats();
   }, []);
+
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const interval = setInterval(() => {
+      fetchStats();
+    }, refreshInterval);
+
+    return () => clearInterval(interval);
+  }, [autoRefresh]);
 
 
   return (
@@ -96,6 +113,11 @@ export default function MonitoringDashboard() {
         <Header subheader={true} title="Overview" />
 
         <div className="flex justify-end gap-2 mb-6">
+          <Button variant="outline" onClick={handleWithBlur(() => setAutoRefresh(v => !v))} className={cn("cursor-pointer", autoRefresh && "animate-pulse")}>
+            {/* <RefreshCcw /> */}
+            <Badge variant={autoRefresh ? "default" : "destructive"}></Badge>
+            {autoRefresh ? "Auto Refresh ON" : "Auto Refresh OFF"}
+          </Button>
           <Button variant="outline" onClick={handleWithBlur(fetchStats)} className="cursor-pointer">
             <RefreshCcw className="w-4 h-4 mr-2" /> Refresh
           </Button>
@@ -126,7 +148,7 @@ export default function MonitoringDashboard() {
         />
       </main>
 
-      <aside className="1fr shrink-0 p-6 border-l bg-card text-card-foreground shadow hidden md:flex flex-col">
+      <aside className="1fr shrink-0 p-4 border-l bg-card text-card-foreground shadow hidden md:flex flex-col">
         <RightMenu
           stats={stats}
           perStatus={perStatus || {}}
