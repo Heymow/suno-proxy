@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { normalizeUrl } from '../utils/normaizeUrl.js';
+import { ApiStats, TimelinePoint } from '../types/ApiTypes.js';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -8,17 +9,13 @@ const statsFilePath = isProd
     ? path.join('/tmp', 'api-stats.json')
     : path.resolve(process.cwd(), 'data', 'api-stats.json');
 
+const timelineFilePath = isProd
+    ? path.join('/tmp', 'timeline-data.json')
+    : path.resolve(process.cwd(), 'data', 'timeline-data.json');
 
-type ApiStats = {
-    success: number;
-    errors: number;
-    timeouts: number;
-    rateLimits: number;
-    total: number;
-    perStatus: Record<number, number>;
-    perEndpoint: Record<string, number>;
-    lastErrors: { url: string; status: number; message?: string; timestamp: number }[];
-};
+const DISPLAY_DURATION_MS = 60 * 60 * 1000; // 1h
+const PRECISION_MS = 100; // 100ms par point
+const MAX_POINTS = DISPLAY_DURATION_MS / PRECISION_MS;
 
 const apiStats: ApiStats = {
     success: 0,
@@ -31,7 +28,31 @@ const apiStats: ApiStats = {
     lastErrors: []
 };
 
+const timeline: TimelinePoint[] = [];
+
+setInterval(() => {
+    saveTimeline();
+    saveApiStats();
+}, 10000);
+
 loadApiStats();
+loadTimeline();
+
+setInterval(() => {
+    const now = Date.now();
+    const last = timeline.at(-1);
+    if (!last || now - last.timestamp >= PRECISION_MS) {
+        timeline.push({
+            timestamp: now,
+            total: apiStats.total,
+            errors: apiStats.errors,
+            timeouts: apiStats.timeouts,
+            rateLimits: apiStats.rateLimits
+        });
+        if (timeline.length > MAX_POINTS) timeline.shift();
+    }
+}, PRECISION_MS);
+
 
 export function logApiCall(url: string, status: number, message?: string): void {
     apiStats.total++;
@@ -53,14 +74,8 @@ export function logApiCall(url: string, status: number, message?: string): void 
             timestamp: Date.now(),
         });
 
-        if (apiStats.lastErrors.length > 20) {
-            apiStats.lastErrors.shift();
-        }
-
-        console.warn(`[API ERROR] ${status} | ${normalizedUrl}${message ? ` | ${message}` : ''}`);
+        if (apiStats.lastErrors.length > 20) apiStats.lastErrors.shift();
     }
-
-    saveApiStats();
 }
 
 export function getApiStats(): ApiStats {
@@ -76,8 +91,18 @@ export function resetApiStats(): void {
     apiStats.perStatus = {};
     apiStats.perEndpoint = {};
     apiStats.lastErrors = [];
+    timeline.length = 0;
+    saveApiStats();
+    saveTimeline();
+    console.log('API stats and timeline have been reset.');
+}
 
-    console.log('API stats have been reset.');
+export function getTimeline(): TimelinePoint[] {
+    return timeline;
+}
+
+export function getLastPoint(): TimelinePoint | null {
+    return timeline.at(-1) || null;
 }
 
 function saveApiStats(): void {
@@ -99,5 +124,27 @@ function loadApiStats(): void {
         }
     } catch (error) {
         console.error('Error loading API stats:', error);
+    }
+}
+
+function saveTimeline(): void {
+    try {
+        fs.mkdirSync(path.dirname(timelineFilePath), { recursive: true });
+        fs.writeFileSync(timelineFilePath, JSON.stringify(timeline, null, 2));
+    } catch (error) {
+        console.error('Error saving timeline:', error);
+    }
+}
+
+function loadTimeline(): void {
+    try {
+        if (fs.existsSync(timelineFilePath)) {
+            const data = fs.readFileSync(timelineFilePath, 'utf-8');
+            const parsed = JSON.parse(data);
+            timeline.push(...parsed);
+            console.log('Timeline loaded from file.');
+        }
+    } catch (error) {
+        console.error('Error loading timeline:', error);
     }
 }

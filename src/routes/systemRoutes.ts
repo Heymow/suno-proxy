@@ -1,27 +1,31 @@
 import express, { Request, Response } from 'express';
-import { getApiStats, resetApiStats } from '../monitoring/apiMonitor.js';
+import {
+    getApiStats,
+    resetApiStats,
+    getTimeline,
+    getLastPoint
+} from '../monitoring/apiMonitor.js';
 
 const router = express.Router();
 
-router.get('/monitoring', (req: Request, res: Response): void => {
+const checkToken = (req: Request, res: Response): boolean => {
     const token = req.headers['x-monitor-token'];
-
     if (!process.env.MONITOR_TOKEN) {
         res.status(500).json({ error: 'Monitoring token not configured' });
-        return;
+        return false;
     }
-
     if (token !== process.env.MONITOR_TOKEN) {
         res.status(403).json({ error: 'Forbidden' });
-        return;
+        return false;
     }
+    return true;
+};
+
+router.get('/monitoring', (req, res) => {
+    if (!checkToken(req, res)) return;
 
     try {
         const stats = getApiStats();
-        if (!stats) {
-            res.status(500).json({ error: 'Monitoring data unavailable' });
-            return;
-        }
         res.status(200).json(stats);
     } catch (error) {
         console.error('Error retrieving monitoring stats:', error);
@@ -29,18 +33,8 @@ router.get('/monitoring', (req: Request, res: Response): void => {
     }
 });
 
-router.post('/monitoring/reset', (req: Request, res: Response): void => {
-    const token = req.headers['x-monitor-token'];
-
-    if (!process.env.MONITOR_TOKEN) {
-        res.status(500).json({ error: 'Monitoring token not configured' });
-        return;
-    }
-
-    if (token !== process.env.MONITOR_TOKEN) {
-        res.status(403).json({ error: 'Forbidden' });
-        return;
-    }
+router.post('/monitoring/reset', (req, res) => {
+    if (!checkToken(req, res)) return;
 
     try {
         resetApiStats();
@@ -48,6 +42,28 @@ router.post('/monitoring/reset', (req: Request, res: Response): void => {
     } catch (error) {
         console.error('Error resetting monitoring stats:', error);
         res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.get('/monitoring/timeline', (req, res) => {
+    if (!checkToken(req, res)) return;
+
+    try {
+        res.status(200).json(getTimeline());
+    } catch (error) {
+        console.error('Error getting timeline:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.get('/monitoring/point', (req, res) => {
+    if (!checkToken(req, res)) return;
+
+    const point = getLastPoint();
+    if (point) {
+        res.json(point);
+    } else {
+        res.status(404).json({ error: 'No data available' });
     }
 });
 

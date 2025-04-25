@@ -1,4 +1,3 @@
-
 import { Button } from "./button";
 import { Activity, LayoutDashboard, Settings, Moon } from "lucide-react";
 
@@ -9,18 +8,18 @@ export default function LeftMenu({ handleWithBlur, toggleDarkMode }: { handleWit
 
                 <h2 className="text-lg font-bold">Dashboard</h2>
                 <nav className="flexflex-row pace-y-2 text-sm mt-4">
-                    <Button variant="default" onClick={e => e.currentTarget.blur()} className="mb-3 cursor-pointer w-full flex items-center gap-2 text-foreground bg-accent-background hover:text-secondary transition-colors outline-1" asChild>
-                        <a href="#" className="flex items-center gap-2 text-muted-foreground hover:text-secondary transition-colors">
+                    <Button variant="default" onClick={e => e.currentTarget.blur()} className="mb-3 cursor-pointer w-full flex items-center gap-2 text-foreground bg-accent-background hover:text-white-500 transition-colors outline-1" asChild>
+                        <a href="#">
                             <LayoutDashboard className="w-4 h-4 mr-2" /> Overview
                         </a>
                     </Button>
                     <Button variant="default" onClick={e => e.currentTarget.blur()} className="mb-3 cursor-pointer w-full flex items-center gap-2 text-foreground bg-accent-background hover:text-secondary transition-colors outline-1" asChild>
-                        <a href="#" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+                        <a href="#">
                             <Activity className="w-4 h-4 mr-2" /> Live Stats
                         </a>
                     </Button>
                     <Button variant="default" onClick={e => e.currentTarget.blur()} className="mb-3 cursor-pointer w-full flex items-center gap-2 text-foreground bg-accent-background hover:text-secondary transition-colors outline-1" asChild>
-                        <a href="#" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+                        <a href="#">
                             <Settings className="w-4 h-4 mr-2" /> Settings
                         </a>
                     </Button>

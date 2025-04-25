@@ -18,9 +18,11 @@
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.9.1",
     "lucide-react": "^0.503.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "recharts": "^2.15.3",
     "tailwind-merge": "^3.2.0",
     "vaul": "^1.1.2"
   },
@@ -38,5 +40,8 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.26.1",
     "vite": "^6.3.1"
+  },
+  "overrides": {
+    "react-is": "^19.1.0"
   }
 }
