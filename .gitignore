@@ -67,3 +67,6 @@ monitoring-ui/node_modules/
 monitoring-ui/dist/
 monitoring-ui/.vite/
 monitoring-ui/.DS_Store
+
+# data storage
+data/
