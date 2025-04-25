@@ -3,7 +3,6 @@ import {
     getApiStats,
     resetApiStats,
     getTimeline,
-    getLastPoint
 } from '../monitoring/apiMonitor.js';
 
 const router = express.Router();
@@ -53,17 +52,6 @@ router.get('/monitoring/timeline', (req, res) => {
     } catch (error) {
         console.error('Error getting timeline:', error);
         res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
-
-router.get('/monitoring/point', (req, res) => {
-    if (!checkToken(req, res)) return;
-
-    const point = getLastPoint();
-    if (point) {
-        res.json(point);
-    } else {
-        res.status(404).json({ error: 'No data available' });
     }
 });
 

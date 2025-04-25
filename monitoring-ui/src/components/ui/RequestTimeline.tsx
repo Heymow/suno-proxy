@@ -4,36 +4,44 @@ import {
     XAxis,
     YAxis,
     Tooltip,
-    ResponsiveContainer
+    ResponsiveContainer,
 } from "recharts";
 import { Point } from "@/types";
-import { memo, useMemo } from "react";
+import { memo, useMemo, useState, useEffect } from "react";
 
-// Nombre fixe de colonnes affichées à l’écran
-const VISIBLE_POINTS = 300;
+// 10 minutes de défilement à l’écran
+const DISPLAY_DURATION_MS = 20 * 60 * 1000;
 
 const RequestTimeline = memo(({ data }: { data: Point[] }) => {
-    const displayedData = useMemo(() => {
-        const slice = data.slice(-VISIBLE_POINTS);
+    const lastTimestamp = data.length > 0 ? data[data.length - 1].timestamp : Date.now();
+    const [virtualNow, setVirtualNow] = useState(lastTimestamp);
 
-        return slice.map((d) => ({
-            ...d,
-            label: new Date(d.timestamp).toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                // @ts-expect-error: still works
-                fractionalSecondDigits: 1,
-            }),
-            critical: d.errors + d.timeouts + d.rateLimits,
-        }));
-    }, [data]);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setVirtualNow(Date.now());
+        }, 250); // ou 250ms
+
+        return () => clearInterval(interval);
+    }, []);
+
+    const windowStart = virtualNow - DISPLAY_DURATION_MS;
+
+    const visibleData = useMemo(() => {
+        const windowed = data.filter(d => d.timestamp >= windowStart);
+        const sampling = Math.max(1, Math.ceil(windowed.length / 500));
+        return windowed
+            .filter((_, i) => i % sampling === 0)
+            .map((d) => ({
+                ...d,
+                critical: d.errors + d.timeouts + d.rateLimits,
+            }));
+    }, [data, windowStart]);
 
     return (
         <div className="w-full h-64">
             <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
-                    data={displayedData}
+                    data={visibleData}
                     margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
                 >
                     <defs>
@@ -49,7 +57,7 @@ const RequestTimeline = memo(({ data }: { data: Point[] }) => {
                     <XAxis
                         dataKey="timestamp"
                         type="number"
-                        domain={['dataMin', 'dataMax']}
+                        domain={[windowStart, virtualNow]}
                         tickFormatter={(value: number) =>
                             new Date(value).toLocaleTimeString("en-GB", {
                                 minute: "2-digit",
@@ -63,6 +71,8 @@ const RequestTimeline = memo(({ data }: { data: Point[] }) => {
                     />
                     <YAxis tick={{ fontSize: 10 }} />
                     <Tooltip
+                        isAnimationActive={false}
+                        wrapperStyle={{ pointerEvents: 'none' }} // empêche les recalculs sur hover
                         content={({ active, payload }) => {
                             if (!active || !payload?.length) return null;
                             const { timestamp, total, critical } = payload[0].payload;

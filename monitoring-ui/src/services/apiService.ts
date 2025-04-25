@@ -37,12 +37,3 @@ export async function fetchTimeline() {
     );
     return res.data;
 }
-
-export async function fetchLatestPoint() {
-    const res = await axios.get(`${baseUrl}/api/internal/monitoring/point`,
-        {
-            headers: { "x-monitor-token": TOKEN },
-        }
-    );
-    return res.data;
-}

@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { normalizeUrl } from '../utils/normaizeUrl.js';
 import { ApiStats, TimelinePoint } from '../types/ApiTypes.js';
+import { broadcastTimelinePoint } from '../websocket/wsServer.js';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -42,17 +43,18 @@ setInterval(() => {
     const now = Date.now();
     const last = timeline.at(-1);
     if (!last || now - last.timestamp >= PRECISION_MS) {
-        timeline.push({
+        const point = {
             timestamp: now,
             total: apiStats.total,
             errors: apiStats.errors,
             timeouts: apiStats.timeouts,
             rateLimits: apiStats.rateLimits
-        });
+        };
+        timeline.push(point);
         if (timeline.length > MAX_POINTS) timeline.shift();
+        broadcastTimelinePoint(point);
     }
 }, PRECISION_MS);
-
 
 export function logApiCall(url: string, status: number, message?: string): void {
     apiStats.total++;
