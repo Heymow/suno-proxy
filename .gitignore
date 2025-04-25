@@ -69,4 +69,5 @@ monitoring-ui/.vite/
 monitoring-ui/.DS_Store
 
 # data storage
-data/
+api-stats.json
+timeline-data.json
