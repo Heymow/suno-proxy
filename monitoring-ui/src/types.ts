@@ -34,3 +34,10 @@ export type Point = {
     timeouts: number
     rateLimits: number
 }
+
+export interface RequestTimelineVisxProps {
+    data: Point[];
+    width?: number;
+    height?: number;
+    duration?: number;
+}

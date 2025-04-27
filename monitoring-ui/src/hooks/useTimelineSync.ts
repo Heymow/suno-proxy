@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Point } from "@/types";
 
-const DISPLAY_DURATION_MS = 10 * 60 * 1000; // 10 minutes
+const DISPLAY_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 jours en millisecondes
 
 export function useTimelineSync(initialTimeline: Point[]) {
     const [timeline, setTimeline] = useState<Point[]>([]);

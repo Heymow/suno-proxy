@@ -13,6 +13,7 @@
     "dev:frontend": "cd monitoring-ui && npm run dev"
   },
   "dependencies": {
+    "@visx/visx": "^3.12.0",
     "axios": "^1.8.4",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",

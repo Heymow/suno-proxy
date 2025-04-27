@@ -1,116 +1,163 @@
-import {
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-} from "recharts";
 import { Point } from "@/types";
-import { memo, useMemo, useState, useEffect } from "react";
+import { AreaClosed } from "@visx/shape";
+import { AxisBottom, AxisLeft } from "@visx/axis";
+import { curveBasis } from "@visx/curve";
+import useTimeWindow from "@/hooks/useTimeWindow";
+import useVisibleData from "@/hooks/useVisibleData";
+import useSmoothedData from "@/hooks/useSmoothedData";
+import useTimelineScales from "@/hooks/useTimelineScales";
+import TimelineContainer from "@/components/ui/TimelineContainer";
+import React, { useRef, useState, useEffect } from "react";
+import { RequestTimelineVisxProps } from "@/types";
 
-// 10 minutes de défilement à l’écran
-const DISPLAY_DURATION_MS = 20 * 60 * 1000;
+type MetricType = "total" | "errors" | "callsPerSecond" | "callsPerMinute" | "callsPerHour";
 
-const RequestTimeline = memo(({ data }: { data: Point[] }) => {
-    const lastTimestamp = data.length > 0 ? data[data.length - 1].timestamp : Date.now();
-    const [virtualNow, setVirtualNow] = useState(lastTimestamp);
+type Props = RequestTimelineVisxProps & {
+    zoomLevel?: number;
+    height?: number;
+    metric?: MetricType;
+};
+
+function RequestTimelineVisx({
+    data,
+    zoomLevel = 1,
+    height = 260,
+    duration,
+}: Props) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [containerWidth, setContainerWidth] = useState<number>(800);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setVirtualNow(Date.now());
-        }, 250); // ou 250ms
-
-        return () => clearInterval(interval);
+        function updateWidth() {
+            if (containerRef.current) {
+                setContainerWidth(containerRef.current.offsetWidth || 800);
+            }
+        }
+        updateWidth();
+        window.addEventListener("resize", updateWidth);
+        return () => window.removeEventListener("resize", updateWidth);
     }, []);
 
-    const windowStart = virtualNow - DISPLAY_DURATION_MS;
+    const computedDuration = duration ?? 3600 * 24 / zoomLevel;
+    const SMOOTH_WINDOW = 200 / zoomLevel;
 
-    const visibleData = useMemo(() => {
-        const windowed = data.filter(d => d.timestamp >= windowStart);
-        const sampling = Math.max(1, Math.ceil(windowed.length / 500));
-        return windowed
-            .filter((_, i) => i % sampling === 0)
-            .map((d) => ({
-                ...d,
-                critical: d.errors + d.timeouts + d.rateLimits,
-            }));
-    }, [data, windowStart]);
+    const { windowStart, virtualNow } = useTimeWindow(computedDuration);
+    const visibleData = useVisibleData(data, windowStart);
+    const smoothedData = useSmoothedData(visibleData, SMOOTH_WINDOW);
+
+    const { xScale, yScale, yMax, margin } = useTimelineScales(
+        visibleData,
+        windowStart,
+        virtualNow,
+        containerWidth,
+        height
+    );
+
+    const hasEnoughData = visibleData && visibleData.length > 1;
 
     return (
-        <div className="w-full h-64">
-            <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                    data={visibleData}
-                    margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
-                >
-                    <defs>
-                        <linearGradient id="totalGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
-                        </linearGradient>
-                        <linearGradient id="errorGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#dc2626" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#dc2626" stopOpacity={0} />
-                        </linearGradient>
-                    </defs>
-                    <XAxis
-                        dataKey="timestamp"
-                        type="number"
-                        domain={[windowStart, virtualNow]}
-                        tickFormatter={(value: number) =>
-                            new Date(value).toLocaleTimeString("en-GB", {
-                                minute: "2-digit",
-                                second: "2-digit",
-                                // @ts-expect-error
-                                fractionalSecondDigits: 1,
-                            })
-                        }
-                        tick={{ fontSize: 10 }}
-                        scale="time"
-                    />
-                    <YAxis tick={{ fontSize: 10 }} />
-                    <Tooltip
-                        isAnimationActive={false}
-                        wrapperStyle={{ pointerEvents: 'none' }} // empêche les recalculs sur hover
-                        content={({ active, payload }) => {
-                            if (!active || !payload?.length) return null;
-                            const { timestamp, total, critical } = payload[0].payload;
-                            return (
-                                <div className="bg-background p-2 rounded-md shadow text-xs">
-                                    <div><strong>{new Date(timestamp).toLocaleTimeString("en-GB", {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                        second: "2-digit",
-                                        // @ts-expect-error
-                                        fractionalSecondDigits: 1
-                                    })}</strong></div>
-                                    <div>Total: {total}</div>
-                                    <div className="text-red-500">Critical: {critical}</div>
-                                </div>
-                            );
-                        }}
-                    />
-                    <Area
-                        type="monotone"
-                        dataKey="total"
-                        stroke="#4f46e5"
-                        fillOpacity={1}
-                        fill="url(#totalGradient)"
-                        isAnimationActive={false}
-                    />
-                    <Area
-                        type="monotone"
-                        dataKey="critical"
-                        stroke="#dc2626"
-                        fillOpacity={1}
-                        fill="url(#errorGradient)"
-                        isAnimationActive={false}
-                    />
-                </AreaChart>
-            </ResponsiveContainer>
+        <div ref={containerRef} style={{ width: "100%" }}>
+            <TimelineContainer width={containerWidth} height={height}>
+                {hasEnoughData ? (
+                    <>
+                        <AreaClosed<Point>
+                            data={smoothedData}
+                            x={d => xScale(d.timestamp)}
+                            y={d => yScale(d.total)}
+                            yScale={yScale}
+                            stroke="#4f46e5"
+                            fill="url(#areaGradient)"
+                            curve={curveBasis}
+                            style={{ opacity: 0.8 }}
+                            mask="url(#fadeMask)"
+                        />
+                        <AreaClosed<Point>
+                            data={smoothedData}
+                            x={d => xScale(d.timestamp)}
+                            y={d => yScale(d.errors + d.timeouts + d.rateLimits)}
+                            yScale={yScale}
+                            stroke="#dc2626"
+                            fill="url(#criticalGradient)"
+                            curve={curveBasis}
+                            style={{ opacity: 0.8 }}
+                            mask="url(#fadeMask)"
+                        />
+                        <AxisBottom
+                            top={yMax}
+                            scale={xScale}
+                            numTicks={Math.max(3, Math.floor(containerWidth / 150))}
+                            tickFormat={d =>
+                                new Date(Number(d)).toLocaleTimeString("en-US", {
+                                    hour12: false,
+                                    year: computedDuration > 31536000 ? "numeric" : undefined,
+                                    month: computedDuration > 2592000 ? "2-digit" : undefined,
+                                    day: computedDuration > 86400 ? "2-digit" : undefined,
+                                    weekday: computedDuration > 604800 ? "long" : undefined,
+                                    hour: computedDuration > 3600 ? "2-digit" : undefined,
+                                    minute: computedDuration < 604800 ? "2-digit" : undefined,
+                                    second: computedDuration < 3600 ? "2-digit" : undefined,
+                                })
+                            }
+                            tickLabelProps={() => ({
+                                fill: "#888",
+                                fontSize: 10,
+                                textAnchor: "middle",
+                                fontFamily: "Arial",
+                                fontWeight: 400,
+                                dy: 0,
+                                dx: 0,
+
+                                strokeWidth: 1,
+                                stroke: "#888",
+
+                                strokeOpacity: 0.2,
+                                textDecoration: "none",
+
+                                textTransform: "none",
+
+                            })}
+                            tickLineProps={{ stroke: "#888", strokeWidth: 1 }}
+                            hideAxisLine={false}
+                            hideTicks={false}
+                        />
+                        <AxisLeft left={margin.left}
+                            scale={yScale}
+                            numTicks={4}
+                            tickFormat={d => d.toString()}
+                            tickLabelProps={() => ({
+                                fill: "#888",
+                                fontSize: 10,
+                                textAnchor: "end",
+                                fontFamily: "Arial",
+                                fontWeight: 400,
+                                dy: 0,
+                                dx: -5,
+                                strokeWidth: 1,
+                                stroke: "#666",
+                                strokeOpacity: 0.2,
+                                textDecoration: "none",
+                                textTransform: "none",
+                            })}
+                            tickLineProps={{ stroke: "#888", strokeWidth: 1 }}
+                            hideAxisLine={false}
+                            hideTicks={false}
+
+                        />
+                    </>
+                ) : (
+                    <text
+                        x={containerWidth / 2}
+                        y={height / 2}
+                        textAnchor="middle"
+                        fill="#888"
+                        fontSize={16}
+                    >
+                        Not enough data
+                    </text>
+                )}
+            </TimelineContainer>
         </div>
     );
-});
+}
 
-export default RequestTimeline;
+export default React.memo(RequestTimelineVisx);
