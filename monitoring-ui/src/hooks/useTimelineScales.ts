@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import { scaleTime, scaleLinear } from "@visx/scale";
-import { Point } from "@/types";
+import { scaleLinear, scaleTime } from "@visx/scale";
+// import { Point } from "@/types";
 
-const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+const margin = { top: 20, right: 10, bottom: 30, left: 40 };
 
 export default function useTimelineScales(
-  visibleData: (Point & { opacity: number })[],
+  visibleData: { timestamp: number; value: number }[], // Modification ici
   windowStart: number,
   virtualNow: number,
   width: number,
@@ -21,15 +21,16 @@ export default function useTimelineScales(
   );
 
   const yMax = height - margin.top - margin.bottom;
-  const yScale = useMemo(
-    () =>
-      scaleLinear({
-        domain: [0, Math.max(...visibleData.map(d => d.total), 10)],
-        range: [yMax, margin.top],
-        nice: true,
-      }),
-    [visibleData, yMax]
-  );
+  const yScale = useMemo(() => {
+    const values = visibleData.map(d => d.value).filter(v => !isNaN(v));
+    const max = values.length > 0 ? Math.max(...values, 1) : 10;
+
+    return scaleLinear({
+      domain: [0, max],
+      range: [yMax, margin.top],
+      nice: true,
+    });
+  }, [visibleData.length, yMax]);
 
   return { xScale, yScale, yMax, margin };
 }

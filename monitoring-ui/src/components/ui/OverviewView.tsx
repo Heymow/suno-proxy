@@ -26,6 +26,12 @@ function getZoomLabel(zoom: number) {
     return ZOOM_LABELS[zoom] ?? `${zoom}x`;
 }
 
+// function getMetricForZoom(zoomLevel: number): "total" | "errors" | "callsPerHour" | "callsPerMinute" | "callsPerSecond" {
+//     if (zoomLevel <= 1) return "callsPerHour";
+//     if (1 < zoomLevel && zoomLevel <= 729) return "callsPerMinute";
+//     return "callsPerSecond";
+// }
+
 export default function MainView({
     stats,
     error,
@@ -39,6 +45,8 @@ export default function MainView({
     const [initialData, setInitialData] = useState<Point[]>([]);
     const [loaded, setLoaded] = useState(false);
     const [currentZoomLevel, setCurrentZoomLevel] = useState(1);
+    const [selectedMetricType, setSelectedMetricType] = useState<"total" | "errors" | "rateLimits" | "success" | "timeouts">("total");
+    const [selectedFrequency, setSelectedFrequency] = useState<"perHour" | "perMinute" | "perSecond" | "raw">("perMinute");
 
     useEffect(() => {
         const load = async () => {
@@ -145,8 +153,39 @@ export default function MainView({
 
             <div className="mt-6 flex flex-col">
                 <div className="flex items-center justify-between">
-                    <h3 className="text-sm text-muted-foreground">Global Health</h3>
+                    <h3 className="text-sm text-muted-foreground">Activity</h3>
                     <div className="flex items-center gap-2 mr-12">
+
+                        <div className="flex gap-4 mb-2">
+                            <select
+                                value={selectedMetricType}
+                                onChange={(e) => {
+                                    const value = e.target.value as "total" | "errors" | "rateLimits" | "success" | "timeouts";
+                                    handleWithBlur(() => setSelectedMetricType(value))();
+                                }}
+                                className="border rounded px-2 py-1"
+                            >
+                                <option value="total" className="bg-accent">Total</option>
+                                <option value="errors" className="bg-accent">Errors</option>
+                                <option value="rateLimits" className="bg-accent">Rate Limits</option>
+                                <option value="success" className="bg-accent">Success</option>
+                                <option value="timeouts" className="bg-accent">Timeouts</option>
+                            </select>
+                            <select
+                                value={selectedFrequency}
+                                onChange={(e) => {
+                                    const value = e.target.value as "perHour" | "perMinute" | "perSecond" | "raw";
+                                    handleWithBlur(() => setSelectedFrequency(value))();
+                                }}
+                                className="border rounded px-2 py-1"
+                            >
+                                <option value="raw" className="bg-accent">Raw (cumulative)</option>
+                                <option value="perHour" className="bg-accent">Per Hour</option>
+                                <option value="perMinute" className="bg-accent">Per Minute</option>
+                                <option value="perSecond" className="bg-accent">Per Second</option>
+                            </select>
+                        </div>
+
                         <h3 className="text-sm text-muted-foreground">
                             Zoom : {getZoomLabel(currentZoomLevel)}
                         </h3>
@@ -170,7 +209,8 @@ export default function MainView({
                     data={timelineData}
                     zoomLevel={currentZoomLevel}
                     height={260}
-                    metric="callsPerHour"
+                    metricType={selectedMetricType}
+                    frequency={selectedFrequency}
                 />
             </div>
         </>
