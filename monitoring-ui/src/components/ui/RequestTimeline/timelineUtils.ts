@@ -27,6 +27,7 @@ export function rollingRate(
         while (left < right && data[left].timestamp < t - windowMs) {
             left++;
         }
+        if (left === right || left === 0) continue; // skip if not enough data or left is the very first point
         const dt = (data[right].timestamp - data[left].timestamp) / 1000;
         const dv = getValue(data[right]) - getValue(data[left]);
         const rate = dt > 0 ? dv / (dt / (windowMs / 1000)) : 0;
@@ -55,26 +56,25 @@ export function removeNaN(data: { timestamp: number; value: number }[]) {
     return data.filter(d => !isNaN(d.value) && isFinite(d.value));
 }
 
-export function binPerSecond(
+export function binByWindow(
     data: Point[],
-    metricType: MetricType
+    metricType: MetricType,
+    binSize: number
 ): { timestamp: number; value: number }[] {
-    if (data.length === 0) return [];
-    const binSize = 1000;
+    if (data.length < 2) return [];
     const sorted = [...data].sort((a, b) => a.timestamp - b.timestamp);
     const minTs = sorted[0].timestamp;
     const maxTs = sorted[sorted.length - 1].timestamp;
     const bins = [];
-    let binStart = minTs;
-    while (binStart < maxTs) {
+    for (let binStart = minTs; binStart < maxTs; binStart += binSize) {
         const binEnd = binStart + binSize;
-        const points = sorted.filter(d => d.timestamp >= binStart && d.timestamp < binEnd);
-        let value = 0;
-        if (points.length > 1) {
-            value = getValue(points[points.length - 1], metricType) - getValue(points[0], metricType);
-        }
+        const left = [...sorted].reverse().find(d => d.timestamp <= binStart);
+        const right = [...sorted].reverse().find(d => d.timestamp <= binEnd);
+        if (!left || !right || left === right) continue;
+        // Ignore if left is the very first point (no point before bin)
+        if (left === sorted[0]) continue;
+        const value = getValue(right, metricType) - getValue(left, metricType);
         bins.push({ timestamp: binStart + binSize / 2, value: Math.max(0, value) });
-        binStart = binEnd;
     }
     return bins;
 }

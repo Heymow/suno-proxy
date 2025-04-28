@@ -1,4 +1,4 @@
-import { Props } from "@/types";
+import { Props, MetricType } from "@/types";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { curveBasis } from "@visx/curve";
 import useTimeWindow from "@/hooks/useTimeWindow";
@@ -41,7 +41,9 @@ function RequestTimelineVisx({
     const visibleData = useVisibleData(data, windowStart);
     const smoothed = useSmoothedData(visibleData, SMOOTH_WINDOW);
 
-    const series = useMemo(
+    const series = useMemo<
+        { metricType: MetricType, color: string, data: { timestamp: number; value: number }[] }[]
+    >(
         () => getSeries({ metricTypes, frequency, smoothed, visibleData, zoomLevel }),
         [metricTypes, frequency, smoothed, visibleData, zoomLevel]
     );
