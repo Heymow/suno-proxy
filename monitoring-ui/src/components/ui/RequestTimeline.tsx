@@ -7,7 +7,7 @@ import useVisibleData from "@/hooks/useVisibleData";
 import useSmoothedData from "@/hooks/useSmoothedData";
 import useTimelineScales from "@/hooks/useTimelineScales";
 import TimelineContainer from "@/components/ui/TimelineContainer";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import { RequestTimelineVisxProps } from "@/types";
 
 type MetricType = "total" | "errors" | "rateLimits" | "success" | "timeouts";
@@ -16,11 +16,29 @@ type Frequency = "raw" | "perSecond" | "perMinute" | "perHour";
 type Props = RequestTimelineVisxProps & {
     zoomLevel?: number;
     height?: number;
-    metricType?: MetricType;
+    metricTypes?: MetricType[]; // <-- tableau de metrics
     frequency?: Frequency;
 };
 
-// Définir un wrapper pour AreaClosed qui masque les détails de typage
+export const METRIC_COLORS: Record<MetricType, string> = {
+    total: "#4f46e5",
+    errors: "#e53e3e",
+    rateLimits: "#f59e42",
+    success: "#22c55e",
+    timeouts: "#64748b"
+};
+
+function getValue(point: Point, metricType: MetricType) {
+    switch (metricType) {
+        case "total": return point.total;
+        case "errors": return point.errors;
+        case "rateLimits": return point.rateLimits;
+        case "success": return point.total - point.errors - point.timeouts - point.rateLimits;
+        case "timeouts": return point.timeouts;
+        default: return point.total;
+    }
+}
+
 function CustomAreaClosed({
     data,
     x,
@@ -42,7 +60,6 @@ function CustomAreaClosed({
     style: React.CSSProperties;
     mask: string;
 }) {
-    // Converti données en format compatible
     const compatibleData = data.map(d => ({
         timestamp: d.timestamp,
         value: d.value,
@@ -68,28 +85,46 @@ function CustomAreaClosed({
     );
 }
 
-// Helper pour calculer les calls par période
 function aggregateCalls(
     data: Point[],
     windowMs: number,
-    getValue: (p: Point) => number
+    getValue: (p: Point) => number,
+    alignedStart: number,
+    alignedEnd: number
 ): { timestamp: number; value: number }[] {
-    if (data.length < 2) return [];
     const result: { timestamp: number; value: number }[] = [];
-    let i = 0;
-    while (i < data.length - 1) {
-        const start = data[i].timestamp;
-        const end = start + windowMs;
-        let j = i + 1;
-        while (j < data.length && data[j].timestamp < end) j++;
-        const value = getValue(data[j - 1]) - getValue(data[i]);
-        result.push({ timestamp: start, value: value / (windowMs / 1000) });
-        i = j;
+    let dataIdx = 0;
+    let prevValue: number | null = null;
+
+    for (
+        let bucketStart = alignedStart;
+        bucketStart < alignedEnd;
+        bucketStart += windowMs
+    ) {
+        let firstIdx = dataIdx;
+        while (firstIdx < data.length && data[firstIdx].timestamp < bucketStart) firstIdx++;
+        let lastIdx = firstIdx;
+        while (lastIdx < data.length && data[lastIdx].timestamp < bucketStart + windowMs) lastIdx++;
+
+        if (lastIdx - firstIdx > 1) {
+            const value =
+                getValue(data[lastIdx - 1]) - getValue(data[firstIdx]);
+            result.push({
+                timestamp: bucketStart,
+                value: value / (windowMs / 1000),
+            });
+            prevValue = getValue(data[lastIdx - 1]);
+            dataIdx = lastIdx;
+        } else {
+            result.push({
+                timestamp: bucketStart,
+                value: 0,
+            });
+        }
     }
     return result;
 }
 
-// Smoothing pour les séries dérivées
 function smoothAggregatedData(
     data: { timestamp: number; value: number }[],
     window: number
@@ -106,7 +141,6 @@ function smoothAggregatedData(
     return result;
 }
 
-// Ajout d'une fonction pour filtrer les points avec NaN
 function removeNaN(data: { timestamp: number; value: number }[]) {
     return data.filter(d => !isNaN(d.value) && isFinite(d.value));
 }
@@ -115,8 +149,9 @@ function RequestTimelineVisx({
     data,
     zoomLevel = 1,
     height = 260,
+    metricTypes = [
+        "total"],
     duration,
-    metricType = "total",
     frequency = "raw",
 }: Props) {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -138,71 +173,113 @@ function RequestTimelineVisx({
 
     const { windowStart, virtualNow } = useTimeWindow(computedDuration);
     const visibleData = useVisibleData(data, windowStart);
-
-    // Sélectionne la bonne clé selon metricType
-    function getValue(point: Point) {
-        switch (metricType) {
-            case "total": return point.total;
-            case "errors": return point.errors;
-            case "rateLimits": return point.rateLimits;
-            case "success": return point.total - point.errors - point.timeouts - point.rateLimits;
-            case "timeouts": return point.timeouts;
-            default: return point.total;
-        }
-    }
-
-    // Toujours appeler le hook, même si tu ne l'utilises pas
     const smoothed = useSmoothedData(visibleData, SMOOTH_WINDOW);
 
-    let displayData: { timestamp: number; value: number }[] = [];
-    if (frequency === "raw") {
-        displayData = smoothed.map(d => ({
-            timestamp: d.timestamp,
-            value: getValue(d),
-        }));
-    } else {
-        let windowMs = 1000;
-        if (frequency === "perMinute") windowMs = 60_000;
-        if (frequency === "perHour") windowMs = 3_600_000;
-        const aggregated = aggregateCalls(visibleData, windowMs, getValue);
-        displayData = smoothAggregatedData(aggregated, Math.round(SMOOTH_WINDOW / 10));
-    }
+    const series = useMemo(
+        () =>
+            metricTypes.map(metricType => {
+                let displayData: { timestamp: number; value: number }[] = [];
 
-    const safeDisplayData = removeNaN(displayData);
+                if (frequency === "raw") {
+                    displayData = smoothed.map(d => ({
+                        timestamp: d.timestamp,
+                        value: getValue(d, metricType),
+                    }));
+                } else {
+                    let windowMs = 100;
+                    if (frequency === "perSecond") {
+                        windowMs = Math.max(100, Math.floor((virtualNow - windowStart) / containerWidth));
+                    }
+                    if (frequency === "perMinute") {
+                        windowMs = Math.max(1000, Math.floor((virtualNow - windowStart) / containerWidth));
+                    }
+                    if (frequency === "perHour") {
+                        windowMs = Math.max(60_000, Math.floor((virtualNow - windowStart) / containerWidth));
+                    }
 
-    // Si aucune donnée valide, ajoute des valeurs par défaut pour éviter les erreurs
-    const hasEnoughData = safeDisplayData.length > 1;
+                    let alignedEnd = Math.ceil(virtualNow / windowMs) * windowMs;
+                    let bucketCount = Math.max(2, Math.ceil((alignedEnd - windowStart) / windowMs));
+                    let alignedStart = alignedEnd - bucketCount * windowMs;
+
+                    const bucketMargin = 2 * windowMs;
+                    const visibleForBucket = data.filter(d => d.timestamp >= alignedStart - bucketMargin && d.timestamp <= alignedEnd);
+
+                    const aggregated = aggregateCalls(
+                        visibleForBucket,
+                        windowMs,
+                        p => getValue(p, metricType),
+                        alignedStart,
+                        alignedEnd
+                    );
+
+                    if (aggregated.length <= 200) {
+                        displayData = smoothAggregatedData(aggregated, Math.round(SMOOTH_WINDOW / 10));
+                    } else {
+                        displayData = aggregated;
+                    }
+                }
+                return {
+                    metricType,
+                    color: METRIC_COLORS[metricType],
+                    data: removeNaN(displayData),
+                };
+            }),
+        [metricTypes, frequency, smoothed]
+    );
+
+    const allDisplayData = series.flatMap(s => s.data);
+    const hasEnoughData = allDisplayData.length > 1;
     if (!hasEnoughData) {
-        safeDisplayData.push({ timestamp: Date.now() - 1000, value: 0 });
-        safeDisplayData.push({ timestamp: Date.now(), value: 0 });
+        allDisplayData.push({ timestamp: Date.now() - 1000, value: 0 });
+        allDisplayData.push({ timestamp: Date.now(), value: 0 });
     }
 
     const { xScale, yScale, yMax, margin } = useTimelineScales(
-        safeDisplayData,
+        allDisplayData,
         windowStart,
         virtualNow,
         containerWidth,
         height
     );
 
+    if (!metricTypes || metricTypes.length === 0) {
+        return (
+            <div ref={containerRef} style={{ width: "100%" }}>
+                <TimelineContainer width={containerWidth} height={height}>
+                    <text
+                        x={containerWidth / 2}
+                        y={height / 2}
+                        textAnchor="middle"
+                        fill="#888"
+                        fontSize={16}
+                    >
+                        Please select a response type
+                    </text>
+                </TimelineContainer>
+            </div>
+        );
+    }
+
     return (
         <div ref={containerRef} style={{ width: "100%" }}>
             <TimelineContainer width={containerWidth} height={height}>
                 {hasEnoughData ? (
                     <>
-                        <CustomAreaClosed
-                            data={safeDisplayData}
-                            x={d => xScale(d.timestamp)}
-                            y={d => yScale(d.value)}
-                            yScale={yScale}
-                            stroke="#4f46e5"
-                            fill="url(#areaGradient)"
-                            curve={curveBasis}
-                            style={{ opacity: 0.8 }}
-                            mask="url(#fadeMask)"
-                        />
+                        {series.map(serie => (
+                            <CustomAreaClosed
+                                key={serie.metricType}
+                                data={serie.data}
+                                x={d => xScale(d.timestamp)}
+                                y={d => yScale(d.value)}
+                                yScale={yScale}
+                                stroke={serie.color}
+                                fill="none"
+                                curve={curveBasis}
+                                style={{ opacity: 0.8 }}
+                                mask="url(#fadeMask)"
+                            />
+                        ))}
 
-                        {/* Reste inchangé */}
                         <AxisBottom
                             top={yMax}
                             scale={xScale}
@@ -210,8 +287,6 @@ function RequestTimelineVisx({
                             tickFormat={d =>
                                 new Date(Number(d)).toLocaleTimeString("en-US", {
                                     hour12: false,
-                                    year: computedDuration > 31536000 ? "numeric" : undefined,
-                                    month: computedDuration > 2592000 ? "2-digit" : undefined,
                                     day: computedDuration > 86400 ? "2-digit" : undefined,
                                     weekday: computedDuration > 604800 ? "long" : undefined,
                                     hour: computedDuration > 3600 ? "2-digit" : undefined,
@@ -269,7 +344,7 @@ function RequestTimelineVisx({
                         fill="#888"
                         fontSize={16}
                     >
-                        Not enough data
+                        Not enough data for this zoom level
                     </text>
                 )}
             </TimelineContainer>

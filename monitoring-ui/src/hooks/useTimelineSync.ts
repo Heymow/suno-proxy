@@ -7,13 +7,11 @@ export function useTimelineSync(initialTimeline: Point[]) {
     const [timeline, setTimeline] = useState<Point[]>([]);
     const wsRef = useRef<WebSocket | null>(null);
 
-    // ⏳ Mise à jour quand initialTimeline arrive
     useEffect(() => {
         const now = Date.now();
         setTimeline(initialTimeline.filter(p => p.timestamp >= now - DISPLAY_DURATION_MS));
     }, [initialTimeline]);
 
-    // 📡 Connexion WebSocket
     useEffect(() => {
         const protocol = location.protocol === "https:" ? "wss" : "ws";
         const host = import.meta.env.VITE_API_WS_URL || location.host;

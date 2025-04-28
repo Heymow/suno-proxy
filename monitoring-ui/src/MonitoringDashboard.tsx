@@ -68,14 +68,14 @@ export default function MonitoringDashboard() {
   const handleCancelReset = () => setShowResetModal(false);
 
   return (
-    <div className="grid min-h-screen w-full grid-cols-1 md:grid-cols-[16rem_minmax(0,1fr)_24rem]">
+    <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-[16rem_minmax(0,1fr)_24rem]">
       <SidebarDrawer handleWithBlur={handleWithBlur} toggleDarkMode={toggleDarkMode} setView={setView} />
 
-      <aside className="w-64 p-6 border-r bg-card text-card-foreground shadow hidden md:flex flex-col justify-between">
+      <aside className="w-64 p-6 border-r bg-card text-card-foreground shadow hidden lg:flex flex-col justify-between">
         <LeftMenu handleWithBlur={handleWithBlur} toggleDarkMode={toggleDarkMode} setView={setView} />
       </aside>
 
-      <main className="flex flex-col px-2 md:px-10 py-8 w-full min-w-0">
+      <main className="flex flex-col px-2 md:px-10 py-8 w-full min-w-0 bg-background lg:mt-0 mt-8">
         <Header subheader={false} title="Suno API calls" />
         <Header subheader={true} title={view} />
         <ActionButtons
@@ -96,7 +96,7 @@ export default function MonitoringDashboard() {
         />
       </main>
 
-      <aside className=" md:flex flex-col w-full p-4 border-l bg-card text-card-foreground shadow">
+      <aside className="md:flex flex-col w-full p-4 border-l bg-card text-card-foreground shadow">
         <RightMenu
           stats={stats}
           perStatus={stats.perStatus}

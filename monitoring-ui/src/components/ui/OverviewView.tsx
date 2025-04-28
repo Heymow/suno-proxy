@@ -7,6 +7,7 @@ import { fetchTimeline } from "@/services/apiService";
 import { useTimelineSync } from "@/hooks/useTimelineSync";
 import { Button } from "./button";
 import { handleWithBlur } from "@/utils/theme";
+import { METRIC_COLORS } from "./RequestTimeline";
 
 const ZOOM_LABELS: Record<number, string> = {
     0.1: "1 week",
@@ -32,6 +33,31 @@ function getZoomLabel(zoom: number) {
 //     return "callsPerSecond";
 // }
 
+function MetricCheckbox({
+    metric,
+    checked,
+    onChange,
+}: {
+    metric: string;
+    checked: boolean;
+    onChange: () => void;
+}) {
+    return (
+        <label className="flex items-center gap-1 text-xs cursor-pointer select-none">
+            <input
+                type="checkbox"
+                checked={checked}
+                className="cursor-pointer"
+                onChange={onChange}
+            />
+            <span style={{ color: METRIC_COLORS[metric as keyof typeof METRIC_COLORS] }} className={`text-xs ${checked ? "opacity-100" : "opacity-70"}`}>
+                {metric.charAt(0).toUpperCase() + metric.slice(1)}
+            </span>
+        </label >
+
+    );
+}
+
 export default function MainView({
     stats,
     error,
@@ -45,7 +71,7 @@ export default function MainView({
     const [initialData, setInitialData] = useState<Point[]>([]);
     const [loaded, setLoaded] = useState(false);
     const [currentZoomLevel, setCurrentZoomLevel] = useState(1);
-    const [selectedMetricType, setSelectedMetricType] = useState<"total" | "errors" | "rateLimits" | "success" | "timeouts">("total");
+    const [selectedMetricTypes, setSelectedMetricTypes] = useState<("total" | "errors" | "rateLimits" | "success" | "timeouts")[]>(["total"]);
     const [selectedFrequency, setSelectedFrequency] = useState<"perHour" | "perMinute" | "perSecond" | "raw">("perMinute");
 
     useEffect(() => {
@@ -151,65 +177,77 @@ export default function MainView({
                 ))}
             </div>
 
-            <div className="mt-6 flex flex-col">
+            <div className="mt-6 flex items-baseline flex-col">
                 <div className="flex items-center justify-between">
-                    <h3 className="text-sm text-muted-foreground">Activity</h3>
-                    <div className="flex items-center gap-2 mr-12">
+                    <h3 className="text-ls text-muted-foreground mr-2 mb-2">Activity</h3>
+                    <div className="flex flex-col 2xl:flex-row  gap-2 mr-12">
 
-                        <div className="flex gap-4 mb-2">
-                            <select
-                                value={selectedMetricType}
-                                onChange={(e) => {
-                                    const value = e.target.value as "total" | "errors" | "rateLimits" | "success" | "timeouts";
-                                    handleWithBlur(() => setSelectedMetricType(value))();
-                                }}
-                                className="border rounded px-2 py-1"
-                            >
-                                <option value="total" className="bg-accent">Total</option>
-                                <option value="errors" className="bg-accent">Errors</option>
-                                <option value="rateLimits" className="bg-accent">Rate Limits</option>
-                                <option value="success" className="bg-accent">Success</option>
-                                <option value="timeouts" className="bg-accent">Timeouts</option>
-                            </select>
+                        <div className="flex gap-4 mb-2 ml-1">
+                            <div className="flex gap-2">
+                                {["total", "errors", "rateLimits", "success", "timeouts"].map(metric => (
+                                    <MetricCheckbox
+                                        key={metric}
+                                        metric={metric}
+                                        checked={selectedMetricTypes.includes(metric as any)}
+                                        onChange={() => {
+                                            setSelectedMetricTypes(prev =>
+                                                prev.includes(metric as any)
+                                                    ? prev.filter(m => m !== metric)
+                                                    : [...prev, metric as any]
+                                            );
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="flex gap-2 mb-2 h-10">
                             <select
                                 value={selectedFrequency}
                                 onChange={(e) => {
                                     const value = e.target.value as "perHour" | "perMinute" | "perSecond" | "raw";
                                     handleWithBlur(() => setSelectedFrequency(value))();
                                 }}
-                                className="border rounded px-2 py-1"
+                                className="border rounded px-2 py-1 mr-2"
                             >
                                 <option value="raw" className="bg-accent">Raw (cumulative)</option>
                                 <option value="perHour" className="bg-accent">Per Hour</option>
                                 <option value="perMinute" className="bg-accent">Per Minute</option>
                                 <option value="perSecond" className="bg-accent">Per Second</option>
                             </select>
-                        </div>
 
-                        <h3 className="text-sm text-muted-foreground">
-                            Zoom : {getZoomLabel(currentZoomLevel)}
-                        </h3>
-                        <Button
-                            variant="outline"
-                            className="cursor-pointer h-5 w-4"
-                            onClick={handleZoomOut}
-                        >
-                            <div className="flex items-center text-sm">-</div>
-                        </Button>
-                        <Button
-                            variant="outline"
-                            className="cursor-pointer h-5 w-4"
-                            onClick={handleZoomIn}
-                        >
-                            <div className="flex items-center text-xs pb-0.5">+</div>
-                        </Button>
+                            <div className="flex items-center gap-2 ml-2 -m-2">
+                                <h3 className="flex text-sm text-muted-foreground -m-3 min-w-50">
+                                    <span className="hidden xl:block text-xs text-nowrap mt-0.5">Zoom :</span>
+                                    <div className="flex items-center gap-2 ml-2 flex-col lg:flex-row -mt-4 lg:mt-0">
+                                        <span className="text-xs text-muted-foreground w-12 text-nowrap text-center">{getZoomLabel(currentZoomLevel)}</span>
+                                        <div className="flex items-center gap-2 ml-2">
+                                            <Button
+                                                variant="outline"
+                                                className="cursor-pointer h-5 w-4"
+                                                onClick={handleZoomOut}
+                                            >
+                                                <div className="flex items-center text-sm pb-0.5">-</div>
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                className="cursor-pointer h-5 w-4"
+                                                onClick={handleZoomIn}
+                                            >
+                                                <div className="flex items-center text-xs">+</div>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <RequestTimeline
                     data={timelineData}
                     zoomLevel={currentZoomLevel}
                     height={260}
-                    metricType={selectedMetricType}
+                    metricTypes={selectedMetricTypes}
                     frequency={selectedFrequency}
                 />
             </div>

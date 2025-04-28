@@ -16,14 +16,14 @@ export default function ActionButtons({
     resetStats: () => Promise<void>;
 }) {
     return (
-        <div className="flex justify-end gap-2 mb-6">
+        <div className="flex justify-end gap-1 mb-6">
             <Button
                 variant="outline"
                 onClick={handleWithBlur(() => setAutoRefresh((v) => !v))}
                 className={cn("cursor-pointer", autoRefresh && "animate-pulse")}
             >
                 <Badge variant={autoRefresh ? "default" : "destructive"} />
-                {autoRefresh ? "Auto Refresh ON" : "Auto Refresh OFF"}
+                Auto Refresh
             </Button>
             <Button
                 variant="outline"

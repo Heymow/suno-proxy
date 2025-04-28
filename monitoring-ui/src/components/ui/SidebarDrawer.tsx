@@ -17,10 +17,10 @@ export default function SidebarDrawer({ handleWithBlur, toggleDarkMode, setView 
         fn();
     };
     return (
-        <div className="md:hidden">
+        <div className="lg:hidden">
             <Drawer direction="left" open={open} onOpenChange={setOpen}>
                 <DrawerTrigger asChild className="fixed top-4 left-4 z-50 ">
-                    <Button variant="outline" className="mb-4 cursor-pointer w-20 h-10"
+                    <Button variant="outline" className="mb-4 cursor-pointer w-20 h-10 bg-accent-foreground"
                         onClick={e => e.currentTarget.blur()}>
                         <Menu className="w-4 h-4" />
                     </Button>
