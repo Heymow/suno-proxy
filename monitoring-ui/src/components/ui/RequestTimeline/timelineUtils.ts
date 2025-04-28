@@ -27,7 +27,7 @@ export function rollingRate(
         while (left < right && data[left].timestamp < t - windowMs) {
             left++;
         }
-        if (left === right || left === 0) continue; // skip if not enough data or left is the very first point
+        if (left === right || left === 0) continue;
         const dt = (data[right].timestamp - data[left].timestamp) / 1000;
         const dv = getValue(data[right]) - getValue(data[left]);
         const rate = dt > 0 ? dv / (dt / (windowMs / 1000)) : 0;
@@ -71,7 +71,7 @@ export function binByWindow(
         const left = [...sorted].reverse().find(d => d.timestamp <= binStart);
         const right = [...sorted].reverse().find(d => d.timestamp <= binEnd);
         if (!left || !right || left === right) continue;
-        // Ignore if left is the very first point (no point before bin)
+
         if (left === sorted[0]) continue;
         const value = getValue(right, metricType) - getValue(left, metricType);
         bins.push({ timestamp: binStart + binSize / 2, value: Math.max(0, value) });

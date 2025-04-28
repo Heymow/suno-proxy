@@ -77,7 +77,7 @@ export default function LastErrors({
 
             <div className="space-y-3">
                 <AnimatePresence>
-                    {visible.map((err) => (
+                    {visible.sort((a: LastError, b: LastError) => b.timestamp - a.timestamp).map((err) => (
                         <motion.div
                             key={err.timestamp}
                             layout
