@@ -9,6 +9,8 @@ import useTimelineScales from "@/hooks/useTimelineScales";
 import TimelineContainer from "@/components/ui/TimelineContainer";
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import { RequestTimelineVisxProps } from "@/types";
+import { useTooltip, TooltipWithBounds } from "@visx/tooltip";
+import { localPoint } from "@visx/event";
 
 type MetricType = "total" | "errors" | "rateLimits" | "success" | "timeouts";
 type Frequency = "raw" | "perSecond" | "perMinute" | "perHour";
@@ -85,21 +87,24 @@ function CustomAreaClosed({
     );
 }
 
-function rollingCount(
+function rollingRate(
     data: Point[],
     getValue: (p: Point) => number,
     windowMs: number
 ): { timestamp: number; value: number }[] {
-    if (data.length === 0) return [];
+    if (data.length < 2) return [];
     const result: { timestamp: number; value: number }[] = [];
     let left = 0;
-    for (let right = 0; right < data.length; right++) {
+    for (let right = 1; right < data.length; right++) {
         const t = data[right].timestamp;
+        // Décale la fenêtre à gauche
         while (left < right && data[left].timestamp < t - windowMs) {
             left++;
         }
-        const value = getValue(data[right]) - getValue(data[left]);
-        result.push({ timestamp: t, value });
+        const dt = (data[right].timestamp - data[left].timestamp) / 1000; // en secondes
+        const dv = getValue(data[right]) - getValue(data[left]);
+        const rate = dt > 0 ? dv / (dt / (windowMs / 1000)) : 0;
+        result.push({ timestamp: t, value: rate });
     }
     return result;
 }
@@ -170,15 +175,21 @@ function RequestTimelineVisx({
                     if (frequency === "perMinute") windowMs = 60_000;
                     if (frequency === "perHour") windowMs = 3_600_000;
 
-                    const rolling = rollingCount(
-                        smoothed,
+                    const rolling = rollingRate(
+                        visibleData,
                         d => getValue(d, metricType),
                         windowMs
                     );
-                    // Lissage léger (ajuste la fenêtre selon le zoom si besoin)
-                    const lissaged = smoothAggregatedData(rolling, Math.min(3, Math.round(1000 / zoomLevel)));
-                    const averageInterval = (smoothed[1]?.timestamp - smoothed[0]?.timestamp) || 1; // Define averageInterval based on smoothed data
-                    const filtered = lissaged.filter(d => d.timestamp <= virtualNow && d.timestamp >= windowStart + SMOOTH_WINDOW * averageInterval);
+                    const lissaged = smoothAggregatedData(
+                        rolling,
+                        Math.min(3, Math.round(1000 / zoomLevel))
+                    );
+                    const averageInterval = (rolling[1]?.timestamp - rolling[0]?.timestamp) || 1;
+                    const filtered = lissaged.filter(
+                        d =>
+                            d.timestamp <= virtualNow &&
+                            d.timestamp >= windowStart + SMOOTH_WINDOW * averageInterval
+                    );
                     displayData = filtered;
                 }
                 return {
@@ -187,7 +198,7 @@ function RequestTimelineVisx({
                     data: removeNaN(displayData),
                 };
             }),
-        [metricTypes, frequency, smoothed, zoomLevel]
+        [metricTypes, frequency, smoothed, visibleData, zoomLevel, virtualNow, windowStart, SMOOTH_WINDOW]
     );
 
     const allDisplayData = useMemo(() => series.flatMap(s => s.data), [series]);
@@ -218,8 +229,80 @@ function RequestTimelineVisx({
         );
     }
 
+    const {
+        tooltipData,
+        tooltipLeft,
+        tooltipTop,
+        showTooltip,
+        hideTooltip,
+    } = useTooltip<{ timestamp: number; value: number }>();
+
+    function handleMouseMove(event: React.MouseEvent<SVGRectElement, MouseEvent>) {
+        const point = localPoint(event) || { x: 0, y: 0 };
+        const x0 = xScale.invert(point.x!);
+        const closest = allDisplayData.reduce((a, b) =>
+            Math.abs(b.timestamp - x0.getTime()) < Math.abs(a.timestamp - x0.getTime()) ? b : a
+        );
+
+        showTooltip({
+            tooltipData: closest,
+            tooltipLeft: point.x,
+            tooltipTop: point.y,
+        });
+    }
+
     return (
-        <div ref={containerRef} style={{ width: "100%" }}>
+        <div ref={containerRef} style={{ width: "100%", position: "relative" }}>
+            {tooltipData && (
+                <TooltipWithBounds
+                    top={tooltipTop}
+                    left={tooltipLeft}
+                    style={{
+                        position: "absolute",
+                        backgroundColor: "rgba(0, 0, 0, 0.85)",
+                        color: "white",
+                        padding: "5px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        lineHeight: "1.5",
+                        zIndex: 1000,
+                        pointerEvents: "none",
+                    }}
+                    className="w-fit h-fit bg-accent"
+                >
+                    <div>
+                        <strong>
+                            {new Date(tooltipData.timestamp).toLocaleTimeString()}
+                        </strong>
+                        <br />
+                        {series
+                            .map(serie => {
+                                const point = serie.data.reduce((a, b) =>
+                                    Math.abs(b.timestamp - tooltipData.timestamp) < Math.abs(a.timestamp - tooltipData.timestamp) ? b : a
+                                );
+                                const avgInterval = serie.data.length > 1
+                                    ? Math.abs(serie.data[1].timestamp - serie.data[0].timestamp)
+                                    : 0;
+                                if (
+                                    point &&
+                                    Math.abs(point.timestamp - tooltipData.timestamp) <= avgInterval * 1.5 &&
+                                    point.value !== undefined &&
+                                    point.value !== null &&
+                                    !isNaN(point.value) &&
+                                    point.value !== 0
+                                ) {
+                                    return (
+                                        <div key={serie.metricType} style={{ color: serie.color }}>
+                                            {serie.metricType}: {point.value.toFixed(2)}
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            })
+                        }
+                    </div>
+                </TooltipWithBounds>
+            )}
             <TimelineContainer width={containerWidth} height={height}>
                 {allDisplayData.length > 1 ? (
                     <>
@@ -237,7 +320,14 @@ function RequestTimelineVisx({
                                 mask="url(#fadeMask)"
                             />
                         ))}
-
+                        <rect
+                            width={containerWidth}
+                            height={height}
+                            fill="transparent"
+                            onMouseMove={handleMouseMove}
+                            onMouseLeave={hideTooltip}
+                            style={{ cursor: "crosshair" }}
+                        />
                         <AxisBottom
                             top={yMax}
                             scale={xScale}

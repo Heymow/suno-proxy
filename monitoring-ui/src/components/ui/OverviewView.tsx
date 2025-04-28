@@ -58,9 +58,13 @@ function MetricCheckbox({
     );
 }
 
+const ZOOM_STORAGE_KEY = "timelineZoomLevel";
+const METRICS_STORAGE_KEY = "timelineMetricTypes";
+const FREQ_STORAGE_KEY = "timelineFrequency";
+
 export default function MainView({
     stats,
-    error,
+    error
 }: {
     stats: ApiStats | null;
     loading: boolean;
@@ -68,13 +72,34 @@ export default function MainView({
     resetStats: () => void;
     toggleDarkMode: () => void;
 }) {
+    // Chargement initial depuis le localStorage
+    const [currentZoomLevel, setCurrentZoomLevel] = useState(() => {
+        const stored = localStorage.getItem(ZOOM_STORAGE_KEY);
+        return stored ? Number(stored) : 27;
+    });
+    const ALL_METRICS = ["total", "errors", "rateLimits", "success", "timeouts"] as const;
+    const [selectedMetricTypes, setSelectedMetricTypes] = useState<typeof ALL_METRICS[number][]>(() => {
+        const stored = localStorage.getItem(METRICS_STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [...ALL_METRICS];
+    });
+    const [selectedFrequency, setSelectedFrequency] = useState<"perHour" | "perMinute" | "perSecond" | "raw">(() => {
+        const stored = localStorage.getItem(FREQ_STORAGE_KEY);
+        return stored ? stored as any : "perMinute";
+    });
+
+    // Sauvegarde à chaque modification
+    useEffect(() => {
+        localStorage.setItem(ZOOM_STORAGE_KEY, String(currentZoomLevel));
+    }, [currentZoomLevel]);
+    useEffect(() => {
+        localStorage.setItem(METRICS_STORAGE_KEY, JSON.stringify(selectedMetricTypes));
+    }, [selectedMetricTypes]);
+    useEffect(() => {
+        localStorage.setItem(FREQ_STORAGE_KEY, selectedFrequency);
+    }, [selectedFrequency]);
+
     const [initialData, setInitialData] = useState<Point[]>([]);
     const [loaded, setLoaded] = useState(false);
-    const [currentZoomLevel, setCurrentZoomLevel] = useState(27);
-    const ALL_METRICS = ["total", "errors", "rateLimits", "success", "timeouts"] as const;
-
-    const [selectedMetricTypes, setSelectedMetricTypes] = useState<typeof ALL_METRICS[number][]>([...ALL_METRICS]);
-    const [selectedFrequency, setSelectedFrequency] = useState<"perHour" | "perMinute" | "perSecond" | "raw">("perMinute");
 
     useEffect(() => {
         const load = async () => {
