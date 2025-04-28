@@ -70,8 +70,10 @@ export default function MainView({
 }) {
     const [initialData, setInitialData] = useState<Point[]>([]);
     const [loaded, setLoaded] = useState(false);
-    const [currentZoomLevel, setCurrentZoomLevel] = useState(1);
-    const [selectedMetricTypes, setSelectedMetricTypes] = useState<("total" | "errors" | "rateLimits" | "success" | "timeouts")[]>(["total"]);
+    const [currentZoomLevel, setCurrentZoomLevel] = useState(27);
+    const ALL_METRICS = ["total", "errors", "rateLimits", "success", "timeouts"] as const;
+
+    const [selectedMetricTypes, setSelectedMetricTypes] = useState<typeof ALL_METRICS[number][]>([...ALL_METRICS]);
     const [selectedFrequency, setSelectedFrequency] = useState<"perHour" | "perMinute" | "perSecond" | "raw">("perMinute");
 
     useEffect(() => {
@@ -184,16 +186,16 @@ export default function MainView({
 
                         <div className="flex gap-4 mb-2 ml-1">
                             <div className="flex gap-2">
-                                {["total", "errors", "rateLimits", "success", "timeouts"].map(metric => (
+                                {ALL_METRICS.map(metric => (
                                     <MetricCheckbox
                                         key={metric}
                                         metric={metric}
-                                        checked={selectedMetricTypes.includes(metric as any)}
+                                        checked={selectedMetricTypes.includes(metric)}
                                         onChange={() => {
                                             setSelectedMetricTypes(prev =>
-                                                prev.includes(metric as any)
+                                                prev.includes(metric)
                                                     ? prev.filter(m => m !== metric)
-                                                    : [...prev, metric as any]
+                                                    : [...prev, metric]
                                             );
                                         }}
                                     />
@@ -208,12 +210,12 @@ export default function MainView({
                                     const value = e.target.value as "perHour" | "perMinute" | "perSecond" | "raw";
                                     handleWithBlur(() => setSelectedFrequency(value))();
                                 }}
-                                className="border rounded px-2 py-1 mr-2"
+                                className="border-1 rounded px-2 mr-2"
                             >
-                                <option value="raw" className="bg-accent">Raw (cumulative)</option>
-                                <option value="perHour" className="bg-accent">Per Hour</option>
-                                <option value="perMinute" className="bg-accent">Per Minute</option>
-                                <option value="perSecond" className="bg-accent">Per Second</option>
+                                <option value="raw" className="bg-background">Raw (cumulative)</option>
+                                <option value="perHour" className="bg-background">Per Hour</option>
+                                <option value="perMinute" className="bg-background">Per Minute</option>
+                                <option value="perSecond" className="bg-background">Per Second</option>
                             </select>
 
                             <div className="flex items-center gap-2 ml-2 -m-2">
@@ -227,14 +229,14 @@ export default function MainView({
                                                 className="cursor-pointer h-5 w-4"
                                                 onClick={handleZoomOut}
                                             >
-                                                <div className="flex items-center text-sm pb-0.5">-</div>
+                                                <div className="text-sm -mt-0.5">-</div>
                                             </Button>
                                             <Button
                                                 variant="outline"
                                                 className="cursor-pointer h-5 w-4"
                                                 onClick={handleZoomIn}
                                             >
-                                                <div className="flex items-center text-xs">+</div>
+                                                <div className="text-xs -mt-0.5">+</div>
                                             </Button>
                                         </div>
                                     </div>

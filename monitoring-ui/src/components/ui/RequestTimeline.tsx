@@ -16,7 +16,7 @@ type Frequency = "raw" | "perSecond" | "perMinute" | "perHour";
 type Props = RequestTimelineVisxProps & {
     zoomLevel?: number;
     height?: number;
-    metricTypes?: MetricType[]; // <-- tableau de metrics
+    metricTypes?: MetricType[];
     frequency?: Frequency;
 };
 
@@ -85,42 +85,21 @@ function CustomAreaClosed({
     );
 }
 
-function aggregateCalls(
+function rollingCount(
     data: Point[],
-    windowMs: number,
     getValue: (p: Point) => number,
-    alignedStart: number,
-    alignedEnd: number
+    windowMs: number
 ): { timestamp: number; value: number }[] {
+    if (data.length === 0) return [];
     const result: { timestamp: number; value: number }[] = [];
-    let dataIdx = 0;
-    let prevValue: number | null = null;
-
-    for (
-        let bucketStart = alignedStart;
-        bucketStart < alignedEnd;
-        bucketStart += windowMs
-    ) {
-        let firstIdx = dataIdx;
-        while (firstIdx < data.length && data[firstIdx].timestamp < bucketStart) firstIdx++;
-        let lastIdx = firstIdx;
-        while (lastIdx < data.length && data[lastIdx].timestamp < bucketStart + windowMs) lastIdx++;
-
-        if (lastIdx - firstIdx > 1) {
-            const value =
-                getValue(data[lastIdx - 1]) - getValue(data[firstIdx]);
-            result.push({
-                timestamp: bucketStart,
-                value: value / (windowMs / 1000),
-            });
-            prevValue = getValue(data[lastIdx - 1]);
-            dataIdx = lastIdx;
-        } else {
-            result.push({
-                timestamp: bucketStart,
-                value: 0,
-            });
+    let left = 0;
+    for (let right = 0; right < data.length; right++) {
+        const t = data[right].timestamp;
+        while (left < right && data[left].timestamp < t - windowMs) {
+            left++;
         }
+        const value = getValue(data[right]) - getValue(data[left]);
+        result.push({ timestamp: t, value });
     }
     return result;
 }
@@ -186,37 +165,21 @@ function RequestTimelineVisx({
                         value: getValue(d, metricType),
                     }));
                 } else {
-                    let windowMs = 100;
-                    if (frequency === "perSecond") {
-                        windowMs = Math.max(100, Math.floor((virtualNow - windowStart) / containerWidth));
-                    }
-                    if (frequency === "perMinute") {
-                        windowMs = Math.max(1000, Math.floor((virtualNow - windowStart) / containerWidth));
-                    }
-                    if (frequency === "perHour") {
-                        windowMs = Math.max(60_000, Math.floor((virtualNow - windowStart) / containerWidth));
-                    }
+                    let windowMs = 60_000;
+                    if (frequency === "perSecond") windowMs = 1_000;
+                    if (frequency === "perMinute") windowMs = 60_000;
+                    if (frequency === "perHour") windowMs = 3_600_000;
 
-                    let alignedEnd = Math.ceil(virtualNow / windowMs) * windowMs;
-                    let bucketCount = Math.max(2, Math.ceil((alignedEnd - windowStart) / windowMs));
-                    let alignedStart = alignedEnd - bucketCount * windowMs;
-
-                    const bucketMargin = 2 * windowMs;
-                    const visibleForBucket = data.filter(d => d.timestamp >= alignedStart - bucketMargin && d.timestamp <= alignedEnd);
-
-                    const aggregated = aggregateCalls(
-                        visibleForBucket,
-                        windowMs,
-                        p => getValue(p, metricType),
-                        alignedStart,
-                        alignedEnd
+                    const rolling = rollingCount(
+                        smoothed,
+                        d => getValue(d, metricType),
+                        windowMs
                     );
-
-                    if (aggregated.length <= 200) {
-                        displayData = smoothAggregatedData(aggregated, Math.round(SMOOTH_WINDOW / 10));
-                    } else {
-                        displayData = aggregated;
-                    }
+                    // Lissage léger (ajuste la fenêtre selon le zoom si besoin)
+                    const lissaged = smoothAggregatedData(rolling, Math.min(3, Math.round(1000 / zoomLevel)));
+                    const averageInterval = (smoothed[1]?.timestamp - smoothed[0]?.timestamp) || 1; // Define averageInterval based on smoothed data
+                    const filtered = lissaged.filter(d => d.timestamp <= virtualNow && d.timestamp >= windowStart + SMOOTH_WINDOW * averageInterval);
+                    displayData = filtered;
                 }
                 return {
                     metricType,
@@ -224,15 +187,10 @@ function RequestTimelineVisx({
                     data: removeNaN(displayData),
                 };
             }),
-        [metricTypes, frequency, smoothed]
+        [metricTypes, frequency, smoothed, zoomLevel]
     );
 
-    const allDisplayData = series.flatMap(s => s.data);
-    const hasEnoughData = allDisplayData.length > 1;
-    if (!hasEnoughData) {
-        allDisplayData.push({ timestamp: Date.now() - 1000, value: 0 });
-        allDisplayData.push({ timestamp: Date.now(), value: 0 });
-    }
+    const allDisplayData = useMemo(() => series.flatMap(s => s.data), [series]);
 
     const { xScale, yScale, yMax, margin } = useTimelineScales(
         allDisplayData,
@@ -263,7 +221,7 @@ function RequestTimelineVisx({
     return (
         <div ref={containerRef} style={{ width: "100%" }}>
             <TimelineContainer width={containerWidth} height={height}>
-                {hasEnoughData ? (
+                {allDisplayData.length > 1 ? (
                     <>
                         {series.map(serie => (
                             <CustomAreaClosed

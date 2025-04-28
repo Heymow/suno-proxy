@@ -29,7 +29,7 @@ export default function useTimelineScales(
       range: [yMax, margin.top],
       nice: true,
     });
-  }, [visibleData.length, yMax]);
+  }, [visibleData, yMax]);
 
   return { xScale, yScale, yMax, margin };
 }
