@@ -31,5 +31,8 @@ export default function useTimelineScales(
     });
   }, [visibleData, yMax]);
 
+  console.log("yScale", yScale.domain(), yScale.range());
+  console.log("Raw total data", visibleData[visibleData.length - 1]);
+
   return { xScale, yScale, yMax, margin };
 }

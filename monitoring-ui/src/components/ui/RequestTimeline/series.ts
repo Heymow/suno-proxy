@@ -5,13 +5,11 @@ import { METRIC_COLORS } from "./timelineConstants";
 export function getSeries({
     metricTypes,
     frequency,
-    smoothed,
     visibleData,
     zoomLevel
 }: {
     metricTypes: MetricType[],
     frequency: Frequency,
-    smoothed: { timestamp: number;[key: string]: any }[],
     visibleData: Point[],
     zoomLevel: number
 }): { metricType: MetricType, color: string, data: { timestamp: number; value: number }[] }[] {
@@ -19,9 +17,9 @@ export function getSeries({
         const color = METRIC_COLORS[metricType];
 
         if (frequency === "raw") {
-            const data = removeNaN(smoothed.map(d => ({
+            const data = removeNaN(visibleData.map(d => ({
                 timestamp: d.timestamp,
-                value: getValue({ ...d, total: 0, errors: 0, timeouts: 0, rateLimits: 0 }, metricType),
+                value: getValue(d, metricType) || 0,
             })));
             return { metricType, color, data };
         }
@@ -40,7 +38,7 @@ export function getSeries({
             );
             const smoothedData = smoothAggregatedData(
                 rolling,
-                Math.min(3, Math.round(1000 / zoomLevel))
+                Math.min(300, Math.round(1000 / zoomLevel))
             );
             const data = removeNaN(smoothedData);
             return { metricType, color, data };

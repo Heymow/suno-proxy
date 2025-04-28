@@ -3,7 +3,7 @@ import { AxisBottom, AxisLeft } from "@visx/axis";
 import { curveBasis } from "@visx/curve";
 import useTimeWindow from "@/hooks/useTimeWindow";
 import useVisibleData from "@/hooks/useVisibleData";
-import useSmoothedData from "@/hooks/useSmoothedData";
+// import useSmoothedData from "@/hooks/useSmoothedData";
 import useTimelineScales from "@/hooks/useTimelineScales";
 import TimelineContainer from "@/components/ui/TimelineContainer";
 import React, { useRef, useState, useEffect, useMemo } from "react";
@@ -39,17 +39,15 @@ function RequestTimelineVisx({
     }, [frequency]);
 
     const computedDuration = duration ?? 3600 * 24 / zoomLevel;
-    const SMOOTH_WINDOW = 200 / zoomLevel;
 
     const { windowStart, virtualNow } = useTimeWindow(computedDuration);
     const visibleData = useVisibleData(data, windowStart);
-    const smoothed = useSmoothedData(visibleData, SMOOTH_WINDOW);
 
     const series = useMemo<
         { metricType: MetricType, color: string, data: { timestamp: number; value: number }[] }[]
     >(
-        () => getSeries({ metricTypes, frequency, smoothed, visibleData, zoomLevel }),
-        [metricTypes, frequency, smoothed, visibleData, zoomLevel]
+        () => getSeries({ metricTypes, frequency, visibleData, zoomLevel }),
+        [metricTypes, frequency, visibleData, zoomLevel]
     );
 
     const filteredSeries = useMemo(
@@ -130,12 +128,6 @@ function RequestTimelineVisx({
         );
     }
 
-    // console.log("frequency", frequency);
-    // console.log("allDisplayData", allDisplayData);
-    // console.log("filteredSeries", filteredSeries);
-    // console.log("x domain", xScale.domain());
-    // console.log("y domain", yScale.domain());
-
     return (
         <div ref={containerRef} style={{ width: "100%", position: "relative" }}>
             {tooltipData && (
@@ -190,7 +182,7 @@ function RequestTimelineVisx({
                 </TooltipWithBounds>
             )}
             <TimelineContainer width={containerWidth} height={height}>
-                {allDisplayData.length > 1 ? (
+                {(frequency === "raw" ? allDisplayData.length > 0 : allDisplayData.length > 1) ? (
                     <>
                         {filteredSeries.map(serie => (
                             <CustomAreaClosed
