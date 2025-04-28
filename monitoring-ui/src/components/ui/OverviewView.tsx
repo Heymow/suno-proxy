@@ -7,7 +7,7 @@ import { fetchTimeline } from "@/services/apiService";
 import { useTimelineSync } from "@/hooks/useTimelineSync";
 import { Button } from "./button";
 import { handleWithBlur } from "@/utils/theme";
-import { METRIC_COLORS } from "./RequestTimeline";
+import { METRIC_COLORS } from "./RequestTimeline/timeLineConstants";
 
 const ZOOM_LABELS: Record<number, string> = {
     0.1: "1 week",

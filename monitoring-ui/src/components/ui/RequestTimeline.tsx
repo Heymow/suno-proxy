@@ -1,5 +1,4 @@
-import { Point } from "@/types";
-import { AreaClosed as VisxAreaClosed } from "@visx/shape";
+import { Props } from "@/types";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { curveBasis } from "@visx/curve";
 import useTimeWindow from "@/hooks/useTimeWindow";
@@ -8,133 +7,16 @@ import useSmoothedData from "@/hooks/useSmoothedData";
 import useTimelineScales from "@/hooks/useTimelineScales";
 import TimelineContainer from "@/components/ui/TimelineContainer";
 import React, { useRef, useState, useEffect, useMemo } from "react";
-import { RequestTimelineVisxProps } from "@/types";
 import { useTooltip, TooltipWithBounds } from "@visx/tooltip";
 import { localPoint } from "@visx/event";
-
-type MetricType = "total" | "errors" | "rateLimits" | "success" | "timeouts";
-type Frequency = "raw" | "perSecond" | "perMinute" | "perHour";
-
-type Props = RequestTimelineVisxProps & {
-    zoomLevel?: number;
-    height?: number;
-    metricTypes?: MetricType[];
-    frequency?: Frequency;
-};
-
-export const METRIC_COLORS: Record<MetricType, string> = {
-    total: "#4f46e5",
-    errors: "#e53e3e",
-    rateLimits: "#f59e42",
-    success: "#22c55e",
-    timeouts: "#64748b"
-};
-
-function getValue(point: Point, metricType: MetricType) {
-    switch (metricType) {
-        case "total": return point.total;
-        case "errors": return point.errors;
-        case "rateLimits": return point.rateLimits;
-        case "success": return point.total - point.errors - point.timeouts - point.rateLimits;
-        case "timeouts": return point.timeouts;
-        default: return point.total;
-    }
-}
-
-function CustomAreaClosed({
-    data,
-    x,
-    y,
-    yScale,
-    stroke,
-    fill,
-    curve,
-    style,
-    mask
-}: {
-    data: { timestamp: number; value: number }[];
-    x: (d: any) => number;
-    y: (d: any) => number;
-    yScale: any;
-    stroke: string;
-    fill: string;
-    curve: any;
-    style: React.CSSProperties;
-    mask: string;
-}) {
-    const compatibleData = data.map(d => ({
-        timestamp: d.timestamp,
-        value: d.value,
-        total: d.value,
-        errors: 0,
-        timeouts: 0,
-        rateLimits: 0,
-        opacity: 1
-    }));
-
-    return (
-        <VisxAreaClosed
-            data={compatibleData}
-            x={x}
-            y={y}
-            yScale={yScale}
-            stroke={stroke}
-            fill={fill}
-            curve={curve}
-            style={style}
-            mask={mask}
-        />
-    );
-}
-
-function rollingRate(
-    data: Point[],
-    getValue: (p: Point) => number,
-    windowMs: number
-): { timestamp: number; value: number }[] {
-    if (data.length < 2) return [];
-    const result: { timestamp: number; value: number }[] = [];
-    let left = 0;
-    for (let right = 1; right < data.length; right++) {
-        const t = data[right].timestamp;
-        // Décale la fenêtre à gauche
-        while (left < right && data[left].timestamp < t - windowMs) {
-            left++;
-        }
-        const dt = (data[right].timestamp - data[left].timestamp) / 1000; // en secondes
-        const dv = getValue(data[right]) - getValue(data[left]);
-        const rate = dt > 0 ? dv / (dt / (windowMs / 1000)) : 0;
-        result.push({ timestamp: t, value: rate });
-    }
-    return result;
-}
-
-function smoothAggregatedData(
-    data: { timestamp: number; value: number }[],
-    window: number
-) {
-    if (data.length < 2) return data;
-    const result = [];
-    for (let i = 0; i < data.length; i++) {
-        const start = Math.max(0, i - window + 1);
-        const windowData = data.slice(start, i + 1);
-        const avg =
-            windowData.reduce((sum, d) => sum + d.value, 0) / windowData.length;
-        result.push({ ...data[i], value: avg });
-    }
-    return result;
-}
-
-function removeNaN(data: { timestamp: number; value: number }[]) {
-    return data.filter(d => !isNaN(d.value) && isFinite(d.value));
-}
+import { getSeries, filterSeriesByWindow } from "./RequestTimeline/series";
+import CustomAreaClosed from "./RequestTimeline/customAreaClosed";
 
 function RequestTimelineVisx({
     data,
     zoomLevel = 1,
     height = 260,
-    metricTypes = [
-        "total"],
+    metricTypes = ["total"],
     duration,
     frequency = "raw",
 }: Props) {
@@ -160,48 +42,19 @@ function RequestTimelineVisx({
     const smoothed = useSmoothedData(visibleData, SMOOTH_WINDOW);
 
     const series = useMemo(
-        () =>
-            metricTypes.map(metricType => {
-                let displayData: { timestamp: number; value: number }[] = [];
-
-                if (frequency === "raw") {
-                    displayData = smoothed.map(d => ({
-                        timestamp: d.timestamp,
-                        value: getValue(d, metricType),
-                    }));
-                } else {
-                    let windowMs = 60_000;
-                    if (frequency === "perSecond") windowMs = 1_000;
-                    if (frequency === "perMinute") windowMs = 60_000;
-                    if (frequency === "perHour") windowMs = 3_600_000;
-
-                    const rolling = rollingRate(
-                        visibleData,
-                        d => getValue(d, metricType),
-                        windowMs
-                    );
-                    const lissaged = smoothAggregatedData(
-                        rolling,
-                        Math.min(3, Math.round(1000 / zoomLevel))
-                    );
-                    const averageInterval = (rolling[1]?.timestamp - rolling[0]?.timestamp) || 1;
-                    const filtered = lissaged.filter(
-                        d =>
-                            d.timestamp <= virtualNow &&
-                            d.timestamp >= windowStart + SMOOTH_WINDOW * averageInterval
-                    );
-                    displayData = filtered;
-                }
-                return {
-                    metricType,
-                    color: METRIC_COLORS[metricType],
-                    data: removeNaN(displayData),
-                };
-            }),
-        [metricTypes, frequency, smoothed, visibleData, zoomLevel, virtualNow, windowStart, SMOOTH_WINDOW]
+        () => getSeries({ metricTypes, frequency, smoothed, visibleData, zoomLevel }),
+        [metricTypes, frequency, smoothed, visibleData, zoomLevel]
     );
 
-    const allDisplayData = useMemo(() => series.flatMap(s => s.data), [series]);
+    const filteredSeries = useMemo(
+        () => filterSeriesByWindow(series, windowStart, virtualNow),
+        [series, windowStart, virtualNow]
+    );
+
+    const allDisplayData = useMemo(
+        () => filteredSeries.flatMap(s => s.data),
+        [filteredSeries]
+    );
 
     const { xScale, yScale, yMax, margin } = useTimelineScales(
         allDisplayData,
@@ -210,6 +63,27 @@ function RequestTimelineVisx({
         containerWidth,
         height
     );
+
+    const {
+        tooltipData,
+        tooltipLeft,
+        tooltipTop,
+        showTooltip,
+        hideTooltip,
+    } = useTooltip<{ timestamp: number; value: number }>();
+
+    function handleMouseMove(event: React.MouseEvent<SVGRectElement, MouseEvent>) {
+        const point = localPoint(event) || { x: 0, y: 0 };
+        const x0 = xScale.invert(point.x!);
+        const closest = allDisplayData.reduce((a, b) =>
+            Math.abs(b.timestamp - x0.getTime()) < Math.abs(a.timestamp - x0.getTime()) ? b : a
+        );
+        showTooltip({
+            tooltipData: closest,
+            tooltipLeft: point.x,
+            tooltipTop: point.y,
+        });
+    }
 
     if (!metricTypes || metricTypes.length === 0) {
         return (
@@ -227,28 +101,6 @@ function RequestTimelineVisx({
                 </TimelineContainer>
             </div>
         );
-    }
-
-    const {
-        tooltipData,
-        tooltipLeft,
-        tooltipTop,
-        showTooltip,
-        hideTooltip,
-    } = useTooltip<{ timestamp: number; value: number }>();
-
-    function handleMouseMove(event: React.MouseEvent<SVGRectElement, MouseEvent>) {
-        const point = localPoint(event) || { x: 0, y: 0 };
-        const x0 = xScale.invert(point.x!);
-        const closest = allDisplayData.reduce((a, b) =>
-            Math.abs(b.timestamp - x0.getTime()) < Math.abs(a.timestamp - x0.getTime()) ? b : a
-        );
-
-        showTooltip({
-            tooltipData: closest,
-            tooltipLeft: point.x,
-            tooltipTop: point.y,
-        });
     }
 
     return (
@@ -275,7 +127,7 @@ function RequestTimelineVisx({
                             {new Date(tooltipData.timestamp).toLocaleTimeString()}
                         </strong>
                         <br />
-                        {series
+                        {filteredSeries
                             .map(serie => {
                                 const point = serie.data.reduce((a, b) =>
                                     Math.abs(b.timestamp - tooltipData.timestamp) < Math.abs(a.timestamp - tooltipData.timestamp) ? b : a
@@ -306,7 +158,7 @@ function RequestTimelineVisx({
             <TimelineContainer width={containerWidth} height={height}>
                 {allDisplayData.length > 1 ? (
                     <>
-                        {series.map(serie => (
+                        {filteredSeries.map(serie => (
                             <CustomAreaClosed
                                 key={serie.metricType}
                                 data={serie.data}

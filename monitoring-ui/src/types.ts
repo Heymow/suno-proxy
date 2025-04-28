@@ -41,3 +41,14 @@ export interface RequestTimelineVisxProps {
     height?: number;
     duration?: number;
 }
+
+export type MetricType = "total" | "errors" | "rateLimits" | "success" | "timeouts";
+
+export type Frequency = "raw" | "perSecond" | "perMinute" | "perHour";
+
+export type Props = RequestTimelineVisxProps & {
+    zoomLevel?: number;
+    height?: number;
+    metricTypes?: MetricType[];
+    frequency?: Frequency;
+};
