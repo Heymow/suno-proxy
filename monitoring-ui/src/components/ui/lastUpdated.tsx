@@ -1,6 +1,6 @@
 export default function LastUpdated({ loading, error }: { loading: boolean; error: string | null }) {
 
-    return (<div className="flex items-center gap-2 mb-6">
+    return (<div className="mb-3">
         <span className="text-muted-foreground text-sm">
             Last updated: {loading ? (
                 <span className="animate-pulse">{new Date().toLocaleTimeString()}</span>

@@ -1,6 +1,6 @@
 import { getValue, rollingRate, smoothAggregatedData, removeNaN, binByWindow, MetricType, Frequency } from "./timelineUtils";
 import { Point } from "@/types";
-import { METRIC_COLORS } from "./timeLineConstants";
+import { METRIC_COLORS } from "./timelineConstants";
 
 export function getSeries({
     metricTypes,

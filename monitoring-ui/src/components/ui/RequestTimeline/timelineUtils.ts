@@ -65,14 +65,16 @@ export function binByWindow(
     const sorted = [...data].sort((a, b) => a.timestamp - b.timestamp);
     const minTs = sorted[0].timestamp;
     const maxTs = sorted[sorted.length - 1].timestamp;
-    const bins = [];
+    const bins: { timestamp: number; value: number }[] = [];
     for (let binStart = minTs; binStart < maxTs; binStart += binSize) {
         const binEnd = binStart + binSize;
         const left = [...sorted].reverse().find(d => d.timestamp <= binStart);
         const right = [...sorted].reverse().find(d => d.timestamp <= binEnd);
-        if (!left || !right || left === right) continue;
-
-        if (left === sorted[0]) continue;
+        if (!left || !right || left === right || left === sorted[0]) {
+            // Ajoute un point vide pour garder la continuité
+            bins.push({ timestamp: binStart + binSize / 2, value: 0 });
+            continue;
+        }
         const value = getValue(right, metricType) - getValue(left, metricType);
         bins.push({ timestamp: binStart + binSize / 2, value: Math.max(0, value) });
     }

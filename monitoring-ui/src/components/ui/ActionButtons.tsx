@@ -16,7 +16,7 @@ export default function ActionButtons({
     resetStats: () => Promise<void>;
 }) {
     return (
-        <div className="flex justify-end gap-1 mb-6">
+        <div className="flex justify-end gap-1 mb-2">
             <Button
                 variant="outline"
                 onClick={handleWithBlur(() => setAutoRefresh((v) => !v))}

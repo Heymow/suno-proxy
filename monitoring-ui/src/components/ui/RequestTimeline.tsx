@@ -34,6 +34,10 @@ function RequestTimelineVisx({
         return () => window.removeEventListener("resize", updateWidth);
     }, []);
 
+    useEffect(() => {
+        hideTooltip();
+    }, [frequency]);
+
     const computedDuration = duration ?? 3600 * 24 / zoomLevel;
     const SMOOTH_WINDOW = 200 / zoomLevel;
 
@@ -105,6 +109,33 @@ function RequestTimelineVisx({
         );
     }
 
+    const MAX_POINTS_PER_SECOND = 6000;
+
+    if (frequency === "perSecond" && allDisplayData.length > MAX_POINTS_PER_SECOND) {
+        return (
+            <div ref={containerRef} style={{ width: "100%" }}>
+                <TimelineContainer width={containerWidth} height={height}>
+                    <text
+                        x={containerWidth / 2}
+                        y={height / 2}
+                        textAnchor="middle"
+                        fill="#888"
+                        fontSize={16}
+                    >
+                        Too many points to display at this zoom level.
+                        {"\n"}Zoom in to see the details.
+                    </text>
+                </TimelineContainer>
+            </div>
+        );
+    }
+
+    // console.log("frequency", frequency);
+    // console.log("allDisplayData", allDisplayData);
+    // console.log("filteredSeries", filteredSeries);
+    // console.log("x domain", xScale.domain());
+    // console.log("y domain", yScale.domain());
+
     return (
         <div ref={containerRef} style={{ width: "100%", position: "relative" }}>
             {tooltipData && (
@@ -131,6 +162,7 @@ function RequestTimelineVisx({
                         <br />
                         {filteredSeries
                             .map(serie => {
+                                if (!serie.data.length) return null; // <-- Ajouté
                                 const point = serie.data.reduce((a, b) =>
                                     Math.abs(b.timestamp - tooltipData.timestamp) < Math.abs(a.timestamp - tooltipData.timestamp) ? b : a
                                 );
