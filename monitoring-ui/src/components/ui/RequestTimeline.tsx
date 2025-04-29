@@ -3,7 +3,6 @@ import { AxisBottom, AxisLeft } from "@visx/axis";
 import { curveBasis } from "@visx/curve";
 import useTimeWindow from "@/hooks/useTimeWindow";
 import useVisibleData from "@/hooks/useVisibleData";
-// import useSmoothedData from "@/hooks/useSmoothedData";
 import useTimelineScales from "@/hooks/useTimelineScales";
 import TimelineContainer from "@/components/ui/TimelineContainer";
 import React, { useRef, useState, useEffect, useMemo } from "react";

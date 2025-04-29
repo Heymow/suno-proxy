@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { handleWithBlur } from "@/utils/theme";
 import MetricCheckbox from "./RequestTimeline/MetricCheckbox";
 import { ALL_METRICS } from "./RequestTimeline/timelineConstants";
 import { MetricType } from "@/types";
-import { getZoomLabel } from "./OverviewView";
 import React from "react";
+import ZoomLevel from "./ZoomLevel";
 
 
 function TimelineToolbar({
@@ -66,31 +65,11 @@ function TimelineToolbar({
                         <option value="perMinute" className="bg-background">Per Minute</option>
                         <option value="perSecond" className="bg-background">Per Second</option>
                     </select>
-
-                    <div className="flex items-center gap-2 ml-2 -m-2">
-                        <h3 className="flex text-sm text-muted-foreground -m-3 min-w-50">
-                            <span className="hidden xl:block text-xs text-nowrap mt-0.5">Zoom :</span>
-                            <div className="flex items-center gap-2 ml-2 flex-col lg:flex-row -mt-4 lg:mt-0">
-                                <span className="text-xs text-muted-foreground w-12 text-nowrap text-center">{getZoomLabel(currentZoomLevel)}</span>
-                                <div className="flex items-center gap-2 ml-2">
-                                    <Button
-                                        variant="outline"
-                                        className="cursor-pointer h-5 w-4"
-                                        onClick={handleZoomOut}
-                                    >
-                                        <div className="text-sm -mt-0.5">-</div>
-                                    </Button>
-                                    <Button
-                                        variant="outline"
-                                        className="cursor-pointer h-5 w-4"
-                                        onClick={handleZoomIn}
-                                    >
-                                        <div className="text-xs -mt-0.5">+</div>
-                                    </Button>
-                                </div>
-                            </div>
-                        </h3>
-                    </div>
+                    <ZoomLevel
+                        currentZoomLevel={currentZoomLevel}
+                        handleZoomIn={handleZoomIn}
+                        handleZoomOut={handleZoomOut}
+                    />
                 </div>
             </div>
         </div>

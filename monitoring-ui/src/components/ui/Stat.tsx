@@ -2,17 +2,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface StatProps {
+    className?: string;
     label: string;
     value: number;
     icon?: React.ReactNode;
     iconColor?: string;
-    enableFlash?: boolean; // Ajout de la prop pour activer/désactiver le flash
+    enableFlash?: boolean;
 }
 
 const ANIMATION_DURATION = 200;
 const DEFAULT_COLOR = "#6366f1";
 
-const Stat = React.memo(({ label, value, icon, iconColor, enableFlash = true }: StatProps) => {
+const Stat = React.memo(({ label, value, icon, iconColor, enableFlash = true, className }: StatProps) => {
     const [isFlashing, setIsFlashing] = useState(false);
     const prevValue = useRef(value);
 
@@ -30,7 +31,7 @@ const Stat = React.memo(({ label, value, icon, iconColor, enableFlash = true }: 
 
     return (
         <Card
-            className={`w-full rounded-xl border shadow hover:shadow-lg transition duration-300 bg-muted/50 min-w-33${isFlashing && enableFlash ? " stat-flash" : ""}`}
+            className={className || `w-full rounded-xl border shadow hover:shadow-lg transition duration-300 bg-muted/50 min-w-33${isFlashing && enableFlash ? " stat-flash" : ""}`}
             style={isFlashing && enableFlash ? { borderColor: flashColor } : {}}
             onAnimationEnd={() => setIsFlashing(false)}
         >

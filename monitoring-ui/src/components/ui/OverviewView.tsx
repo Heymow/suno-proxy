@@ -6,12 +6,9 @@ import { RefreshCcw, CheckCircle, XCircle, AlertTriangle, Clock } from "lucide-r
 import { fetchTimeline } from "@/services/apiService";
 import { useTimelineSync } from "@/hooks/useTimelineSync";
 import { handleWithBlur } from "@/utils/theme";
-import { ZOOM_LABELS, ZOOM_STORAGE_KEY, METRICS_STORAGE_KEY, FREQ_STORAGE_KEY, ALL_METRICS } from "./RequestTimeline/timelineConstants";
+import { ZOOM_STORAGE_KEY, METRICS_STORAGE_KEY, FREQ_STORAGE_KEY, ALL_METRICS } from "./RequestTimeline/timelineConstants";
 import TimelineToolbar from "./TimelineToolbar";
 
-export function getZoomLabel(zoom: number) {
-    return ZOOM_LABELS[zoom] ?? `${zoom}x`;
-}
 
 export default function MainView({
     stats,
