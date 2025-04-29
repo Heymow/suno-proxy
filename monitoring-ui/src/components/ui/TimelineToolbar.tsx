@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { handleWithBlur } from "@/utils/theme";
-import MetricCheckbox from "./RequestTimeline/MetricCheckBox";
+import MetricCheckbox from "./RequestTimeline/MetricCheckbox";
 import { ALL_METRICS } from "./RequestTimeline/timelineConstants";
 import { MetricType } from "@/types";
 import { getZoomLabel } from "./OverviewView";

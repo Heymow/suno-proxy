@@ -16,6 +16,18 @@ export function getSeries({
     const getMetricData = (metricType: MetricType): { metricType: MetricType, color: string, data: { timestamp: number; value: number }[] } | null => {
         const color = METRIC_COLORS[metricType];
 
+        if (frequency === "raw" && metricType === "success") {
+            let prev = 0;
+            let sum = 0;
+            const data = visibleData.map(d => {
+                const delta = (d.total || 0) - prev;
+                prev = d.total || 0;
+                sum += delta > 0 ? delta : 0; // ignore les baisses éventuelles
+                return { timestamp: d.timestamp, value: sum };
+            });
+            return { metricType, color, data };
+        }
+
         if (frequency === "raw") {
             const data = removeNaN(visibleData.map(d => ({
                 timestamp: d.timestamp,
