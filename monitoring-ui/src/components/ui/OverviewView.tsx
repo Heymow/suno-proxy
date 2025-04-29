@@ -2,20 +2,17 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import { Point, ApiStats } from "@/types";
 import RequestTimeline from "./RequestTimeline";
 import Stat from "@/components/ui/Stat";
-import { RefreshCcw, CheckCircle, XCircle, AlertTriangle, Clock } from "lucide-react";
 import { fetchTimeline } from "@/services/apiService";
 import { useTimelineSync } from "@/hooks/useTimelineSync";
 import { handleWithBlur } from "@/utils/theme";
 import { ZOOM_STORAGE_KEY, METRICS_STORAGE_KEY, FREQ_STORAGE_KEY, ALL_METRICS } from "./RequestTimeline/timelineConstants";
 import TimelineToolbar from "./TimelineToolbar";
+import { getStatItems } from "@/utils/statItemsConfig";
 
 
 export default function MainView({
     stats,
     error,
-    // loading,
-    // resetStats,
-    // toggleDarkMode,
 }: {
     stats: ApiStats | null;
     loading: boolean;
@@ -68,46 +65,7 @@ export default function MainView({
 
     const isLoading = !stats || !loaded;
 
-    const statItems = useMemo(() => [
-        {
-            key: "total",
-            label: "Total Calls",
-            value: stats?.total ?? 0,
-            icon: <RefreshCcw />,
-            iconColor: "#6366f1", // indigo-500
-            className: "hidden md:block",
-            enableFlash: false,
-        },
-        {
-            key: "success",
-            label: "Success",
-            value: stats?.success ?? 0,
-            icon: <CheckCircle className="text-green-500" />,
-            iconColor: "#22c55e", // green-500
-        },
-        {
-            key: "errors",
-            label: "Errors",
-            value: stats?.errors ?? 0,
-            icon: <XCircle className="text-red-500" />,
-            iconColor: "#ef4444", // red-500
-        },
-        {
-            key: "rateLimits",
-            label: "Rate Limits",
-            value: stats?.rateLimits ?? 0,
-            icon: <AlertTriangle className="text-yellow-500" />,
-            iconColor: "#eab308", // yellow-500
-        },
-        {
-            key: "timeouts",
-            label: "Timeouts",
-            value: stats?.timeouts ?? 0,
-            icon: <Clock className="text-blue-400" />,
-            iconColor: "#60a5fa", // blue-400
-            className: "hidden xl:block 2xl:hidden 3xl:block",
-        },
-    ], [stats]);
+    const statItems = useMemo(() => getStatItems(stats), [stats]);
 
     const hideTooltip = useCallback(() => {
         const tooltip = document.querySelector(".tooltip") as HTMLElement;
