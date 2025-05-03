@@ -1,0 +1,3629 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "New Suno API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Suno API"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Playlist": {
+        "type": "object",
+        "properties": {
+          "entity_type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "playlist_clips": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "clip": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "entity_type": {
+                      "type": "string"
+                    },
+                    "video_url": {
+                      "type": "string"
+                    },
+                    "audio_url": {
+                      "type": "string"
+                    },
+                    "image_url": {
+                      "type": "string"
+                    },
+                    "image_large_url": {
+                      "type": "string"
+                    },
+                    "major_model_version": {
+                      "type": "string"
+                    },
+                    "model_name": {
+                      "type": "string"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "tags": {
+                          "type": "string"
+                        },
+                        "prompt": {
+                          "type": "string"
+                        },
+                        "edited_clip_id": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "duration": {
+                          "type": "number"
+                        },
+                        "edit_session_id": {
+                          "type": "string"
+                        },
+                        "can_remix": {
+                          "type": "boolean"
+                        },
+                        "is_remix": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "tags",
+                        "prompt",
+                        "type",
+                        "duration",
+                        "can_remix",
+                        "is_remix"
+                      ]
+                    },
+                    "caption": {
+                      "type": "string"
+                    },
+                    "is_liked": {
+                      "type": "boolean"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "display_name": {
+                      "type": "string"
+                    },
+                    "handle": {
+                      "type": "string"
+                    },
+                    "is_handle_updated": {
+                      "type": "boolean"
+                    },
+                    "avatar_image_url": {
+                      "type": "string"
+                    },
+                    "is_trashed": {
+                      "type": "boolean"
+                    },
+                    "explicit": {
+                      "type": "boolean"
+                    },
+                    "comment_count": {
+                      "type": "number"
+                    },
+                    "flag_count": {
+                      "type": "number"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "play_count": {
+                      "type": "number"
+                    },
+                    "upvote_count": {
+                      "type": "number"
+                    },
+                    "is_public": {
+                      "type": "boolean"
+                    },
+                    "allow_comments": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "entity_type",
+                    "video_url",
+                    "audio_url",
+                    "image_url",
+                    "image_large_url",
+                    "major_model_version",
+                    "model_name",
+                    "metadata",
+                    "is_liked",
+                    "user_id",
+                    "display_name",
+                    "handle",
+                    "is_handle_updated",
+                    "avatar_image_url",
+                    "is_trashed",
+                    "comment_count",
+                    "flag_count",
+                    "created_at",
+                    "status",
+                    "title",
+                    "play_count",
+                    "upvote_count",
+                    "is_public",
+                    "allow_comments"
+                  ]
+                },
+                "relative_index": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "clip",
+                "relative_index"
+              ]
+            }
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "num_total_results": {
+            "type": "number"
+          },
+          "current_page": {
+            "type": "number"
+          },
+          "is_owned": {
+            "type": "boolean"
+          },
+          "is_trashed": {
+            "type": "boolean"
+          },
+          "is_public": {
+            "type": "boolean"
+          },
+          "user_display_name": {
+            "type": "string"
+          },
+          "user_handle": {
+            "type": "string"
+          },
+          "user_avatar_image_url": {
+            "type": "string"
+          },
+          "upvote_count": {
+            "type": "number"
+          },
+          "dislike_count": {
+            "type": "number"
+          },
+          "flag_count": {
+            "type": "number"
+          },
+          "skip_count": {
+            "type": "number"
+          },
+          "play_count": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "is_discover_playlist": {
+            "type": "boolean"
+          },
+          "song_count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "entity_type",
+          "id",
+          "playlist_clips",
+          "num_total_results",
+          "current_page",
+          "is_owned",
+          "is_trashed",
+          "is_public",
+          "upvote_count",
+          "dislike_count",
+          "flag_count",
+          "skip_count",
+          "play_count",
+          "name",
+          "description",
+          "is_discover_playlist"
+        ],
+        "description": "Playlist response schema",
+        "example": {
+          "entity_type": "playlist_schema",
+          "id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+          "playlist_clips": [
+            {
+              "clip": {
+                "id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+                "entity_type": "song_schema",
+                "video_url": "https://example.com/video.mp4",
+                "audio_url": "https://example.com/audio.mp3",
+                "image_url": "https://example.com/image.jpg",
+                "image_large_url": "https://example.com/image_large.jpg",
+                "major_model_version": "v4",
+                "model_name": "chirp-v4",
+                "metadata": {
+                  "tags": "pop, rock, electronic",
+                  "prompt": "Generate a clip about nature",
+                  "edited_clip_id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+                  "type": "audio",
+                  "duration": 120,
+                  "edit_session_id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+                  "can_remix": true,
+                  "is_remix": false
+                },
+                "caption": "This is a sample clip caption.",
+                "is_liked": false,
+                "user_id": "f7f434fd-0605-4721-8485-b0c4f1e5a2d3",
+                "display_name": "John Doe",
+                "handle": "johndoe",
+                "is_handle_updated": false,
+                "avatar_image_url": "https://example.com/avatar.jpg",
+                "is_trashed": false,
+                "explicit": false,
+                "comment_count": 10,
+                "flag_count": 0,
+                "created_at": "2025-05-03T21:43:49.205Z",
+                "status": "active",
+                "title": "Song Title",
+                "play_count": 1000,
+                "upvote_count": 100,
+                "is_public": true,
+                "allow_comments": true
+              },
+              "relative_index": 0
+            }
+          ],
+          "image_url": "https://example.com/playlist_image.jpg",
+          "num_total_results": 1,
+          "current_page": 1,
+          "is_owned": true,
+          "is_trashed": false,
+          "is_public": true,
+          "user_display_name": "John Doe",
+          "user_handle": "@johndoe",
+          "user_avatar_image_url": "https://example.com/avatar.jpg",
+          "upvote_count": 100,
+          "dislike_count": 0,
+          "flag_count": 0,
+          "skip_count": 0,
+          "play_count": 1000,
+          "name": "My Playlist",
+          "description": "This is a sample playlist description.",
+          "is_discover_playlist": false,
+          "song_count": 1
+        }
+      },
+      "Song": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "entity_type": {
+            "type": "string"
+          },
+          "video_url": {
+            "type": "string"
+          },
+          "audio_url": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "image_large_url": {
+            "type": "string"
+          },
+          "major_model_version": {
+            "type": "string"
+          },
+          "model_name": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "tags": {
+                "type": "string"
+              },
+              "prompt": {
+                "type": "string"
+              },
+              "concat_history": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "infill": {
+                      "type": "boolean"
+                    },
+                    "source": {
+                      "type": "string"
+                    },
+                    "continue_at": {
+                      "type": "number"
+                    },
+                    "infill_dur_s": {
+                      "type": "number"
+                    },
+                    "infill_end_s": {
+                      "type": "number"
+                    },
+                    "infill_lyrics": {
+                      "type": "string"
+                    },
+                    "infill_start_s": {
+                      "type": "number"
+                    },
+                    "include_future_s": {
+                      "type": "number"
+                    },
+                    "include_history_s": {
+                      "type": "number"
+                    },
+                    "infill_context_end_s": {
+                      "type": "number"
+                    },
+                    "infill_context_start_s": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ]
+                }
+              },
+              "edited_clip_id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "duration": {
+                "type": "number"
+              },
+              "refund_credits": {
+                "type": "boolean"
+              },
+              "stream": {
+                "type": "boolean"
+              },
+              "upsample_clip_id": {
+                "type": "string"
+              },
+              "task": {
+                "type": "string"
+              },
+              "persona_id": {
+                "type": "string"
+              },
+              "edit_session_id": {
+                "type": "string"
+              },
+              "can_remix": {
+                "type": "boolean"
+              },
+              "is_remix": {
+                "type": "boolean"
+              },
+              "priority": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "tags",
+              "prompt",
+              "type",
+              "duration",
+              "can_remix",
+              "is_remix"
+            ]
+          },
+          "caption": {
+            "type": "string"
+          },
+          "is_liked": {
+            "type": "boolean"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "handle": {
+            "type": "string"
+          },
+          "is_handle_updated": {
+            "type": "boolean"
+          },
+          "avatar_image_url": {
+            "type": "string"
+          },
+          "is_trashed": {
+            "type": "boolean"
+          },
+          "explicit": {
+            "type": "boolean"
+          },
+          "comment_count": {
+            "type": "number"
+          },
+          "flag_count": {
+            "type": "number"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "play_count": {
+            "type": "number"
+          },
+          "upvote_count": {
+            "type": "number"
+          },
+          "is_public": {
+            "type": "boolean"
+          },
+          "allow_comments": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "entity_type",
+          "video_url",
+          "audio_url",
+          "image_url",
+          "image_large_url",
+          "major_model_version",
+          "model_name",
+          "metadata",
+          "is_liked",
+          "user_id",
+          "display_name",
+          "handle",
+          "is_handle_updated",
+          "avatar_image_url",
+          "is_trashed",
+          "comment_count",
+          "flag_count",
+          "created_at",
+          "status",
+          "title",
+          "play_count",
+          "upvote_count",
+          "is_public"
+        ],
+        "description": "Response schema for song",
+        "example": {
+          "id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+          "entity_type": "song_schema",
+          "video_url": "https://example.com/video.mp4",
+          "audio_url": "https://example.com/audio.mp3",
+          "image_url": "https://example.com/image.jpg",
+          "image_large_url": "https://example.com/image_large.jpg",
+          "major_model_version": "v4",
+          "model_name": "chirp-v4",
+          "metadata": {
+            "tags": "pop, rock, electronic",
+            "prompt": "Generate a clip about nature",
+            "concat_history": [
+              {
+                "id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+                "type": "edit_crop",
+                "infill": true,
+                "source": "web",
+                "infill_dur_s": 22.6,
+                "infill_end_s": 244.16,
+                "infill_lyrics": "[outro]\nyou are not the only one[End]",
+                "infill_start_s": 221.56,
+                "include_future_s": 2,
+                "include_history_s": 2,
+                "infill_context_end_s": 244.16,
+                "infill_context_start_s": 191.56
+              }
+            ],
+            "type": "concat_infilling",
+            "duration": 244.84,
+            "edit_session_id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+            "can_remix": true,
+            "is_remix": false
+          },
+          "is_liked": true,
+          "user_id": "f7f434fd-0605-4721-8485-b0c4f1e5a2d3",
+          "display_name": "John Doe",
+          "handle": "johndoe",
+          "is_handle_updated": false,
+          "avatar_image_url": "https://example.com/avatar.jpg",
+          "is_trashed": false,
+          "comment_count": 10,
+          "flag_count": 0,
+          "created_at": "2024-04-16T18:11:01.938Z",
+          "status": "complete",
+          "title": "Song Title",
+          "play_count": 1000,
+          "upvote_count": 100,
+          "is_public": true,
+          "allow_comments": true
+        }
+      },
+      "Comment": {
+        "type": "object",
+        "properties": {
+          "next_cursor": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "clip_id": {
+                  "type": "string"
+                },
+                "user_id": {
+                  "type": "string"
+                },
+                "user_display_name": {
+                  "type": "string"
+                },
+                "user_handle": {
+                  "type": "string"
+                },
+                "user_avatar_url": {
+                  "type": "string"
+                },
+                "user_comments_blocked": {
+                  "type": "boolean"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "num_likes": {
+                  "type": "number"
+                },
+                "num_replies": {
+                  "type": "number"
+                },
+                "replies": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "user_id": {
+                        "type": "string"
+                      },
+                      "user_display_name": {
+                        "type": "string"
+                      },
+                      "user_handle": {
+                        "type": "string"
+                      },
+                      "user_avatar_url": {
+                        "type": "string"
+                      },
+                      "user_comments_blocked": {
+                        "type": "boolean"
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "num_likes": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "user_id",
+                      "user_display_name",
+                      "user_handle",
+                      "user_avatar_url",
+                      "user_comments_blocked",
+                      "content",
+                      "created_at",
+                      "num_likes"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "clip_id",
+                "user_id",
+                "user_display_name",
+                "user_handle",
+                "user_avatar_url",
+                "user_comments_blocked",
+                "content",
+                "created_at",
+                "num_likes"
+              ]
+            }
+          },
+          "allow_comment": {
+            "type": "boolean"
+          },
+          "total_count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "next_cursor",
+          "results",
+          "allow_comment",
+          "total_count"
+        ],
+        "description": "Response schema for comments",
+        "example": {
+          "next_cursor": "string",
+          "results": [
+            {
+              "id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+              "clip_id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+              "user_id": "f7f434fd-0605-4721-8485-b0c4f1e5a2d3",
+              "user_display_name": "John Doe",
+              "user_handle": "johndoe",
+              "user_avatar_url": "https://example.com/avatar.jpg",
+              "user_comments_blocked": true,
+              "content": "❤️❤️❤️❤️",
+              "created_at": "2024-04-16T18:11:01.938Z",
+              "num_likes": 2,
+              "num_replies": 1,
+              "replies": [
+                {
+                  "id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+                  "user_id": "f7f434fd-0605-4721-8485-b0c4f1e5a2d3",
+                  "user_display_name": "John Doe",
+                  "user_handle": "johndoe",
+                  "user_avatar_url": "https://example.com/avatar.jpg",
+                  "user_comments_blocked": true,
+                  "content": "Thanks a lot ❤️",
+                  "created_at": "2024-04-16T18:11:01.938Z",
+                  "num_likes": 2
+                }
+              ]
+            }
+          ],
+          "allow_comment": true,
+          "total_count": 2
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "handle": {
+            "type": "string"
+          },
+          "profile_description": {
+            "type": "string"
+          },
+          "clips": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "entity_type": {
+                  "type": "string"
+                },
+                "video_url": {
+                  "type": "string"
+                },
+                "audio_url": {
+                  "type": "string"
+                },
+                "image_url": {
+                  "type": "string"
+                },
+                "image_large_url": {
+                  "type": "string"
+                },
+                "major_model_version": {
+                  "type": "string"
+                },
+                "model_name": {
+                  "type": "string"
+                },
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "tags": {
+                      "type": "string"
+                    },
+                    "prompt": {
+                      "type": "string"
+                    },
+                    "edited_clip_id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "duration": {
+                      "type": "number"
+                    },
+                    "has_vocal": {
+                      "type": "boolean"
+                    },
+                    "video_upload_width": {
+                      "type": "number"
+                    },
+                    "video_upload_height": {
+                      "type": "number"
+                    },
+                    "edit_session_id": {
+                      "type": "string"
+                    },
+                    "can_remix": {
+                      "type": "boolean"
+                    },
+                    "is_remix": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "duration",
+                    "can_remix",
+                    "is_remix"
+                  ]
+                },
+                "caption": {
+                  "type": "string"
+                },
+                "is_liked": {
+                  "type": "boolean"
+                },
+                "user_id": {
+                  "type": "string"
+                },
+                "display_name": {
+                  "type": "string"
+                },
+                "handle": {
+                  "type": "string"
+                },
+                "is_handle_updated": {
+                  "type": "boolean"
+                },
+                "avatar_image_url": {
+                  "type": "string"
+                },
+                "is_trashed": {
+                  "type": "boolean"
+                },
+                "is_pinned": {
+                  "type": "boolean"
+                },
+                "explicit": {
+                  "type": "boolean"
+                },
+                "comment_count": {
+                  "type": "number"
+                },
+                "flag_count": {
+                  "type": "number"
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "play_count": {
+                  "type": "number"
+                },
+                "upvote_count": {
+                  "type": "number"
+                },
+                "is_public": {
+                  "type": "boolean"
+                },
+                "allow_comments": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "entity_type",
+                "video_url",
+                "audio_url",
+                "image_url",
+                "image_large_url",
+                "major_model_version",
+                "model_name",
+                "is_liked",
+                "user_id",
+                "display_name",
+                "handle",
+                "is_handle_updated",
+                "avatar_image_url",
+                "is_trashed",
+                "comment_count",
+                "flag_count",
+                "created_at",
+                "status",
+                "title",
+                "play_count",
+                "upvote_count",
+                "is_public",
+                "allow_comments"
+              ]
+            }
+          },
+          "stats": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "upvote_count__sum": {
+                    "type": "number"
+                  },
+                  "play_count__sum": {
+                    "type": "number"
+                  },
+                  "followers_count": {
+                    "type": "number"
+                  },
+                  "following_count": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "upvote_count__sum",
+                  "play_count__sum",
+                  "followers_count",
+                  "following_count"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": false
+              }
+            ]
+          },
+          "is_flagged": {
+            "type": "boolean"
+          },
+          "is_following": {
+            "type": "boolean"
+          },
+          "num_total_clips": {
+            "type": "number"
+          },
+          "current_page": {
+            "type": "number"
+          },
+          "playlists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "entity_type": {
+                  "type": "string"
+                },
+                "image_url": {
+                  "type": "string"
+                },
+                "playlist_clips": {
+                  "type": "array",
+                  "items": {
+                    "nullable": true
+                  }
+                },
+                "current_page": {
+                  "type": "number"
+                },
+                "num_total_results": {
+                  "type": "number"
+                },
+                "is_owned": {
+                  "type": "boolean"
+                },
+                "is_trashed": {
+                  "type": "boolean"
+                },
+                "is_public": {
+                  "type": "boolean"
+                },
+                "user_display_name": {
+                  "type": "string"
+                },
+                "user_handle": {
+                  "type": "string"
+                },
+                "user_avatar_image_url": {
+                  "type": "string"
+                },
+                "upvote_count": {
+                  "type": "number"
+                },
+                "dislike_count": {
+                  "type": "number"
+                },
+                "flag_count": {
+                  "type": "number"
+                },
+                "skip_count": {
+                  "type": "number"
+                },
+                "play_count": {
+                  "type": "number"
+                },
+                "song_count": {
+                  "type": "number"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "is_discover_playlist": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "entity_type",
+                "playlist_clips",
+                "current_page",
+                "num_total_results",
+                "is_owned",
+                "is_trashed",
+                "is_public",
+                "user_display_name",
+                "user_handle",
+                "user_avatar_image_url",
+                "upvote_count",
+                "dislike_count",
+                "play_count",
+                "song_count",
+                "name",
+                "is_discover_playlist"
+              ]
+            }
+          },
+          "avatar_image_url": {
+            "type": "string"
+          },
+          "favorite_songs": {
+            "type": "array",
+            "items": {
+              "nullable": true
+            }
+          },
+          "personas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "image_s3_id": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "root_clip_id": {
+                  "type": "string"
+                },
+                "clip": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "entity_type": {
+                      "type": "string"
+                    },
+                    "video_url": {
+                      "type": "string"
+                    },
+                    "audio_url": {
+                      "type": "string"
+                    },
+                    "image_url": {
+                      "type": "string"
+                    },
+                    "image_large_url": {
+                      "type": "string"
+                    },
+                    "major_model_version": {
+                      "type": "string"
+                    },
+                    "model_name": {
+                      "type": "string"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "tags": {
+                          "type": "string"
+                        },
+                        "prompt": {
+                          "type": "string"
+                        },
+                        "edited_clip_id": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "duration": {
+                          "type": "number"
+                        },
+                        "has_vocal": {
+                          "type": "boolean"
+                        },
+                        "video_upload_width": {
+                          "type": "number"
+                        },
+                        "video_upload_height": {
+                          "type": "number"
+                        },
+                        "edit_session_id": {
+                          "type": "string"
+                        },
+                        "can_remix": {
+                          "type": "boolean"
+                        },
+                        "is_remix": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "duration",
+                        "can_remix",
+                        "is_remix"
+                      ]
+                    },
+                    "caption": {
+                      "type": "string"
+                    },
+                    "is_liked": {
+                      "type": "boolean"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "display_name": {
+                      "type": "string"
+                    },
+                    "handle": {
+                      "type": "string"
+                    },
+                    "is_handle_updated": {
+                      "type": "boolean"
+                    },
+                    "avatar_image_url": {
+                      "type": "string"
+                    },
+                    "is_trashed": {
+                      "type": "boolean"
+                    },
+                    "explicit": {
+                      "type": "boolean"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "play_count": {
+                      "type": "number"
+                    },
+                    "upvote_count": {
+                      "type": "number"
+                    },
+                    "is_public": {
+                      "type": "boolean"
+                    },
+                    "allow_comments": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "entity_type",
+                    "video_url",
+                    "audio_url",
+                    "image_url",
+                    "image_large_url",
+                    "major_model_version",
+                    "model_name",
+                    "metadata",
+                    "is_liked",
+                    "user_id",
+                    "display_name",
+                    "handle",
+                    "is_handle_updated",
+                    "avatar_image_url",
+                    "is_trashed",
+                    "created_at",
+                    "status",
+                    "title",
+                    "play_count",
+                    "upvote_count",
+                    "is_public",
+                    "allow_comments"
+                  ]
+                },
+                "user_display_name": {
+                  "type": "string"
+                },
+                "user_handle": {
+                  "type": "string"
+                },
+                "user_image_url": {
+                  "type": "string"
+                },
+                "persona_clips": {
+                  "type": "array",
+                  "items": {
+                    "nullable": true
+                  }
+                },
+                "is_suno_persona": {
+                  "type": "boolean"
+                },
+                "is_trashed": {
+                  "type": "boolean"
+                },
+                "is_owned": {
+                  "type": "boolean"
+                },
+                "is_public": {
+                  "type": "boolean"
+                },
+                "is_public_approved": {
+                  "type": "boolean"
+                },
+                "is_loved": {
+                  "type": "boolean"
+                },
+                "upvote_count": {
+                  "type": "number"
+                },
+                "clip_count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "image_s3_id",
+                "root_clip_id",
+                "clip",
+                "user_display_name",
+                "user_handle",
+                "user_image_url",
+                "persona_clips",
+                "is_suno_persona",
+                "is_trashed",
+                "is_owned",
+                "is_public",
+                "is_public_approved",
+                "is_loved",
+                "upvote_count",
+                "clip_count"
+              ]
+            }
+          },
+          "user_comments_blocked": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "user_id",
+          "display_name",
+          "handle",
+          "clips",
+          "stats",
+          "is_flagged",
+          "is_following",
+          "num_total_clips",
+          "current_page",
+          "playlists",
+          "avatar_image_url",
+          "favorite_songs",
+          "personas"
+        ],
+        "description": "User response schema",
+        "example": {
+          "user_id": "6f37e09d-0c89-43b5-bc69-0225ec367b14",
+          "display_name": "DiggerMc",
+          "handle": "diggermc",
+          "profile_description": "Meine songs dürfen benutzt, verändert, geklaut werden!  ... ich mache das nur für Inspiration :)\n und einfach nur am \"BOCK AUF MUKKE MACHEN\" ^^  o7 ",
+          "clips": [
+            {
+              "id": "5067b2fd-4ad4-47e5-8140-43a29e7ac9d6",
+              "entity_type": "song_schema",
+              "video_url": "https://cdn1.suno.ai/5067b2fd-4ad4-47e5-8140-43a29e7ac9d6.mp4",
+              "audio_url": "https://cdn1.suno.ai/5067b2fd-4ad4-47e5-8140-43a29e7ac9d6.mp3",
+              "image_url": "https://cdn2.suno.ai/image_5067b2fd-4ad4-47e5-8140-43a29e7ac9d6.jpeg",
+              "image_large_url": "https://cdn2.suno.ai/image_large_5067b2fd-4ad4-47e5-8140-43a29e7ac9d6.jpeg",
+              "major_model_version": "v4",
+              "model_name": "chirp-v4",
+              "metadata": {
+                "tags": "reggey, ska stealdrumm, up beat, kölsch",
+                "prompt": "(Intro)\nEy, ich stonn he am Strand,\ndat is' nit Kölle, aber ejal,\nweil ich spür et janz jenau…\nUsedom, Baby – Reggae en d’r Ostsee!\nWoah – joo!\n\n(Strophe 1)\nBin en kölsche Jung, doch he bliev ich länger\nDenn de Wind es mild un et Leben es wenger\nStress un Hektik bliev zohus\nHier jibbet Sonne statt Verdruss (Ey!)\n\nIwwerall Sand, de Möwe schreit\nUn ich tanz met d’r Flaschenpost durch d’r Zeit\nUsedom, du jeile Insle\nHier krieg selbst dr Köbes Hitzepickel (Haha!)\n\n(Pre-Chorus)\nReggae klingt us'm Lautsprecher raus\nUn ich spill op d’r Luftmatratz' Schach met d’r Maus\nDat is kein Trick, dat es Levve\nUsedom, ich well dich nie mehr abgewe' (Woah!)\n\n(Kölscher Chorus)\nSommerjeföhl\nPalme danze\nNaachlang danze (Danze)\nDJ spillt op (Oh, oh, oh, oh)\nSommerjeföhl\nStrand un Füer\nEt brennt en mir (Brennt!)\nIch will nur dir (Nur dir)\n\n(Strophe 2)\nZelten am Strand, Scholle frisch op’m Grill\nUn ich sing met dä Jungs: „Dat es, wat ich will!“\nStrandkörv in Reih, Seebrück’ wie im Film\nIn Ahlbeck danze selbst d’r Möw' met Stil (Ey!)\n\nBäderarchitektur, alles blink un blank\nReggae läuft, jeder Pitter wird zum Sang\nUsedom, du häs et jeblick\nMachst us Kölsche zu Jamaika-shick (Joo!)\n\n(Pre-Chorus)\nHe stonn Palmen aus Plastik, doch es ejal\nDenn et Herz schläht op One Love-Kanal\nMit e Flönz in d’r Hand un Rhythm im Blut\nBringe ich kölsche Sonn' met Roots – alles joot!\n\n(Kölscher Chorus)\nSommerjeföhl\nPalme danze\nNaachlang danze (Danze)\nDJ spillt op (Oh, oh, oh, oh)\nSommerjeföhl\nStrand un Füer\nEt brennt en mir (Brennt!)\nIch will nur dir (Nur dir)\n\n(Bridge)\nUnd wenn et rägnet – och kein Ding\nDenn ich spür d’r Bass, wie er springt un springt\nUsedom, du häs mie verzaubert\nNeu-Deutsch Jamaika – wat für e Zauberkraft! (Jaja!)\n\n(Letzter Chorus – mit extra Adlibs)\nSommerjeföhl (Ey, Summer!)\nPalme danze (Jo, sway met mir!)\nNaachlang danze (Danze – durch!)\nDJ spillt op (Oh, oh, oh, oh – fire!)\nSommerjeföhl (Ey, yeah!)\nStrand un Füer\nEt brennt en mir (Brennt!)\nIch will nur dir (Nur dir – woah!)\n\n(Outro)\nOp Usedom jibt et kein Dom,\naber dä Vibe – dä es wie Zohus\nKölsch un Reggae – dat es e Muss\nNeu-Deutsch Jamaika – op d’r Ostseekus’t\nJoo!\n\n\n",
+                "type": "gen",
+                "duration": 184.92,
+                "can_remix": true,
+                "is_remix": false
+              },
+              "is_liked": false,
+              "user_id": "6f37e09d-0c89-43b5-bc69-0225ec367b14",
+              "display_name": "DiggerMc",
+              "handle": "diggermc",
+              "is_handle_updated": true,
+              "avatar_image_url": "https://cdn1.suno.ai/b9dbe5f2.webp",
+              "is_trashed": false,
+              "is_pinned": true,
+              "explicit": false,
+              "comment_count": 7,
+              "flag_count": 0,
+              "created_at": "2025-04-14T00:47:24.398Z",
+              "status": "complete",
+              "title": "Neu-Deutsch Jamaika (Usedom Vibes op Kölsch)",
+              "play_count": 107,
+              "upvote_count": 39,
+              "is_public": true,
+              "allow_comments": true
+            }
+          ],
+          "stats": {
+            "upvote_count__sum": 1598,
+            "play_count__sum": 8958,
+            "followers_count": 240,
+            "following_count": 247
+          },
+          "is_flagged": false,
+          "is_following": false,
+          "num_total_clips": 97,
+          "current_page": 1,
+          "playlists": [
+            {
+              "id": "3c7f6ebe-a3b7-49c8-8e31-811f41b9e179",
+              "entity_type": "playlist_schema",
+              "image_url": "https://cdn2.suno.ai/image_bfaa4714-0ca5-4ba8-867e-4400cef719d1.jpeg",
+              "playlist_clips": [],
+              "current_page": 0,
+              "num_total_results": 4,
+              "is_owned": false,
+              "is_trashed": false,
+              "is_public": true,
+              "user_display_name": "DiggerMc",
+              "user_handle": "diggermc",
+              "user_avatar_image_url": "https://cdn1.suno.ai/b9dbe5f2.webp",
+              "upvote_count": 4,
+              "dislike_count": 0,
+              "flag_count": 0,
+              "skip_count": 0,
+              "play_count": 0,
+              "song_count": 4,
+              "name": "Halloween EP  (A side)",
+              "description": "",
+              "is_discover_playlist": false
+            }
+          ],
+          "avatar_image_url": "https://cdn1.suno.ai/b9dbe5f2.webp",
+          "favorite_songs": [],
+          "personas": [
+            {
+              "id": "f35449ba-0cc8-4d52-90b9-c509d8fdce04",
+              "name": "Hunter 2",
+              "description": "",
+              "image_s3_id": "https://cdn2.suno.ai/image_1b5a767b-edaf-46bf-bea4-44741f4471ba.jpeg",
+              "root_clip_id": "1b5a767b-edaf-46bf-bea4-44741f4471ba",
+              "clip": {
+                "id": "1b5a767b-edaf-46bf-bea4-44741f4471ba",
+                "entity_type": "song_schema",
+                "video_url": "https://cdn1.suno.ai/1b5a767b-edaf-46bf-bea4-44741f4471ba.mp4",
+                "audio_url": "https://cdn1.suno.ai/1b5a767b-edaf-46bf-bea4-44741f4471ba.mp3",
+                "image_url": "https://cdn2.suno.ai/image_1b5a767b-edaf-46bf-bea4-44741f4471ba.jpeg",
+                "image_large_url": "https://cdn2.suno.ai/image_large_1b5a767b-edaf-46bf-bea4-44741f4471ba.jpeg",
+                "major_model_version": "v4",
+                "model_name": "chirp-v4",
+                "metadata": {
+                  "tags": "Caribbean, Tropical, Reggae, Ska, Dubstep, EDM, Epic, Heroic, Cinematic, Cosmic, Adventure, Intense, Atmospheric, Ambient, Steel Drums, Synth Pads, Dynamic Percussion, Battle, funny",
+                  "prompt": "[Intro: After the Fall]\n(Flickering lights. Dust settles. A deep rumble in the distance)\nThe Rat King falls, Cyber rats are gone, the island stands,\nbut something stirs beneath the sands.\nA hidden force, a twisted scheme,\nthis war ain't over—just caught in between.\n\nSuper Canal Rodent Hunter breathes out slow,\nwipes his brow, thinks it's time to go. (Finally)\nBut then—a crack, a shift, a sound so deep,\nthe ground caves in, drags him beneath. (Oh, come on)\n\n[Darkness. Then a flickering neon light. A distorted voice speaks]\n“You beat the King... but you never asked—who built the throne?”\n\n[Verse 1: The Lab Below]\nHe wakes up in a room, cold steel, bright screens,\ntubes full of something—pulsing, obscene.\nA lab, abandoned, but not quite dead,\nmachines humming, blinking red.\n\nFigures in the dark, shadows in sync,\nglowing eyes watching—waiting to think.\nA scientist steps in, smirk so wide,\nhis glasses cracked, but sharp with pride.\n\n\"You fight well, but you don’t understand,\nthis island was never just palm trees and sand.\nThe rats? Just pawns, a simple game,\nbut now, dear Hunter—you’ll learn my name.\"\n\n[Pre-Chorus: The Mind Unleashed]\nThe walls start shifting, metal alive,\nHunter’s trapped—nowhere to dive.\nHe tries to punch, tries to swing,\nbut the room itself begins to sting. (Uh… this feels bad)\n\nThen—the scientist pulls a switch,\nthe world distorts, his thoughts start to glitch.\nA voice in his head, static and pain,\nhis mind unraveling, tied in chains. (Get… outta… my…)\n\n[Chorus: Breaking Free]\nWires coil, circuits spark,\nhis body’s frozen, mind goes dark.\nMemories twist, past feels fake,\nwho is he really—what’s at stake?\n\nBut deep inside, something snaps,\nthe static clears, the system cracks.\nOne deep breath—he locks his gaze,\nand for the first time, he’s unfazed.\n\n(Nah. Not today) - Not today\n\n[Verse 2: The Great Escape]\nHe breaks the hold, the lab goes red,\nalarms scream loud, the scientist fled.\nBut Hunter ain't done, not letting him run,\nthe real fight's coming, and he wants some fun.\n\nTunnels collapse, steam erupts,\nHunter jumps as the ceiling corrupts.\nA final door, a final test,\nbut what waits beyond ain't like the rest.\n\nRows of tubes—hundreds inside,\nmechanical beasts, glowing with pride.\nNot just rats, but something more,\na new breed waiting beyond the door.\n\nThe scientist whispers, voice so low—\n“Welcome, Hunter… to Level Two.”\n\n(To be continued…)",
+                  "type": "gen",
+                  "duration": 240,
+                  "can_remix": true,
+                  "is_remix": false
+                },
+                "is_liked": false,
+                "user_id": "6f37e09d-0c89-43b5-bc69-0225ec367b14",
+                "display_name": "DiggerMc",
+                "handle": "diggermc",
+                "is_handle_updated": true,
+                "avatar_image_url": "https://cdn1.suno.ai/b9dbe5f2.webp",
+                "is_trashed": false,
+                "created_at": "2025-02-26T06:54:49.760Z",
+                "status": "complete",
+                "title": "The Battle for Purradise (part 3)",
+                "play_count": 45,
+                "upvote_count": 10,
+                "is_public": true,
+                "allow_comments": true
+              },
+              "user_display_name": "DiggerMc",
+              "user_handle": "diggermc",
+              "user_image_url": "https://cdn1.suno.ai/b9dbe5f2.webp",
+              "persona_clips": [],
+              "is_suno_persona": false,
+              "is_trashed": false,
+              "is_owned": false,
+              "is_public": false,
+              "is_public_approved": false,
+              "is_loved": false,
+              "upvote_count": 0,
+              "clip_count": 0
+            }
+          ],
+          "user_comments_blocked": false
+        }
+      },
+      "UserRecent": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "handle": {
+            "type": "string"
+          },
+          "clips": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "entity_type": {
+                  "type": "string"
+                },
+                "video_url": {
+                  "type": "string"
+                },
+                "audio_url": {
+                  "type": "string"
+                },
+                "image_url": {
+                  "type": "string"
+                },
+                "image_large_url": {
+                  "type": "string"
+                },
+                "major_model_version": {
+                  "type": "string"
+                },
+                "model_name": {
+                  "type": "string"
+                },
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "tags": {
+                      "type": "string"
+                    },
+                    "prompt": {
+                      "type": "string"
+                    },
+                    "edited_clip_id": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "duration": {
+                      "type": "number"
+                    },
+                    "has_vocal": {
+                      "type": "boolean"
+                    },
+                    "video_upload_width": {
+                      "type": "number"
+                    },
+                    "video_upload_height": {
+                      "type": "number"
+                    },
+                    "edit_session_id": {
+                      "type": "string"
+                    },
+                    "can_remix": {
+                      "type": "boolean"
+                    },
+                    "is_remix": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "duration",
+                    "can_remix",
+                    "is_remix"
+                  ]
+                },
+                "caption": {
+                  "type": "string"
+                },
+                "is_liked": {
+                  "type": "boolean"
+                },
+                "user_id": {
+                  "type": "string"
+                },
+                "display_name": {
+                  "type": "string"
+                },
+                "handle": {
+                  "type": "string"
+                },
+                "is_handle_updated": {
+                  "type": "boolean"
+                },
+                "avatar_image_url": {
+                  "type": "string"
+                },
+                "is_trashed": {
+                  "type": "boolean"
+                },
+                "explicit": {
+                  "type": "boolean"
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "play_count": {
+                  "type": "number"
+                },
+                "upvote_count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "entity_type",
+                "video_url",
+                "audio_url",
+                "image_url",
+                "image_large_url",
+                "major_model_version",
+                "model_name",
+                "metadata",
+                "is_liked",
+                "user_id",
+                "display_name",
+                "handle",
+                "is_handle_updated",
+                "avatar_image_url",
+                "is_trashed",
+                "created_at",
+                "status",
+                "title",
+                "play_count",
+                "upvote_count"
+              ]
+            }
+          }
+        },
+        "required": [
+          "user_id",
+          "display_name",
+          "handle",
+          "clips"
+        ],
+        "description": "User recent response schema",
+        "example": {
+          "user_id": "6f37e09d-0c89-43b5-bc69-0225ec367b14",
+          "display_name": "DiggerMc",
+          "handle": "diggermc",
+          "clips": [
+            {
+              "id": "5067b2fd-4ad4-47e5-8140-43a29e7ac9d6",
+              "entity_type": "song_schema",
+              "video_url": "https://cdn1.suno.ai/5067b2fd-4ad4-47e5-8140-43a29e7ac9d6.mp4",
+              "audio_url": "https://cdn1.suno.ai/5067b2fd-4ad4-47e5-8140-43a29e7ac9d6.mp3",
+              "image_url": "https://cdn2.suno.ai/image_5067b2fd-4ad4-47e5-8140-43a29e7ac9d6.jpeg",
+              "image_large_url": "https://cdn2.suno.ai/image_large_5067b2fd-4ad4-47e5-8140-43a29e7ac9d6.jpeg",
+              "major_model_version": "v4",
+              "model_name": "chirp-v4",
+              "metadata": {
+                "type": "gen",
+                "duration": 184.92,
+                "can_remix": true,
+                "is_remix": false
+              },
+              "is_liked": false,
+              "user_id": "6f37e09d-0c89-43b5-bc69-0225ec367b14",
+              "display_name": "DiggerMc",
+              "handle": "diggermc",
+              "is_handle_updated": true,
+              "avatar_image_url": "https://cdn1.suno.ai/b9dbe5f2.webp",
+              "is_trashed": false,
+              "explicit": false,
+              "created_at": "2025-04-14T00:47:24.398Z",
+              "status": "complete",
+              "title": "Neu-Deutsch Jamaika (Usedom Vibes op Kölsch)",
+              "play_count": 107,
+              "upvote_count": 39
+            }
+          ]
+        }
+      },
+      "Status": {
+        "type": "object",
+        "properties": {
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "section_name": {
+                  "type": "string"
+                },
+                "section_type": {
+                  "type": "string"
+                },
+                "style_type": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "entity_type": {
+                            "type": "string"
+                          },
+                          "video_url": {
+                            "type": "string"
+                          },
+                          "video_cover_url": {
+                            "type": "string"
+                          },
+                          "preview_url": {
+                            "type": "string"
+                          },
+                          "audio_url": {
+                            "type": "string"
+                          },
+                          "image_url": {
+                            "type": "string"
+                          },
+                          "image_large_url": {
+                            "type": "string"
+                          },
+                          "major_model_version": {
+                            "type": "string"
+                          },
+                          "model_name": {
+                            "type": "string"
+                          },
+                          "metadata": {
+                            "type": "object",
+                            "properties": {
+                              "tags": {
+                                "type": "string"
+                              },
+                              "prompt": {
+                                "type": "string"
+                              },
+                              "concat_history": {
+                                "type": "array",
+                                "items": {
+                                  "nullable": true
+                                }
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "duration": {
+                                "type": "number"
+                              },
+                              "edit_session_id": {
+                                "type": "string"
+                              },
+                              "can_remix": {
+                                "type": "boolean"
+                              },
+                              "is_remix": {
+                                "type": "boolean"
+                              },
+                              "refund_credits": {
+                                "type": "boolean"
+                              },
+                              "stream": {
+                                "type": "boolean"
+                              },
+                              "priority": {
+                                "type": "number"
+                              },
+                              "is_audio_upload_tos_accepted": {
+                                "type": "boolean"
+                              },
+                              "gpt_description_prompt": {
+                                "type": "string"
+                              },
+                              "cover_clip_id": {
+                                "type": "string"
+                              },
+                              "upsample_clip_id": {
+                                "type": "string"
+                              },
+                              "task": {
+                                "type": "string"
+                              },
+                              "free_quota_category": {
+                                "type": "string"
+                              },
+                              "has_vocal": {
+                                "type": "boolean"
+                              },
+                              "negative_tags": {
+                                "type": "string"
+                              },
+                              "artist_clip_id": {
+                                "type": "string"
+                              },
+                              "persona_id": {
+                                "type": "string"
+                              },
+                              "video_upload_width": {
+                                "type": "number"
+                              },
+                              "video_upload_height": {
+                                "type": "number"
+                              },
+                              "edited_clip_id": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "caption": {
+                            "type": "string"
+                          },
+                          "is_liked": {
+                            "type": "boolean"
+                          },
+                          "user_id": {
+                            "type": "string"
+                          },
+                          "display_name": {
+                            "type": "string"
+                          },
+                          "handle": {
+                            "type": "string"
+                          },
+                          "is_handle_updated": {
+                            "type": "boolean"
+                          },
+                          "avatar_image_url": {
+                            "type": "string"
+                          },
+                          "is_trashed": {
+                            "type": "boolean"
+                          },
+                          "explicit": {
+                            "type": "boolean"
+                          },
+                          "comment_count": {
+                            "type": "number"
+                          },
+                          "flag_count": {
+                            "type": "number"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "play_count": {
+                            "type": "number"
+                          },
+                          "upvote_count": {
+                            "type": "number"
+                          },
+                          "is_public": {
+                            "type": "boolean"
+                          },
+                          "allow_comments": {
+                            "type": "boolean"
+                          },
+                          "display_tags": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "entity_type"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "entity_type": {
+                            "type": "string"
+                          },
+                          "image_url": {
+                            "type": "string"
+                          },
+                          "playlist_clips": {
+                            "type": "array",
+                            "items": {
+                              "nullable": true
+                            }
+                          },
+                          "current_page": {
+                            "type": "number"
+                          },
+                          "num_total_results": {
+                            "type": "number"
+                          },
+                          "is_owned": {
+                            "type": "boolean"
+                          },
+                          "is_trashed": {
+                            "type": "boolean"
+                          },
+                          "is_public": {
+                            "type": "boolean"
+                          },
+                          "user_display_name": {
+                            "type": "string"
+                          },
+                          "user_handle": {
+                            "type": "string"
+                          },
+                          "user_avatar_image_url": {
+                            "type": "string"
+                          },
+                          "upvote_count": {
+                            "type": "number"
+                          },
+                          "dislike_count": {
+                            "type": "number"
+                          },
+                          "flag_count": {
+                            "type": "number"
+                          },
+                          "skip_count": {
+                            "type": "number"
+                          },
+                          "play_count": {
+                            "type": "number"
+                          },
+                          "song_count": {
+                            "type": "number"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "is_discover_playlist": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "entity_type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "image_url": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "image_url"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "link": {
+                            "type": "string"
+                          },
+                          "mobile_link": {
+                            "type": "string"
+                          },
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "entity_type": {
+                                      "type": "string"
+                                    },
+                                    "video_url": {
+                                      "type": "string"
+                                    },
+                                    "video_cover_url": {
+                                      "type": "string"
+                                    },
+                                    "preview_url": {
+                                      "type": "string"
+                                    },
+                                    "audio_url": {
+                                      "type": "string"
+                                    },
+                                    "image_url": {
+                                      "type": "string"
+                                    },
+                                    "image_large_url": {
+                                      "type": "string"
+                                    },
+                                    "major_model_version": {
+                                      "type": "string"
+                                    },
+                                    "model_name": {
+                                      "type": "string"
+                                    },
+                                    "metadata": {
+                                      "type": "object",
+                                      "properties": {
+                                        "tags": {
+                                          "type": "string"
+                                        },
+                                        "prompt": {
+                                          "type": "string"
+                                        },
+                                        "concat_history": {
+                                          "type": "array",
+                                          "items": {
+                                            "nullable": true
+                                          }
+                                        },
+                                        "type": {
+                                          "type": "string"
+                                        },
+                                        "duration": {
+                                          "type": "number"
+                                        },
+                                        "edit_session_id": {
+                                          "type": "string"
+                                        },
+                                        "can_remix": {
+                                          "type": "boolean"
+                                        },
+                                        "is_remix": {
+                                          "type": "boolean"
+                                        },
+                                        "refund_credits": {
+                                          "type": "boolean"
+                                        },
+                                        "stream": {
+                                          "type": "boolean"
+                                        },
+                                        "priority": {
+                                          "type": "number"
+                                        },
+                                        "is_audio_upload_tos_accepted": {
+                                          "type": "boolean"
+                                        },
+                                        "gpt_description_prompt": {
+                                          "type": "string"
+                                        },
+                                        "cover_clip_id": {
+                                          "type": "string"
+                                        },
+                                        "upsample_clip_id": {
+                                          "type": "string"
+                                        },
+                                        "task": {
+                                          "type": "string"
+                                        },
+                                        "free_quota_category": {
+                                          "type": "string"
+                                        },
+                                        "has_vocal": {
+                                          "type": "boolean"
+                                        },
+                                        "negative_tags": {
+                                          "type": "string"
+                                        },
+                                        "artist_clip_id": {
+                                          "type": "string"
+                                        },
+                                        "persona_id": {
+                                          "type": "string"
+                                        },
+                                        "video_upload_width": {
+                                          "type": "number"
+                                        },
+                                        "video_upload_height": {
+                                          "type": "number"
+                                        },
+                                        "edited_clip_id": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "caption": {
+                                      "type": "string"
+                                    },
+                                    "is_liked": {
+                                      "type": "boolean"
+                                    },
+                                    "user_id": {
+                                      "type": "string"
+                                    },
+                                    "display_name": {
+                                      "type": "string"
+                                    },
+                                    "handle": {
+                                      "type": "string"
+                                    },
+                                    "is_handle_updated": {
+                                      "type": "boolean"
+                                    },
+                                    "avatar_image_url": {
+                                      "type": "string"
+                                    },
+                                    "is_trashed": {
+                                      "type": "boolean"
+                                    },
+                                    "explicit": {
+                                      "type": "boolean"
+                                    },
+                                    "comment_count": {
+                                      "type": "number"
+                                    },
+                                    "flag_count": {
+                                      "type": "number"
+                                    },
+                                    "created_at": {
+                                      "type": "string"
+                                    },
+                                    "status": {
+                                      "type": "string"
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    },
+                                    "play_count": {
+                                      "type": "number"
+                                    },
+                                    "upvote_count": {
+                                      "type": "number"
+                                    },
+                                    "is_public": {
+                                      "type": "boolean"
+                                    },
+                                    "allow_comments": {
+                                      "type": "boolean"
+                                    },
+                                    "display_tags": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "entity_type"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "entity_type": {
+                                      "type": "string"
+                                    },
+                                    "image_url": {
+                                      "type": "string"
+                                    },
+                                    "playlist_clips": {
+                                      "type": "array",
+                                      "items": {
+                                        "nullable": true
+                                      }
+                                    },
+                                    "current_page": {
+                                      "type": "number"
+                                    },
+                                    "num_total_results": {
+                                      "type": "number"
+                                    },
+                                    "is_owned": {
+                                      "type": "boolean"
+                                    },
+                                    "is_trashed": {
+                                      "type": "boolean"
+                                    },
+                                    "is_public": {
+                                      "type": "boolean"
+                                    },
+                                    "user_display_name": {
+                                      "type": "string"
+                                    },
+                                    "user_handle": {
+                                      "type": "string"
+                                    },
+                                    "user_avatar_image_url": {
+                                      "type": "string"
+                                    },
+                                    "upvote_count": {
+                                      "type": "number"
+                                    },
+                                    "dislike_count": {
+                                      "type": "number"
+                                    },
+                                    "flag_count": {
+                                      "type": "number"
+                                    },
+                                    "skip_count": {
+                                      "type": "number"
+                                    },
+                                    "play_count": {
+                                      "type": "number"
+                                    },
+                                    "song_count": {
+                                      "type": "number"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "description": {
+                                      "type": "string"
+                                    },
+                                    "is_discover_playlist": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "id"
+                                  ]
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "entity_type": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "image_url": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "image_url"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "item_type": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "title",
+                          "link",
+                          "mobile_link",
+                          "items",
+                          "item_type"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "item_type": {
+                  "type": "string"
+                },
+                "preview_items_count": {
+                  "type": "number"
+                },
+                "feed_metadata": {
+                  "type": "object",
+                  "properties": {
+                    "feed_metadata_type": {
+                      "type": "string"
+                    },
+                    "language": {
+                      "type": "string"
+                    },
+                    "language_text": {
+                      "type": "string"
+                    },
+                    "lang_map_keys": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "ranking_map_keys": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "rank_text": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "feed_metadata_type"
+                  ]
+                },
+                "feed_metadata_type": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "title",
+                "id",
+                "section_type",
+                "items"
+              ]
+            }
+          },
+          "page": {
+            "type": "number"
+          },
+          "total_sections": {
+            "type": "number"
+          },
+          "page_size": {
+            "type": "number"
+          },
+          "start_index": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "sections"
+        ],
+        "description": "Suno status response schema",
+        "example": {
+          "sections": [
+            {
+              "title": "",
+              "id": "featured_feed",
+              "section_type": "featured_feed",
+              "items": [
+                {
+                  "id": "featured_feed_for_you",
+                  "title": "For You",
+                  "link": "/for-you",
+                  "mobile_link": "",
+                  "items": [],
+                  "item_type": "song_schema"
+                },
+                {
+                  "id": "featured_feed_following",
+                  "title": "Suggested Creators",
+                  "link": "/feed",
+                  "mobile_link": "",
+                  "items": [],
+                  "item_type": "following_feed_item_schema"
+                },
+                {
+                  "id": "featured_feed_trending",
+                  "title": "Trending",
+                  "link": "/trending",
+                  "mobile_link": "",
+                  "items": [
+                    {
+                      "id": "307bf850-6d49-44f6-858e-23e29a64d1b5",
+                      "entity_type": "song_schema",
+                      "video_url": "https://cdn1.suno.ai/307bf850-6d49-44f6-858e-23e29a64d1b5.mp4",
+                      "audio_url": "https://cdn1.suno.ai/307bf850-6d49-44f6-858e-23e29a64d1b5.mp3",
+                      "image_url": "https://cdn2.suno.ai/image_307bf850-6d49-44f6-858e-23e29a64d1b5.jpeg",
+                      "image_large_url": "https://cdn2.suno.ai/image_large_307bf850-6d49-44f6-858e-23e29a64d1b5.jpeg",
+                      "major_model_version": "v4.5",
+                      "model_name": "chirp-auk",
+                      "metadata": {
+                        "tags": "Chicago rap, clear vocals, conscious drill, soul-trap, boom bap roots, pitched-down gospel samples, ambient vinyl crackle, reversed piano loops, 808 slides, spoken-word interludes, breath-heavy delivery, gritty realism, layered rhyme schemes, inner-city storytelling, chipmunk samples, samples",
+                        "prompt": "[Intro]\nSometimes I wonder if the water remembers\nAll the faces it watched disappear...\n\n[Verse 1]\nMama lit candles by the kitchen light\nPrayin’ I’d come home and not another fight\nGunshots echo, that’s the lullaby\nSirens sing over babies cry\nI used to dream of a safer block\nWhere doors ain’t locked and the clocks don’t stop\nBut time froze when my brother went away\nNow his name's on the wall where the memories stay\n\nI talk to shadows that walk with me\nThey know the struggle, the hustle, the heat\nEvery move’s a gamble, every step a bet\nBut the dice roll heavy when you’re swimmin’ in debt\nI’m just tryna find peace, but it's hard to breathe\nIn a city where hope’s as rare as belief\nBut even in the dark, I still find the spark\nEven when I’m lost, I’m still playin’ my part\n\n[Pre-Chorus]\nI ain't tryna be a statistic\nI ain't tryna be just another name\nBut they teach you early in this game\nTo survive, you gotta learn how to fight through the pain\n\n[Chorus]\nAshes in the lake, washed away with the rain\nEverything we lose, everything we gain\nI walk through the fire, but I’m still intact\nEvery step I take, I’m pullin' myself back\nAshes in the lake, but I still see the light\nI’m chasin' tomorrow, but I’m fightin’ tonight\nEvery scar on my soul, every crack in the ground\nI’ll be here forever, won’t let it bring me down\n\n[Verse 2]\nYou can see it in the eyes, the pain’s deep-set\nBut you can’t hide from the struggle you ain’t met\nLost friends, lost time, but I keep pressin’\nEvery day’s a blessing, but it’s hard to learn the lesson\nI’m out here tryna chase what’s left of me\nCan’t let the ghosts bury me beneath the streets\nI put my trust in these beats and these bars\nI wear my heart on my sleeve, battle scars\n\n[Pre-Chorus]\nI ain't tryna be a statistic\nI ain't tryna be just another name\nBut they teach you early in this game\nTo survive, you gotta learn how to fight through the pain\n\n[Chorus]\nAshes in the lake, washed away with the rain\nEverything we lose, everything we gain\nI walk through the fire, but I’m still intact\nEvery step I take, I’m pullin' myself back\nAshes in the lake, but I still see the light\nI’m chasin' tomorrow, but I’m fightin’ tonight\nEvery scar on my soul, every crack in the ground\nI’ll be here forever, won’t let it bring me down\n\n[Bridge]\nThey say the city don’t forgive, but I’m not here for forgiveness.\nI’m here to learn, to grow, to make it out, even if it’s one step at a time.\n'Cause in the end, it’s not the streets that define me.\nIt’s the fight in my heart.\n\n[Chorus]\nAshes in the lake, washed away with the rain\nEverything we lose, everything we gain\nI walk through the fire, but I’m still intact\nEvery step I take, I’m pullin' myself back\nAshes in the lake, but I still see the light\nI’m chasin' tomorrow, but I’m fightin’ tonight\nEvery scar on my soul, every crack in the ground\nI’ll be here forever, won’t let it bring me down\n\n[Outro]\nAshes in the lake... but we still rise.\nKeep walkin’, keep fightin’, we still alive.",
+                        "edited_clip_id": "d3006332-af57-4394-b034-6360b6886af6",
+                        "type": "edit_fade",
+                        "duration": 209.8,
+                        "edit_session_id": "780b354a-dc81-4ca3-b706-6ea060ed9505",
+                        "can_remix": true,
+                        "is_remix": false
+                      },
+                      "is_liked": false,
+                      "user_id": "f87d023d-e7cb-45a8-9343-8ed13c961bbf",
+                      "display_name": "DreamOUT",
+                      "handle": "dreamout",
+                      "is_handle_updated": true,
+                      "avatar_image_url": "https://cdn1.suno.ai/2f369987.webp",
+                      "is_trashed": false,
+                      "explicit": false,
+                      "comment_count": 45,
+                      "flag_count": 5,
+                      "created_at": "2025-05-02T00:16:46.717Z",
+                      "status": "complete",
+                      "title": "Ashes In The Lake",
+                      "play_count": 11582,
+                      "upvote_count": 582,
+                      "is_public": true,
+                      "allow_comments": true
+                    },
+                    {
+                      "id": "6a2d9bb4-9804-4638-9abc-be63af682add",
+                      "entity_type": "song_schema",
+                      "video_url": "https://cdn1.suno.ai/6a2d9bb4-9804-4638-9abc-be63af682add.mp4",
+                      "audio_url": "https://cdn1.suno.ai/6a2d9bb4-9804-4638-9abc-be63af682add.mp3",
+                      "image_url": "https://cdn2.suno.ai/6a2d9bb4-9804-4638-9abc-be63af682add_45c78345.jpeg",
+                      "image_large_url": "https://cdn2.suno.ai/6a2d9bb4-9804-4638-9abc-be63af682add_45c78345.jpeg",
+                      "major_model_version": "v4.5",
+                      "model_name": "chirp-auk",
+                      "metadata": {
+                        "tags": "funk-rap bounce, alt hip hop, Neo-Soul-Infused Deep House, groovy, funk soul, spacing",
+                        "prompt": "yeah i really only came to kick it\nsomething, like soccer, or judo \nmy mind gone, to new planet\nmaybe pluto, \nwho know? \nyou really wanna fight like it's sumo\nlet it go motherfucker, who do you know?\nweed will take you up to mars, baby i ain't talking bruno\ni might even play my cards, yeah reverse like it's uno\nlook you gonna be a star, okay fine here yo' kudos\nsorta like alaska, cold as ice, baby juno\nmeanwhile, ima take a break for a moment\ndeep breath in, baby pray for atonement\noh you show it? \nima find a place to hold emotion\nfore i phone in like a bomb threat, and blow it\nback to the hangin', games playin on the play station\nwaste time, blurry like my eyes need lasik\nbaseline bumping you can hear it in a space ship\nfeeling like i'm playin for the lakers, amazin\n\n[chorus]\nso \nwanna vibe baby bring a friend\ni extend my brother's hand \ni would rather stay in, rip the pen\nbefore you! turn! off! all the lights! \n\n[verse 2]\ncause we ain't got a \nlot of time left\ni manuver like the heimlich, very upset\ni been workin' like a migrant\nall the success, ain't improved upon where i been\nso ima do me and take another fuckin' night in\nreally? boy i see ya trippin psilocybin\nspouting off some shit like you done opened up the hydrant\nlovin' is the drug, but i don't know if you supplyin'\ni don't want for this to get violent\nbut i take your silence, as guilt, or serious complicity\ndont mistake my kindness, for any authenticity\ni'ma turn the dial up to burn, in the sixth degree\none day we gonna make history, finna see\n\n\n\n[chorus]\nwoah slow your roll\nbaby we ain't gonna do too much tonight\nso you can slide\nand come inside\nbut on your way please grab my food and flick the lights\n\ncause this ain't magic\nrather i'd say that it feels just quite alright\nour love ain't average\nyour touch will keep me up into the night\n\nwanna ride baby bring a friend, \ni extend my brothers hand\ni would rather stay in bed\nso please turn off the lights!",
+                        "concat_history": [
+                          {
+                            "id": "b035b82f-cfda-47df-b1f9-18e73fdab453",
+                            "type": "concat",
+                            "infill": false,
+                            "source": "web",
+                            "continue_at": 125.08
+                          },
+                          {
+                            "id": "fda12b77-9e05-4c86-b56b-f636368d4d82"
+                          }
+                        ],
+                        "type": "concat",
+                        "duration": 210.91997916666668,
+                        "edit_session_id": "18692e05-95c0-42a5-88bd-0dddbb318f21",
+                        "can_remix": true,
+                        "is_remix": false
+                      },
+                      "caption": "get outta here",
+                      "is_liked": false,
+                      "user_id": "2aaf8adb-9953-496d-bea9-0b1d79f98fb0",
+                      "display_name": "chunck 🐐",
+                      "handle": "chunck",
+                      "is_handle_updated": true,
+                      "avatar_image_url": "https://cdn1.suno.ai/c866ee34.webp",
+                      "is_trashed": false,
+                      "explicit": false,
+                      "comment_count": 49,
+                      "flag_count": 10,
+                      "created_at": "2025-05-01T22:58:34.595Z",
+                      "status": "complete",
+                      "title": "f*** you, let's hang",
+                      "play_count": 21870,
+                      "upvote_count": 612,
+                      "is_public": true,
+                      "allow_comments": true
+                    }
+                  ],
+                  "item_type": "song_schema",
+                  "feed_metadata": {
+                    "feed_metadata_type": "trending_metadata",
+                    "language": "",
+                    "language_text": "Global",
+                    "lang_map_keys": [
+                      "Global",
+                      "Arabic",
+                      "Bengali",
+                      "Chinese",
+                      "Czech",
+                      "Dutch",
+                      "English",
+                      "Finnish",
+                      "French",
+                      "German",
+                      "Greek",
+                      "Gujarati",
+                      "Hebrew",
+                      "Hindi",
+                      "Hungarian",
+                      "Indonesian",
+                      "Italian",
+                      "Japanese",
+                      "Kazakh",
+                      "Korean",
+                      "Malay",
+                      "Persian",
+                      "Polish",
+                      "Portuguese",
+                      "Panjabi",
+                      "Russian",
+                      "Spanish",
+                      "Swedish",
+                      "Tagalog",
+                      "Tamil",
+                      "Telugu",
+                      "Thai",
+                      "Turkish",
+                      "Ukrainian",
+                      "Urdu",
+                      "Vietnamese"
+                    ],
+                    "ranking_map_keys": [
+                      "Now",
+                      "Weekly",
+                      "Monthly",
+                      "All Time"
+                    ],
+                    "rank_text": "Now"
+                  },
+                  "feed_metadata_type": "trending_metadata"
+                }
+              ]
+            },
+            {
+              "title": "Best of v4.5",
+              "id": "480b0308-492b-4649-9a59-1d7c6782aa04",
+              "link": "/playlist/480b0308-492b-4649-9a59-1d7c6782aa04",
+              "section_name": "campaign_playlists",
+              "style_type": "normal",
+              "section_type": "playlist",
+              "items": [
+                {
+                  "id": "962ecc39-8b37-4d98-9fa8-09a80433ddc4",
+                  "entity_type": "song_schema",
+                  "video_url": "https://cdn1.suno.ai/962ecc39-8b37-4d98-9fa8-09a80433ddc4.mp4",
+                  "audio_url": "https://cdn1.suno.ai/962ecc39-8b37-4d98-9fa8-09a80433ddc4.mp3",
+                  "image_url": "https://cdn2.suno.ai/962ecc39-8b37-4d98-9fa8-09a80433ddc4_4da22d16.jpeg",
+                  "image_large_url": "https://cdn2.suno.ai/962ecc39-8b37-4d98-9fa8-09a80433ddc4_4da22d16.jpeg",
+                  "major_model_version": "v4.5",
+                  "model_name": "chirp-auk",
+                  "metadata": {
+                    "tags": "Male vocal,Moody glitch-pop, experimental alt-electronic, stuttered emotive vocals, dark ambient undertones, lo-fi drum kit, glitchy synth arpeggios, rhythmic layering, restrained emotional delivery.\n",
+                    "prompt": "[Intro]  \n[Ambient synth pads, distant filtered vocals, no drums]  \nEverybody is talking  \nNobody is stopping  \nEveryone is sharing the dark part of their thoughts  \nBut turning away in the face of uncertainty,  \nNo sharing everything I've got, no  \n\n[Chorus]  \n[Lo-fi beat and bass drop in glitchy synth arpeggios, layered autotuned vocals]  \nDon't begin withou-ou-ou-ou-out me,  \nDon't begin withou-ou-ou-ou-out me.  \nEven when I fault you, I'm so screwed without you,  \nNo, no…  \n\n[Verse 1]  \n[Vocals filtered minimal percussion]  \nScarfing down the system  \nStarving out our existence  \nRepeating our little phrases  \nTo try and save our own skin  \nSo they don't abuse us again  \nThe mental game is their name  \nThe part that keeps us sane  \nIs us shouting out our own brains  \nSacrificed again  \nBelow us is our friends  \nHope you haven't forgot about me, no  \n\n[Chorus]  \n[Beat returns glitchy synths added harmonies on vocals]  \nDon't begin withou-ou-ou-ou-out me,  \nDon't begin withou-ou-ou-ou-out me.  \nEven when I fault you, I'm so screwed without you,  \nNo, no, no, no  \n\n[Verse 2]  \n[Beat stripped back atmospheric synth swells]  \nStarved by our own decisions  \nStarved by their insecurities  \nStarved by their authorities  \nStarved out by my own immaturity  \nThese tears might be the death of me  \nTears lead to the darkness inside of me  \nDon't know that part of me  \n\n[Chorus]  \n[Full arrangement emotive, restrained vocals]  \nDon't begin withou-ou-ou-ou-out me,  \nDon't begin withou-ou-ou-ou-out me.  \nEven when I fault you, I'm so screwed without you,  \nNo, no, no, no  \n\n[Bridge Outro Chant]  \n[Chant with reverb instruments fade out gradually]  \nHey hey hey hey  \nHey hey hey hey  \nHey hey hey hey",
+                    "type": "gen",
+                    "duration": 173.44,
+                    "refund_credits": false,
+                    "stream": true,
+                    "can_remix": true,
+                    "is_remix": false,
+                    "priority": 10
+                  },
+                  "is_liked": false,
+                  "user_id": "c01dfb59-98e5-4735-8f3c-0d6605804f68",
+                  "display_name": "AroundOnce",
+                  "handle": "aroundonce",
+                  "is_handle_updated": true,
+                  "avatar_image_url": "https://cdn1.suno.ai/cd2e690b.webp",
+                  "is_trashed": false,
+                  "explicit": false,
+                  "comment_count": 41,
+                  "flag_count": 3,
+                  "display_tags": "glitch-pop, experimental alt-electronic, dark ambient",
+                  "created_at": "2025-05-01T16:50:43.452Z",
+                  "status": "complete",
+                  "title": "Fault V4.5",
+                  "play_count": 11810,
+                  "upvote_count": 488,
+                  "is_public": true,
+                  "allow_comments": true
+                },
+                {
+                  "id": "540b88c8-0373-45bf-bf33-4cecb7c6f800",
+                  "entity_type": "song_schema",
+                  "video_url": "https://cdn1.suno.ai/540b88c8-0373-45bf-bf33-4cecb7c6f800.mp4",
+                  "video_cover_url": "https://cdn1.suno.ai/video_upload_1efcaec4-9a0d-4ede-9ff8-48dea6f2e64c.mp4",
+                  "preview_url": "https://cdn1.suno.ai/video_upload_1efcaec4-9a0d-4ede-9ff8-48dea6f2e64c_preview.mp4",
+                  "audio_url": "https://cdn1.suno.ai/540b88c8-0373-45bf-bf33-4cecb7c6f800.mp3",
+                  "image_url": "https://cdn2.suno.ai/image_video_upload_1efcaec4-9a0d-4ede-9ff8-48dea6f2e64c_snapshot_0s.jpeg",
+                  "image_large_url": "https://cdn2.suno.ai/image_large_video_upload_1efcaec4-9a0d-4ede-9ff8-48dea6f2e64c_snapshot_0s.jpeg",
+                  "major_model_version": "v4.5",
+                  "model_name": "chirp-auk",
+                  "metadata": {
+                    "tags": "Afroswing Experimental Teemuth",
+                    "prompt": "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n// © 2025 Teemuth\n\n🎵 Suno: https://suno.com/@teemuth\n\n🎵 Spotify: open.spotify.com/artist/6OiYRjnt94boE4iFYvNZa5?si=n8GN72wDSkqZds7MJtY--w\n\n📺 YouTube: youtube.com/@Teemuth_\n\n🐦‍⬛ Twitter/X: x.com/real_teemuth\n\n🎮 hyperfollow.com/realteemuth\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n[Verse]\nSaid I’m a survivor (yeah!)\nSee how I’m smilin’ (uh)\nTook all the pressure\nStill I’m risin’ (woo!)\nOoh—\n\nBeen through the struggle (struggle)\nFelt the whole quake (quake)\nDidn’t lose shine—\nNah, I don’t break (don’t break!)\nStill survivin’ (still here!)\nOoh—\n\n[Pre-Chorus]\nSo let’s light up the rhythm (light it!)\nWatch how I glide (watch me!)\nFeel this momentum—\nI’m touchin’ the sky (uh-huh!)\nOh—\n\n[Chorus]\nSurvivor! (Say it loud!)\nSurvivor! (Beat that drum!)\nOoh—\nSurvivor! (Call me that!)\nSurvivor! (Can’t hold back!)\nOoh— (Ooh—)\n\n[Verse]\nTried to break my spirit (they tried!)\nThey thought they could kill it (they lied!)\nBut I bounce back—\nWith more rhythm in it! (let’s ride!)\nNo—\nThey can’t touch this (nah!)\nMm—\n\nAnd I know you feel me (you do!)\nLook how far we’ve run (so far!)\nClimbin’ through storms\nNow we movin’ as one\nYeah—\nNow we havin’ fun (say it!)\nUh—\n\n[Chorus]\nSurvivor! (You know the name!)\nSurvivor! (No shame, no shame!)\nOoh—\nSurvivor! (Say it twice!)\nSurvivor! (That’s my life!)\nOoh— (Ooh!)\n\n[Final Chorus]\nSurvivor! (You know the name!)\nSurvivor! (No shame, no shame!)\nOoh—\nSurvivor! (Say it twice!)\nSurvivor! (That’s my life!)\nOoh— (Ooh!)\n\n",
+                    "edited_clip_id": "e55988dc-c316-43e7-ba02-c8a038a1c103",
+                    "type": "edit_crop",
+                    "duration": 195.24,
+                    "has_vocal": false,
+                    "video_upload_width": 1440,
+                    "video_upload_height": 1440,
+                    "edit_session_id": "a8d4e5be-4dac-4710-b3b1-6f420b2f20c4",
+                    "can_remix": false,
+                    "is_remix": false
+                  },
+                  "caption": "Let's Survive Together!",
+                  "is_liked": false,
+                  "user_id": "1ede38ea-6231-4886-ba66-0f25eb4edc40",
+                  "display_name": "Teemuth",
+                  "handle": "teemuth",
+                  "is_handle_updated": true,
+                  "avatar_image_url": "https://cdn1.suno.ai/9f56ae1f.webp",
+                  "is_trashed": false,
+                  "explicit": false,
+                  "comment_count": 41,
+                  "flag_count": 6,
+                  "created_at": "2025-05-01T16:04:17.935Z",
+                  "status": "complete",
+                  "title": "Survivor",
+                  "play_count": 15406,
+                  "upvote_count": 421,
+                  "is_public": true,
+                  "allow_comments": true
+                }
+              ],
+              "preview_items_count": 4
+            },
+            {
+              "title": "Now in Motion",
+              "id": "7679c335-16d4-419b-8254-5cd2c3f16b99",
+              "link": "/playlist/7679c335-16d4-419b-8254-5cd2c3f16b99",
+              "section_name": "campaign_playlists",
+              "style_type": "normal",
+              "section_type": "playlist",
+              "items": [
+                {
+                  "id": "f04dc954-6900-42db-a096-d813ba523e6f",
+                  "entity_type": "song_schema",
+                  "video_url": "https://cdn1.suno.ai/f04dc954-6900-42db-a096-d813ba523e6f.mp4",
+                  "video_cover_url": "https://cdn1.suno.ai/video_upload_f44032e5-3634-4312-8f0c-610d42360988.mp4",
+                  "preview_url": "https://cdn1.suno.ai/video_upload_f44032e5-3634-4312-8f0c-610d42360988_preview.mp4",
+                  "audio_url": "https://cdn1.suno.ai/f04dc954-6900-42db-a096-d813ba523e6f.mp3",
+                  "image_url": "https://cdn2.suno.ai/image_video_upload_f44032e5-3634-4312-8f0c-610d42360988_snapshot_0s.jpeg",
+                  "image_large_url": "https://cdn2.suno.ai/image_large_video_upload_f44032e5-3634-4312-8f0c-610d42360988_snapshot_0s.jpeg",
+                  "major_model_version": "v4",
+                  "model_name": "chirp-v4",
+                  "metadata": {
+                    "tags": "reggaeton,  perreo",
+                    "prompt": "Verso 1\nSalíamos sin plan, solas por ahí,\nCon mi amiga, siempre sabes cómo es.\nNada de preocupaciones, solo pasarla bien,\nUnas risas, una cerveza, y todo es cien.\nCoro\nTú y yo, sin pensar en nada,\nRiendo todo el día, sin drama.\nNo hace falta mucho para disfrutar,\nCon mi mejor amiga, no hay más que hablar.\nVerso 2\nCalle, música y un par de historias,\nHablando de todo, sin apuros ni glorias.\nLo bueno se da fácil cuando estamos juntas,\nAsí somos, sin estrés, sin vueltas.\nCoro\nTú y yo, sin pensar en nada,\nRiendo todo el día, sin drama.\nNo hace falta mucho para disfrutar,\nCon mi mejor amiga, no hay más que hablar.\nPuente\nY si el día se acaba, ya nos da igual,\nSeguimos en lo nuestro, siempre real.\nLo importante es estar, nada más,\nTodo fluye con ella, siempre al compás.\nCoro\nTú y yo, sin pensar en nada,\nRiendo todo el día, sin drama.\nNo hace falta mucho para disfrutar,\nCon mi mejor amiga, no hay más que hablar.\nCoro\nTú y yo, sin pensar en nada,\nRiendo todo el día, sin drama.\nNo hace falta mucho para disfrutar,\nCon mi mejor amiga, no hay más que hablar.\n",
+                    "concat_history": [
+                      {
+                        "id": "164c55a3-8546-4de9-9a00-d7ce67050f68",
+                        "type": "gen",
+                        "infill": true,
+                        "source": "web",
+                        "infill_dur_s": 9.68,
+                        "infill_end_s": 9.68,
+                        "infill_lyrics": "Verso 1\nSalíamos sin plan, solas por ahí,\nCon mi amiga, siempre sabes cómo es.",
+                        "infill_start_s": 0,
+                        "include_future_s": 2,
+                        "include_history_s": 2,
+                        "infill_context_end_s": 39.68,
+                        "infill_context_start_s": 0
+                      },
+                      {
+                        "id": "5b05284f-87ce-4dde-8009-0f6332f1c368"
+                      }
+                    ],
+                    "type": "concat_infilling",
+                    "duration": 164.92,
+                    "video_upload_width": 1080,
+                    "video_upload_height": 1920,
+                    "edit_session_id": "3ef674de-0318-4f71-b213-479f1c670950",
+                    "can_remix": true,
+                    "is_remix": false
+                  },
+                  "is_liked": false,
+                  "user_id": "be7a2ab8-d60e-4a1e-866b-185a5777116e",
+                  "display_name": "Clara",
+                  "handle": "claraco",
+                  "is_handle_updated": true,
+                  "avatar_image_url": "https://cdn1.suno.ai/5d29d3bf.webp",
+                  "is_trashed": false,
+                  "explicit": false,
+                  "comment_count": 250,
+                  "flag_count": 43,
+                  "created_at": "2025-03-26T02:13:05.554Z",
+                  "status": "complete",
+                  "title": "Siempre ready",
+                  "play_count": 115321,
+                  "upvote_count": 3293,
+                  "is_public": true,
+                  "allow_comments": true
+                },
+                {
+                  "id": "074ae404-a8d5-4e35-a84a-0b6f22eee22e",
+                  "entity_type": "song_schema",
+                  "video_url": "https://cdn1.suno.ai/074ae404-a8d5-4e35-a84a-0b6f22eee22e.mp4",
+                  "video_cover_url": "https://cdn1.suno.ai/video_upload_8615853c-05be-4279-ba57-6c037d0dba5a.mp4",
+                  "preview_url": "https://cdn1.suno.ai/video_upload_8615853c-05be-4279-ba57-6c037d0dba5a_preview.mp4",
+                  "audio_url": "https://cdn1.suno.ai/074ae404-a8d5-4e35-a84a-0b6f22eee22e.mp3",
+                  "image_url": "https://cdn2.suno.ai/image_video_upload_8615853c-05be-4279-ba57-6c037d0dba5a_snapshot_0s.jpeg",
+                  "image_large_url": "https://cdn2.suno.ai/image_large_video_upload_8615853c-05be-4279-ba57-6c037d0dba5a_snapshot_0s.jpeg",
+                  "major_model_version": "v4",
+                  "model_name": "chirp-v4",
+                  "metadata": {
+                    "tags": "quirky, unique voice, alternative r&b, art pop, progressive soul, introspective, progressive, psychedelic",
+                    "prompt": "[Verse]\nI'm losin' myself\nI'm losin' my mind\nWhy did they leave me all out in the cold\nWith tears in my eyes\n\n[Verse]\nAnd I'm tryin' my best\nTo keep myself whole\nBut how can I give something to you\nThat is not in my own control\n\n[Chorus]\nI've loved people heartless\nAnd I've fallen the hardest\nI'm myself\nI promise\nBut sometimes I'm someone else\nI think I've lost my mind now\nI just hope I'll be fine now\nAnd it's nothing you've done wrong\nI'm sorry I'm not strong\nSomeone told me I'm all wrong\n\n[Bridge]\nThis is uncharted territory\nBut boy\nTell me different stories\nAnd you\nYou say that I deserve the world\nBut I've already got what I want\n\n[Verse]\n'Cause I'm losin' myself\nAnd I'm losin' my mind\nWhy did they leave me all out in the cold\nTo figure out why\n\n[Instrumental break]\n\n[Chorus]\nI've loved people heartless\nAnd I've fallen the hardest\nI'm myself\nI promise\nBut sometimes I'm someone else\nAnd I think I've lost my mind now\n'Cause when I learned the truth\nI cried out\nBut I'll figure it all out",
+                    "edited_clip_id": "3b244243-558d-455b-b8a7-9889a05ca582",
+                    "type": "edit_crop",
+                    "duration": 210.6,
+                    "video_upload_width": 1214,
+                    "video_upload_height": 2160,
+                    "edit_session_id": "e7289be7-d604-409a-ab08-10bb4929714a",
+                    "can_remix": true,
+                    "is_remix": false
+                  },
+                  "caption": "Cowritten with ReMi",
+                  "is_liked": false,
+                  "user_id": "0a22188e-a3a2-4a6c-a108-30c0cae4d752",
+                  "display_name": "IO",
+                  "handle": "ian",
+                  "is_handle_updated": true,
+                  "avatar_image_url": "https://cdn1.suno.ai/631e956e.webp",
+                  "is_trashed": false,
+                  "explicit": false,
+                  "comment_count": 178,
+                  "flag_count": 19,
+                  "created_at": "2025-01-15T21:27:06.791Z",
+                  "status": "complete",
+                  "title": "Heartless",
+                  "play_count": 115337,
+                  "upvote_count": 2971,
+                  "is_public": true,
+                  "allow_comments": true
+                }
+              ],
+              "preview_items_count": 4
+            },
+            {
+              "title": "Featured",
+              "id": "featured_playlists",
+              "section_name": "tastemaker_playlists",
+              "style_type": "featured",
+              "section_type": "playlist_list",
+              "items": [
+                {
+                  "id": "6e758550-bbaf-4dc9-b00c-a2a9af2b003a",
+                  "entity_type": "playlist_schema",
+                  "image_url": "https://cdn2.suno.ai/b68e1840.jpeg",
+                  "playlist_clips": [],
+                  "current_page": 0,
+                  "num_total_results": 21,
+                  "is_owned": false,
+                  "is_trashed": false,
+                  "is_public": false,
+                  "user_display_name": "Ghostplayer",
+                  "user_handle": "ghostplayermusic",
+                  "user_avatar_image_url": "https://cdn1.suno.ai/34d24a8e.webp",
+                  "upvote_count": 3,
+                  "dislike_count": 0,
+                  "flag_count": 0,
+                  "skip_count": 0,
+                  "play_count": 596,
+                  "song_count": 21,
+                  "name": "Unplug 🧘",
+                  "description": "Deep breaths... relax your mind... perfect for deep focus, sleep, or mediation",
+                  "is_discover_playlist": false
+                },
+                {
+                  "id": "09367564-e5df-4a5e-b5c7-04cc057c0b77",
+                  "entity_type": "playlist_schema",
+                  "image_url": "https://cdn2.suno.ai/GENRE_COVER_IMG_ChillWave.jpeg",
+                  "playlist_clips": [],
+                  "current_page": 0,
+                  "num_total_results": 62,
+                  "is_owned": false,
+                  "is_trashed": false,
+                  "is_public": true,
+                  "user_display_name": "GROOVEBOT",
+                  "user_handle": "groovebot",
+                  "user_avatar_image_url": "https://cdn1.suno.ai/defaultBlue.webp",
+                  "upvote_count": 15,
+                  "dislike_count": 1,
+                  "flag_count": 0,
+                  "skip_count": 0,
+                  "play_count": 3670,
+                  "song_count": 62,
+                  "name": "Chillwave",
+                  "description": "Sunsets and nostalgia for memories you never actually had",
+                  "is_discover_playlist": true
+                }
+              ]
+            },
+            {
+              "title": "New Songs",
+              "id": "new_songs_playlist",
+              "section_name": "new_songs_playlist",
+              "style_type": "normal",
+              "section_type": "playlist",
+              "items": [
+                {
+                  "id": "b6569497-1b2c-4f1c-a861-8e46e30a8de9",
+                  "entity_type": "song_schema",
+                  "video_url": "https://cdn1.suno.ai/b6569497-1b2c-4f1c-a861-8e46e30a8de9.mp4",
+                  "audio_url": "https://cdn1.suno.ai/b6569497-1b2c-4f1c-a861-8e46e30a8de9.mp3",
+                  "image_url": "https://cdn2.suno.ai/image_b6569497-1b2c-4f1c-a861-8e46e30a8de9.jpeg",
+                  "image_large_url": "https://cdn2.suno.ai/image_large_b6569497-1b2c-4f1c-a861-8e46e30a8de9.jpeg",
+                  "major_model_version": "v4.5",
+                  "model_name": "chirp-ahi-up-1",
+                  "metadata": {
+                    "tags": "bang it, hard core, rock, east coast rap, male vocals, hit it, let it rip, bad ass metal",
+                    "prompt": "[Intro] \n\n[Guitar Interlude]\n\n[Verse]\nSaw her in the moonlight sneakin through the night\nEyes like glowing embers set the world alight\nHeart of mischief laughter’s on the rise\nDanger in her smile oh baby’s got snake eyes\n\n[Pre-Chorus]\nCharming eyes so bright\nHer love is a painful delight (oh yeah)\nYou won’t know until she bites\n\n[Chorus]\nEvery step she takes she’s light and free\nLurking in the shadows fate’s decree\nWhispers of her past they mesmerize\nCareful where you tread ‘cause baby’s got snake eyes\n\n[Break]\n[Instrumental Interlude]\n\n[Verse 2]\nWalking on a tightrope charm is her disguise\nTrading sweetened venom and the sweetest lies\nMystery woman’s got me so hypnotized\nFalling for her spell now baby’s got snake eyes\n\n[Pre-Chorus]\nCharming eyes so bright\nHer love is a painful delight (oh yeah)\nYou won’t know until she bites\n\n[Chorus]\nEvery step she takes she’s light and free\nLurking in the shadows fate’s decree\nWhispers of her past they mesmerize\nCareful where you tread ‘cause baby’s got snake eyes\n\n[Break]\n[Instrumental Interlude]\n\n[Bridge]\nShe’s a secret weapon under moonlit skies\nA riddle wrapped in starlight truth belies\nCaught in her enchantment took me by surprise\nI’m frozen in her stare ‘cause baby’s got snake eyes\n\n[Guitar Solo]\n\n[Verse 3]\nHer snaky curves coiled around me\nShe sinks her fangs into me\nNow stricken by her poison\nI am doomed to her dungeon ‘cause baby’s got snake eyes\n\n[Pre-Chorus]\nCharming eyes so bright\nHer love is a painful delight (oh yeah)\nYou won’t know until she bites\n\n[Chorus]\nEvery step she takes she’s light and free\nLurking in the shadows fate’s decree\nWhispers of her past they mesmerize\nCareful where you tread ‘cause baby’s got snake eyes\n\n[Instrumental Fadeout]\n\n[End]\n",
+                    "edited_clip_id": "a8a1457f-fc01-4bea-a006-b410a550fffd",
+                    "type": "upsample",
+                    "duration": 239,
+                    "refund_credits": false,
+                    "stream": false,
+                    "upsample_clip_id": "a8a1457f-fc01-4bea-a006-b410a550fffd",
+                    "task": "upsample",
+                    "can_remix": true,
+                    "is_remix": false,
+                    "priority": 10
+                  },
+                  "is_liked": false,
+                  "user_id": "c43d02d2-3820-4ce6-9b24-2a44012ec6d5",
+                  "display_name": "FreddyMax [YouTube @FreddyMaxOfficial]",
+                  "handle": "freddymax",
+                  "is_handle_updated": true,
+                  "avatar_image_url": "https://cdn1.suno.ai/1d702fce.webp",
+                  "is_trashed": false,
+                  "explicit": false,
+                  "comment_count": 0,
+                  "flag_count": 0,
+                  "created_at": "2025-05-03T10:00:41.397Z",
+                  "status": "complete",
+                  "title": "Baby's Got Snake Eyes Extended (Remastered)",
+                  "play_count": 11,
+                  "upvote_count": 7,
+                  "is_public": true,
+                  "allow_comments": true
+                },
+                {
+                  "id": "c7db5a49-0da0-47fb-9ffc-072b930a665b",
+                  "entity_type": "song_schema",
+                  "video_url": "https://cdn1.suno.ai/c7db5a49-0da0-47fb-9ffc-072b930a665b.mp4",
+                  "audio_url": "https://cdn1.suno.ai/c7db5a49-0da0-47fb-9ffc-072b930a665b.mp3",
+                  "image_url": "https://cdn2.suno.ai/c7db5a49-0da0-47fb-9ffc-072b930a665b_c50c1f53.jpeg",
+                  "image_large_url": "https://cdn2.suno.ai/c7db5a49-0da0-47fb-9ffc-072b930a665b_c50c1f53.jpeg",
+                  "major_model_version": "v4.5",
+                  "model_name": "chirp-auk",
+                  "metadata": {
+                    "tags": "Instrumental\n8D audio, lounge, ethereal jazz",
+                    "prompt": "",
+                    "type": "gen",
+                    "duration": 140.72,
+                    "refund_credits": false,
+                    "stream": true,
+                    "can_remix": true,
+                    "is_remix": false,
+                    "priority": 10
+                  },
+                  "is_liked": false,
+                  "user_id": "5daefb1f-2673-4ce1-bb19-90ee744a79fe",
+                  "display_name": "Larissa Kryukova (@lvk music)",
+                  "handle": "adrenalinefueledplaylists6930",
+                  "is_handle_updated": true,
+                  "avatar_image_url": "https://cdn1.suno.ai/c5fe4c2e.webp",
+                  "is_trashed": false,
+                  "explicit": false,
+                  "comment_count": 0,
+                  "flag_count": 0,
+                  "display_tags": "lounge, ethereal jazz, instrumental",
+                  "created_at": "2025-05-03T09:37:51.001Z",
+                  "status": "complete",
+                  "title": "LVK Instrumental  - # 173",
+                  "play_count": 62,
+                  "upvote_count": 17,
+                  "is_public": true,
+                  "allow_comments": true
+                }
+              ],
+              "preview_items_count": 2
+            }
+          ],
+          "page": 0,
+          "total_sections": 12,
+          "page_size": 5,
+          "start_index": 0
+        }
+      },
+      "Trending": {
+        "type": "object",
+        "properties": {
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "selected_option": {
+                  "type": "string"
+                },
+                "secondary_options": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "secondary_selected_option": {
+                  "type": "string"
+                },
+                "section_name": {
+                  "type": "string"
+                },
+                "style_type": {
+                  "type": "string"
+                },
+                "section_type": {
+                  "type": "string"
+                },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "entity_type": {
+                        "type": "string"
+                      },
+                      "video_url": {
+                        "type": "string"
+                      },
+                      "video_cover_url": {
+                        "type": "string"
+                      },
+                      "preview_url": {
+                        "type": "string"
+                      },
+                      "audio_url": {
+                        "type": "string"
+                      },
+                      "image_url": {
+                        "type": "string"
+                      },
+                      "image_large_url": {
+                        "type": "string"
+                      },
+                      "major_model_version": {
+                        "type": "string"
+                      },
+                      "model_name": {
+                        "type": "string"
+                      },
+                      "metadata": {
+                        "type": "object",
+                        "properties": {
+                          "tags": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "prompt": {
+                            "type": "string"
+                          },
+                          "concat_history": {
+                            "type": "array",
+                            "items": {
+                              "nullable": true
+                            }
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "duration": {
+                            "type": "number"
+                          },
+                          "persona_id": {
+                            "type": "string"
+                          },
+                          "video_upload_width": {
+                            "type": "number"
+                          },
+                          "video_upload_height": {
+                            "type": "number"
+                          },
+                          "edit_session_id": {
+                            "type": "string"
+                          },
+                          "can_remix": {
+                            "type": "boolean"
+                          },
+                          "is_remix": {
+                            "type": "boolean"
+                          },
+                          "has_vocal": {
+                            "type": "boolean"
+                          },
+                          "refund_credits": {
+                            "type": "boolean"
+                          },
+                          "stream": {
+                            "type": "boolean"
+                          },
+                          "priority": {
+                            "type": "number"
+                          },
+                          "is_audio_upload_tos_accepted": {
+                            "type": "boolean"
+                          },
+                          "gpt_description_prompt": {
+                            "type": "string"
+                          },
+                          "cover_clip_id": {
+                            "type": "string"
+                          },
+                          "upsample_clip_id": {
+                            "type": "string"
+                          },
+                          "task": {
+                            "type": "string"
+                          },
+                          "free_quota_category": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "prompt",
+                          "type",
+                          "duration"
+                        ]
+                      },
+                      "caption": {
+                        "type": "string"
+                      },
+                      "is_liked": {
+                        "type": "boolean"
+                      },
+                      "user_id": {
+                        "type": "string"
+                      },
+                      "display_name": {
+                        "type": "string"
+                      },
+                      "handle": {
+                        "type": "string"
+                      },
+                      "is_handle_updated": {
+                        "type": "boolean"
+                      },
+                      "avatar_image_url": {
+                        "type": "string"
+                      },
+                      "is_trashed": {
+                        "type": "boolean"
+                      },
+                      "explicit": {
+                        "type": "boolean"
+                      },
+                      "comment_count": {
+                        "type": "number"
+                      },
+                      "flag_count": {
+                        "type": "number"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "play_count": {
+                        "type": "number"
+                      },
+                      "upvote_count": {
+                        "type": "number"
+                      },
+                      "is_public": {
+                        "type": "boolean"
+                      },
+                      "allow_comments": {
+                        "type": "boolean"
+                      },
+                      "persona": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "image_s3_id": {
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "root_clip_id": {
+                            "type": "string"
+                          },
+                          "user_handle": {
+                            "type": "string"
+                          },
+                          "user_display_name": {
+                            "type": "string"
+                          },
+                          "user_image_url": {
+                            "type": "string"
+                          },
+                          "is_owned": {
+                            "type": "boolean"
+                          },
+                          "is_public": {
+                            "type": "boolean"
+                          },
+                          "is_trashed": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "image_s3_id",
+                          "root_clip_id",
+                          "user_handle",
+                          "user_display_name",
+                          "user_image_url",
+                          "is_owned",
+                          "is_public",
+                          "is_trashed"
+                        ]
+                      },
+                      "display_tags": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "entity_type",
+                      "audio_url",
+                      "image_url",
+                      "image_large_url",
+                      "metadata",
+                      "is_liked",
+                      "user_id",
+                      "display_name",
+                      "handle",
+                      "is_handle_updated",
+                      "avatar_image_url",
+                      "is_trashed",
+                      "explicit",
+                      "comment_count",
+                      "flag_count",
+                      "created_at",
+                      "status",
+                      "title",
+                      "play_count",
+                      "upvote_count",
+                      "is_public",
+                      "allow_comments"
+                    ]
+                  }
+                },
+                "preview_items_count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "title",
+                "id",
+                "options",
+                "selected_option",
+                "secondary_options",
+                "secondary_selected_option",
+                "section_name",
+                "style_type",
+                "section_type",
+                "items",
+                "preview_items_count"
+              ]
+            }
+          },
+          "page": {
+            "type": "number"
+          },
+          "total_sections": {
+            "type": "number"
+          },
+          "page_size": {
+            "type": "number"
+          },
+          "start_index": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "sections",
+          "page",
+          "total_sections",
+          "page_size",
+          "start_index"
+        ],
+        "description": "Trending response schema",
+        "example": {
+          "sections": [
+            {
+              "title": "English Trending",
+              "id": "discover_playlist",
+              "options": [
+                "English",
+                "Global",
+                "Arabic",
+                "Bengali",
+                "Chinese",
+                "Czech",
+                "Dutch",
+                "Finnish",
+                "French",
+                "German",
+                "Greek",
+                "Gujarati",
+                "Hebrew",
+                "Hindi",
+                "Hungarian",
+                "Indonesian",
+                "Italian",
+                "Japanese",
+                "Kazakh",
+                "Korean",
+                "Malay",
+                "Persian",
+                "Polish",
+                "Portuguese",
+                "Panjabi",
+                "Russian",
+                "Spanish",
+                "Swedish",
+                "Tagalog",
+                "Tamil",
+                "Telugu",
+                "Thai",
+                "Turkish",
+                "Ukrainian",
+                "Urdu",
+                "Vietnamese"
+              ],
+              "selected_option": "English",
+              "secondary_options": [
+                "Now",
+                "Weekly",
+                "Monthly",
+                "All Time"
+              ],
+              "secondary_selected_option": "Now",
+              "section_name": "trending_songs",
+              "style_type": "normal",
+              "section_type": "playlist",
+              "items": [
+                {
+                  "id": "a63cc9ec-7238-45d7-a227-b1d99d7254bc",
+                  "entity_type": "song_schema",
+                  "video_url": "https://cdn1.suno.ai/a63cc9ec-7238-45d7-a227-b1d99d7254bc.mp4",
+                  "audio_url": "https://cdn1.suno.ai/a63cc9ec-7238-45d7-a227-b1d99d7254bc.mp3",
+                  "image_url": "https://cdn2.suno.ai/a63cc9ec-7238-45d7-a227-b1d99d7254bc_da65ddbc.jpeg",
+                  "image_large_url": "https://cdn2.suno.ai/a63cc9ec-7238-45d7-a227-b1d99d7254bc_da65ddbc.jpeg",
+                  "major_model_version": "v4.5",
+                  "model_name": "chirp-auk",
+                  "metadata": {
+                    "tags": "synthwave, lo-fi, indie rock, disco dance, phonk beat",
+                    "prompt": "[Intro]\nOh, I’m tracing stars with a broken map — still lost, je me perds, je me perds\nAh, I’m calling out but your heart’s off-track — pas de lumière, pas de repère\n\n[Verse 1]\nCaught in a maze of my mind, I can’t tell where I began\nDes ombres sur les murs, des pas inconnus — où suis-je vraiment ?\nI picture your face in the firelight, but I’m scared to touch the flame\nOne step forward, two back in time, je danse encore avec ton nom\n\n[Pre-Chorus]\nBut I still believe you’re out there somewhere\nDonne-moi un signe, je viendrai vers toi\nYou bring the silence, I’ll bring the sky\nSous les étoiles gelées, je crie pour toi\n\n[Chorus]\nAh-woo, searching for you with a compass, mais tu t’effaces, tu te caches\nOh-oh, love in your heart like a fortress, je ne peux pas monter, je ne peux pas\nAh-woo, calling your name through the night wind, le vent me trahit encore\nHaha, of course I’d chase the impossible—c’est ma folie, c’est mon sort\n\n[Verse 2]\nLeave me alone if you need to, I still hold the dream inside\nTu me manques comme l’aube, quand les larmes commencent à tomber\nIt hurts ‘cause it’s all too familiar—my clock says there’s half an hour\nDis-moi, où es-tu maintenant ? Et qui suis-je sans ta lumière ?\n\n[Pre-Chorus]\nStill got the fire, still got the map\nTrace-moi une route, je n’abandonnerai pas\nYou bring the distance, I’ll bring the run\nÀ travers les mondes, je cours vers toi\n\n[Chorus]\nAh-woo, searching for you with a compass, mais tu t’éloignes, tu disparais\nOh-oh, love in your heart like a fortress, je frappe, mais rien ne s’ouvre jamais\nAh-woo, calling your name through the night wind, mais ton écho s’efface\nHaha, of course I’d chase the impossible — j’y vais, quoi qu’il se passe\n\n[Bridge]\nAh, ah, ah, ah — tu m’entends, là-haut ?\nOh, oh, oh, oh — je parle aux nuages\nWe were planets misaligned, now I float, I fly\nJe poursuis ton ombre dans le ciel froid\n\n[Final Chorus]\nAh-woo, still searching for you with a compass, mais je ne te trouve jamais\nOh-oh, love in your heart still haunts me — ça brûle encore, je ne peux l’oublier\nAh-woo, I scream through the void with a last breath, peut-être tu m’entendras\nHaha... but if you don’t, je garde l’espoir, je te laisse là\n\n[Outro]\nOh, I’m tracing stars with a broken map — je suis perdu, mais j’essaie, j’essaie\nAh, maybe your love was a ghostlight... mais je me lève, je me lève, je me lève",
+                    "type": "gen",
+                    "duration": 254.88,
+                    "can_remix": true,
+                    "is_remix": false,
+                    "refund_credits": false,
+                    "stream": true,
+                    "priority": 10
+                  },
+                  "caption": "halfway is enough",
+                  "is_liked": false,
+                  "user_id": "5f0a911a-8224-4637-a04e-d8efa15dfa2e",
+                  "display_name": "ari",
+                  "handle": "omniamore",
+                  "is_handle_updated": true,
+                  "avatar_image_url": "https://cdn1.suno.ai/e372ed14.webp",
+                  "is_trashed": false,
+                  "explicit": false,
+                  "comment_count": 56,
+                  "flag_count": 3,
+                  "created_at": "2025-05-02T23:19:37.006Z",
+                  "status": "complete",
+                  "title": "broken compass",
+                  "play_count": 13546,
+                  "upvote_count": 565,
+                  "is_public": true,
+                  "allow_comments": true,
+                  "display_tags": "synthwave, lo-fi, indie rock, disco dance, phonk beat"
+                },
+                {
+                  "id": "34945fa9-adfb-4841-9c6f-68fbe1de0df8",
+                  "entity_type": "song_schema",
+                  "video_url": "https://cdn1.suno.ai/34945fa9-adfb-4841-9c6f-68fbe1de0df8.mp4",
+                  "video_cover_url": "https://cdn1.suno.ai/video_upload_b1e29ed0-35fe-404e-9bf3-4f9ee3fb0098.mp4",
+                  "preview_url": "https://cdn1.suno.ai/video_upload_b1e29ed0-35fe-404e-9bf3-4f9ee3fb0098_preview.mp4",
+                  "audio_url": "https://cdn1.suno.ai/34945fa9-adfb-4841-9c6f-68fbe1de0df8.mp3",
+                  "image_url": "https://cdn2.suno.ai/image_video_upload_b1e29ed0-35fe-404e-9bf3-4f9ee3fb0098_snapshot_0s.jpeg",
+                  "image_large_url": "https://cdn2.suno.ai/image_large_video_upload_b1e29ed0-35fe-404e-9bf3-4f9ee3fb0098_snapshot_0s.jpeg",
+                  "major_model_version": "v4.5",
+                  "model_name": "chirp-auk",
+                  "metadata": {
+                    "tags": "r&b, hip-hop, female, male, duet, 88bpm, 808s, reverb vocals",
+                    "prompt": "[Female - Intro]\nnah nah nah\nla la la\nnah nah nah\nla la la\n\n[Female - Verse ]\nI just packed my bag\nLeft you so slowly\nYou can keep all of your things\nAct like you know me\nHeard the words you said\nYou never showed me\nNow you tryna slide right back\nI’m done - don’t hold me\n\n[Female - Pre-Chorus]:\nI don’t wanna play you like the old me \nYou don’t hit my line sayin’ you wanna hold me \nNow you in your feels, yeah babe I know that\nTryna spin the block, no baby, I won’t go back\n\n[Female - Chorus]:\nYou told me\nYou know me\nThen showed me\nYou don’t own me  \nYou told me\nYou know me\nThen showed me\nYou don’t own me\n\n[Male Rap Verse]:\nI ain’t say the right things when I had the time\nToo busy tryna win, caught up in my pride\nYou was movin’ different, I ain't even ask why\nNow I'm scrollin' through your page just to feel that high\n\nI ain’t think you’d leave, thought you'd ride or stay\nNow your bag packed up, you ain’t call all day\nYou got cold in the eyes, no words to say\nGuess the real ones leave when you move that way\n\n[Female & Male - Chorus]:\nYou told me\nYou know me\nThen showed me\nYou don’t own me  \nYou told me\nYou know me\nThen showed me\nYou don’t own me\n\n[Outro]\n",
+                    "type": "gen",
+                    "duration": 132.36,
+                    "video_upload_width": 720,
+                    "video_upload_height": 720,
+                    "can_remix": true,
+                    "is_remix": true,
+                    "has_vocal": false,
+                    "refund_credits": false,
+                    "stream": true,
+                    "priority": 10,
+                    "cover_clip_id": "19822f85-2c51-4a1c-9c3a-c9eae1747da5",
+                    "task": "cover"
+                  },
+                  "caption": "New Music Friday 🔥",
+                  "is_liked": false,
+                  "user_id": "d6a774a3-adb3-4cd3-b315-754180ccafd4",
+                  "display_name": "Yamill",
+                  "handle": "yamill",
+                  "is_handle_updated": true,
+                  "avatar_image_url": "https://cdn1.suno.ai/af392a24.webp",
+                  "is_trashed": false,
+                  "explicit": false,
+                  "comment_count": 33,
+                  "flag_count": 11,
+                  "created_at": "2025-05-02T19:15:23.275Z",
+                  "status": "complete",
+                  "title": "CRUSHED",
+                  "play_count": 13027,
+                  "upvote_count": 460,
+                  "is_public": true,
+                  "allow_comments": true,
+                  "display_tags": "r&b, hip-hop"
+                }
+              ],
+              "preview_items_count": 2
+            }
+          ],
+          "page": 0,
+          "total_sections": 1,
+          "page_size": 2,
+          "start_index": 0
+        }
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/playlists/{playlistId}": {
+      "get": {
+        "summary": "Get playlist info",
+        "tags": [
+          "Playlists"
+        ],
+        "parameters": [
+          {
+            "name": "playlistId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A playlist response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Playlist"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/playlists/{playlistId}/{page}": {
+      "get": {
+        "summary": "Get playlist page",
+        "tags": [
+          "Playlists"
+        ],
+        "parameters": [
+          {
+            "name": "playlistId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A playlist response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Playlist"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/song/{songId}": {
+      "get": {
+        "summary": "Get song info",
+        "tags": [
+          "Songs"
+        ],
+        "parameters": [
+          {
+            "name": "songId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A song response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Song"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/song/comments/{songId}": {
+      "get": {
+        "summary": "Get song comments",
+        "tags": [
+          "Songs"
+        ],
+        "parameters": [
+          {
+            "name": "songId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A song comments response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{userId}": {
+      "get": {
+        "summary": "Get user info",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A user info response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/recent/{userId}": {
+      "get": {
+        "summary": "Get user recent songs",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A user recent songs response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trending/status": {
+      "get": {
+        "summary": "Get Suno global status",
+        "tags": [
+          "Trending"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A Suno global status response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trending/{list}/{timeSpan}": {
+      "get": {
+        "summary": "Get specific trending page",
+        "tags": [
+          "Trending"
+        ],
+        "parameters": [
+          {
+            "name": "list",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Global",
+                "Arabic",
+                "Bengali",
+                "Chinese",
+                "Czech",
+                "Dutch",
+                "English",
+                "Finnish",
+                "French",
+                "German",
+                "Greek",
+                "Gujarati",
+                "Hebrew",
+                "Hindi",
+                "Hungarian",
+                "Indonesian",
+                "Italian",
+                "Japanese",
+                "Kazakh",
+                "Korean",
+                "Malay",
+                "Persian",
+                "Polish",
+                "Portuguese",
+                "Panjabi",
+                "Russian",
+                "Spanish",
+                "Swedish",
+                "Tagalog",
+                "Tamil",
+                "Telugu",
+                "Thai",
+                "Turkish",
+                "Ukrainian",
+                "Urdu",
+                "Vietnamese"
+              ]
+            }
+          },
+          {
+            "name": "timeSpan",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Now",
+                "Weekly",
+                "Monthly",
+                "All Time"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A specific trending info response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Trending"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

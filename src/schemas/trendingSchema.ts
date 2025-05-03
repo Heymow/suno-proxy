@@ -1,4 +1,10 @@
+import { trendingResponse } from '../swagger/example_responses/get_trending_list.js';
+import {
+    extendZodWithOpenApi
+} from '@asteasolutions/zod-to-openapi';
 import { z } from "zod";
+
+extendZodWithOpenApi(z);
 
 const MetadataSchema = z.object({
     tags: z.string().optional().nullable(),
@@ -91,4 +97,9 @@ export const TrendingResponseSchema = z.object({
     total_sections: z.number(),
     page_size: z.number(),
     start_index: z.number(),
-});
+})
+    .openapi({
+        description: 'Trending response schema',
+        required: ['sections', 'page', 'total_sections', 'page_size', 'start_index'],
+        example: trendingResponse
+    })

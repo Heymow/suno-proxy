@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import { Request, Response } from 'express';
-import { User, UserRecent, UserRecentSchema, UserSchema } from '../schemas/userSchema.js';
+import { User, UserRecent, UserRecentPageResponseSchema, UserPageResponseSchema } from '../schemas/userSchema.js';
 import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { getCachedItem, setCachedItem } from '../services/cacheService.js';
 import { isValidPageNumber } from '../utils/regex.js';
@@ -14,7 +14,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 async function fetchAllUserPages(
     handle: string,
     totalPages: number,
-    schema: typeof UserSchema,
+    schema: typeof UserPageResponseSchema,
     forceRefresh: boolean = false
 ) {
     let allClips: User['clips'] = [];
@@ -28,7 +28,15 @@ async function fetchAllUserPages(
             url,
             schema,
             notFoundMessage: `User page ${currentPage} not found`,
-            logPrefix: 'user'
+            logPrefix: 'user',
+            normalizer: data => {
+                if (data.clips && !Array.isArray(data.clips)) {
+                    data.clips = Object.values(data.clips).filter(
+                        v => typeof v === 'object' && v !== null && !Array.isArray(v)
+                    );
+                }
+                return data;
+            }
         });
 
         if ('error' in result) {
@@ -72,7 +80,7 @@ export const getUserPageInfo = async (req: Request,
             id: `${handle}_page_${pageNumber}`,
             forceRefresh,
             url,
-            schema: UserSchema,
+            schema: UserPageResponseSchema,
             notFoundMessage: 'User not found',
             logPrefix: 'user'
         });
@@ -113,7 +121,7 @@ export const getAllClipsFromUser = async (handle: string, forceRefresh = false):
             id: `${handle}_page_1`,
             forceRefresh,
             url: `${profileUrl}${handle}?page=1&playlists_sort_by=created_at&clips_sort_by=created_at`,
-            schema: UserSchema,
+            schema: UserPageResponseSchema,
             notFoundMessage: 'User not found',
             logPrefix: 'user'
         });
@@ -126,14 +134,14 @@ export const getAllClipsFromUser = async (handle: string, forceRefresh = false):
         const totalPages = Math.ceil(totalClips / 20);
 
         let allClips = [...firstPage.clips];
-        const nextClips = await fetchAllUserPages(handle, totalPages, UserSchema, forceRefresh);
+        const nextClips = await fetchAllUserPages(handle, totalPages, UserPageResponseSchema, forceRefresh);
         allClips = allClips.concat(nextClips);
 
         firstPage.clips = allClips;
 
         firstPage.clips.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-        const typedUser = UserSchema.safeParse(firstPage);
+        const typedUser = UserPageResponseSchema.safeParse(firstPage);
         if (!typedUser.success) {
             console.error('Error rebuilding user data:', typedUser.error.format());
             return { error: 'Error rebuilding user data:', details: typedUser.error.format() };
@@ -167,7 +175,7 @@ export const getRecentClips = async (req: Request, res: Response): Promise<Respo
             id: handle,
             forceRefresh,
             url,
-            schema: UserRecentSchema,
+            schema: UserRecentPageResponseSchema,
             notFoundMessage: 'User not found',
             logPrefix: 'user_recent'
         });

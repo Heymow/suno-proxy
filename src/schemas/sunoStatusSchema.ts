@@ -1,599 +1,10 @@
-// {
-//     "sections": [
-//       {
-//         "title": "",
-//         "id": "featured_feed",
-//         "section_type": "featured_feed",
-//         "items": [
-//           {
-//             "id": "featured_feed_for_you",
-//             "title": "For You",
-//             "link": "/for-you",
-//             "mobile_link": "",
-//             "items": [],
-//             "item_type": "song_schema"
-//           },
-//           {
-//             "id": "featured_feed_following",
-//             "title": "Suggested Creators",
-//             "link": "/feed",
-//             "mobile_link": "",
-//             "items": [],
-//             "item_type": "following_feed_item_schema"
-//           },
-//           {
-//             "id": "featured_feed_trending",
-//             "title": "Trending",
-//             "link": "/trending",
-//             "mobile_link": "",
-//             "items": [
-//               {
-//                 "id": "6a2d9bb4-9804-4638-9abc-be63af682add",
-//                 "entity_type": "song_schema",
-//                 "video_url": "https://cdn1.suno.ai/6a2d9bb4-9804-4638-9abc-be63af682add.mp4",
-//                 "audio_url": "https://cdn1.suno.ai/6a2d9bb4-9804-4638-9abc-be63af682add.mp3",
-//                 "image_url": "https://cdn2.suno.ai/6a2d9bb4-9804-4638-9abc-be63af682add_45c78345.jpeg",
-//                 "image_large_url": "https://cdn2.suno.ai/6a2d9bb4-9804-4638-9abc-be63af682add_45c78345.jpeg",
-//                 "major_model_version": "v4.5",
-//                 "model_name": "chirp-auk",
-//                 "metadata": {
-//                   "tags": "funk-rap bounce, alt hip hop, Neo-Soul-Infused Deep House, groovy, funk soul, spacing",
-//                   "prompt": "yeah i really only came to kick it\nsomething, like soccer, or judo \nmy mind gone, to new planet\nmaybe pluto, \nwho know? \nyou really wanna fight like it's sumo\nlet it go motherfucker, who do you know?\nweed will take you up to mars, baby i ain't talking bruno\ni might even play my cards, yeah reverse like it's uno\nlook you gonna be a star, okay fine here yo' kudos\nsorta like alaska, cold as ice, baby juno\nmeanwhile, ima take a break for a moment\ndeep breath in, baby pray for atonement\noh you show it? \nima find a place to hold emotion\nfore i phone in like a bomb threat, and blow it\nback to the hangin', games playin on the play station\nwaste time, blurry like my eyes need lasik\nbaseline bumping you can hear it in a space ship\nfeeling like i'm playin for the lakers, amazin\n\n[chorus]\nso \nwanna vibe baby bring a friend\ni extend my brother's hand \ni would rather stay in, rip the pen\nbefore you! turn! off! all the lights! \n\n[verse 2]\ncause we ain't got a \nlot of time left\ni manuver like the heimlich, very upset\ni been workin' like a migrant\nall the success, ain't improved upon where i been\nso ima do me and take another fuckin' night in\nreally? boy i see ya trippin psilocybin\nspouting off some shit like you done opened up the hydrant\nlovin' is the drug, but i don't know if you supplyin'\ni don't want for this to get violent\nbut i take your silence, as guilt, or serious complicity\ndont mistake my kindness, for any authenticity\ni'ma turn the dial up to burn, in the sixth degree\none day we gonna make history, finna see\n\n\n\n[chorus]\nwoah slow your roll\nbaby we ain't gonna do too much tonight\nso you can slide\nand come inside\nbut on your way please grab my food and flick the lights\n\ncause this ain't magic\nrather i'd say that it feels just quite alright\nour love ain't average\nyour touch will keep me up into the night\n\nwanna ride baby bring a friend, \ni extend my brothers hand\ni would rather stay in bed\nso please turn off the lights!",
-//                   "concat_history": [
-//                     {
-//                       "id": "b035b82f-cfda-47df-b1f9-18e73fdab453",
-//                       "type": "concat",
-//                       "infill": false,
-//                       "source": "web",
-//                       "continue_at": 125.08
-//                     },
-//                     {
-//                       "id": "fda12b77-9e05-4c86-b56b-f636368d4d82"
-//                     }
-//                   ],
-//                   "type": "concat",
-//                   "duration": 210.91997916666668,
-//                   "edit_session_id": "18692e05-95c0-42a5-88bd-0dddbb318f21",
-//                   "can_remix": true,
-//                   "is_remix": false
-//                 },
-//                 "caption": "get outta here",
-//                 "is_liked": false,
-//                 "user_id": "2aaf8adb-9953-496d-bea9-0b1d79f98fb0",
-//                 "display_name": "chunck 🐐",
-//                 "handle": "chunck",
-//                 "is_handle_updated": true,
-//                 "avatar_image_url": "https://cdn1.suno.ai/c866ee34.webp",
-//                 "is_trashed": false,
-//                 "explicit": false,
-//                 "comment_count": 36,
-//                 "flag_count": 6,
-//                 "created_at": "2025-05-01T22:58:34.595Z",
-//                 "status": "complete",
-//                 "title": "f*** you, let's hang",
-//                 "play_count": 14519,
-//                 "upvote_count": 436,
-//                 "is_public": true,
-//                 "allow_comments": true
-//               },
-//               {
-//                 "id": "307bf850-6d49-44f6-858e-23e29a64d1b5",
-//                 "entity_type": "song_schema",
-//                 "video_url": "https://cdn1.suno.ai/307bf850-6d49-44f6-858e-23e29a64d1b5.mp4",
-//                 "audio_url": "https://cdn1.suno.ai/307bf850-6d49-44f6-858e-23e29a64d1b5.mp3",
-//                 "image_url": "https://cdn2.suno.ai/image_307bf850-6d49-44f6-858e-23e29a64d1b5.jpeg",
-//                 "image_large_url": "https://cdn2.suno.ai/image_large_307bf850-6d49-44f6-858e-23e29a64d1b5.jpeg",
-//                 "major_model_version": "v4.5",
-//                 "model_name": "chirp-auk",
-//                 "metadata": {
-//                   "tags": "Chicago rap, clear vocals, conscious drill, soul-trap, boom bap roots, pitched-down gospel samples, ambient vinyl crackle, reversed piano loops, 808 slides, spoken-word interludes, breath-heavy delivery, gritty realism, layered rhyme schemes, inner-city storytelling, chipmunk samples, samples",
-//                   "prompt": "[Intro]\nSometimes I wonder if the water remembers\nAll the faces it watched disappear...\n\n[Verse 1]\nMama lit candles by the kitchen light\nPrayin’ I’d come home and not another fight\nGunshots echo, that’s the lullaby\nSirens sing over babies cry\nI used to dream of a safer block\nWhere doors ain’t locked and the clocks don’t stop\nBut time froze when my brother went away\nNow his name's on the wall where the memories stay\n\nI talk to shadows that walk with me\nThey know the struggle, the hustle, the heat\nEvery move’s a gamble, every step a bet\nBut the dice roll heavy when you’re swimmin’ in debt\nI’m just tryna find peace, but it's hard to breathe\nIn a city where hope’s as rare as belief\nBut even in the dark, I still find the spark\nEven when I’m lost, I’m still playin’ my part\n\n[Pre-Chorus]\nI ain't tryna be a statistic\nI ain't tryna be just another name\nBut they teach you early in this game\nTo survive, you gotta learn how to fight through the pain\n\n[Chorus]\nAshes in the lake, washed away with the rain\nEverything we lose, everything we gain\nI walk through the fire, but I’m still intact\nEvery step I take, I’m pullin' myself back\nAshes in the lake, but I still see the light\nI’m chasin' tomorrow, but I’m fightin’ tonight\nEvery scar on my soul, every crack in the ground\nI’ll be here forever, won’t let it bring me down\n\n[Verse 2]\nYou can see it in the eyes, the pain’s deep-set\nBut you can’t hide from the struggle you ain’t met\nLost friends, lost time, but I keep pressin’\nEvery day’s a blessing, but it’s hard to learn the lesson\nI’m out here tryna chase what’s left of me\nCan’t let the ghosts bury me beneath the streets\nI put my trust in these beats and these bars\nI wear my heart on my sleeve, battle scars\n\n[Pre-Chorus]\nI ain't tryna be a statistic\nI ain't tryna be just another name\nBut they teach you early in this game\nTo survive, you gotta learn how to fight through the pain\n\n[Chorus]\nAshes in the lake, washed away with the rain\nEverything we lose, everything we gain\nI walk through the fire, but I’m still intact\nEvery step I take, I’m pullin' myself back\nAshes in the lake, but I still see the light\nI’m chasin' tomorrow, but I’m fightin’ tonight\nEvery scar on my soul, every crack in the ground\nI’ll be here forever, won’t let it bring me down\n\n[Bridge]\nThey say the city don’t forgive, but I’m not here for forgiveness.\nI’m here to learn, to grow, to make it out, even if it’s one step at a time.\n'Cause in the end, it’s not the streets that define me.\nIt’s the fight in my heart.\n\n[Chorus]\nAshes in the lake, washed away with the rain\nEverything we lose, everything we gain\nI walk through the fire, but I’m still intact\nEvery step I take, I’m pullin' myself back\nAshes in the lake, but I still see the light\nI’m chasin' tomorrow, but I’m fightin’ tonight\nEvery scar on my soul, every crack in the ground\nI’ll be here forever, won’t let it bring me down\n\n[Outro]\nAshes in the lake... but we still rise.\nKeep walkin’, keep fightin’, we still alive.",
-//                   "edited_clip_id": "d3006332-af57-4394-b034-6360b6886af6",
-//                   "type": "edit_fade",
-//                   "duration": 209.8,
-//                   "edit_session_id": "780b354a-dc81-4ca3-b706-6ea060ed9505",
-//                   "can_remix": true,
-//                   "is_remix": false
-//                 },
-//                 "is_liked": false,
-//                 "user_id": "f87d023d-e7cb-45a8-9343-8ed13c961bbf",
-//                 "display_name": "DreamOUT",
-//                 "handle": "dreamout",
-//                 "is_handle_updated": true,
-//                 "avatar_image_url": "https://cdn1.suno.ai/2f369987.webp",
-//                 "is_trashed": false,
-//                 "explicit": false,
-//                 "comment_count": 21,
-//                 "flag_count": 2,
-//                 "created_at": "2025-05-02T00:16:46.717Z",
-//                 "status": "complete",
-//                 "title": "Ashes In The Lake",
-//                 "play_count": 5930,
-//                 "upvote_count": 325,
-//                 "is_public": true,
-//                 "allow_comments": true
-//               }
-//             ],
-//             "item_type": "song_schema",
-//             "feed_metadata": {
-//               "feed_metadata_type": "trending_metadata",
-//               "language": "",
-//               "language_text": "Global",
-//               "lang_map_keys": [
-//                 "Global",
-//                 "Arabic",
-//                 "Bengali",
-//                 "Chinese",
-//                 "Czech",
-//                 "Dutch",
-//                 "English",
-//                 "Finnish",
-//                 "French",
-//                 "German",
-//                 "Greek",
-//                 "Gujarati",
-//                 "Hebrew",
-//                 "Hindi",
-//                 "Hungarian",
-//                 "Indonesian",
-//                 "Italian",
-//                 "Japanese",
-//                 "Kazakh",
-//                 "Korean",
-//                 "Malay",
-//                 "Persian",
-//                 "Polish",
-//                 "Portuguese",
-//                 "Panjabi",
-//                 "Russian",
-//                 "Spanish",
-//                 "Swedish",
-//                 "Tagalog",
-//                 "Tamil",
-//                 "Telugu",
-//                 "Thai",
-//                 "Turkish",
-//                 "Ukrainian",
-//                 "Urdu",
-//                 "Vietnamese"
-//               ],
-//               "ranking_map_keys": [
-//                 "Now",
-//                 "Weekly",
-//                 "Monthly",
-//                 "All Time"
-//               ],
-//               "rank_text": "Now"
-//             },
-//             "feed_metadata_type": "trending_metadata"
-//           }
-//         ]
-//       },
-//       {
-//         "title": "Best of v4.5",
-//         "id": "480b0308-492b-4649-9a59-1d7c6782aa04",
-//         "link": "/playlist/480b0308-492b-4649-9a59-1d7c6782aa04",
-//         "section_name": "campaign_playlists",
-//         "style_type": "normal",
-//         "section_type": "playlist",
-//         "items": [
-//           {
-//             "id": "2cafd7f8-0240-4577-a68c-07fcb0606b1a",
-//             "entity_type": "song_schema",
-//             "video_url": "https://cdn1.suno.ai/2cafd7f8-0240-4577-a68c-07fcb0606b1a.mp4",
-//             "audio_url": "https://cdn1.suno.ai/2cafd7f8-0240-4577-a68c-07fcb0606b1a.mp3",
-//             "image_url": "https://cdn2.suno.ai/image_2cafd7f8-0240-4577-a68c-07fcb0606b1a.jpeg",
-//             "image_large_url": "https://cdn2.suno.ai/image_large_2cafd7f8-0240-4577-a68c-07fcb0606b1a.jpeg",
-//             "major_model_version": "v4.5",
-//             "model_name": "chirp-auk",
-//             "metadata": {
-//               "tags": "Gregorian Chant + Techno,Sacred. Futuristic. Meditative. Vast.\n100–108 (slow techno)",
-//               "prompt": "[Instrumental Intro]\n[Low drone rises from silence — ancient, deep like the inside of a cathedral.\nA single Gregorian chant echoes faintly, processed through glowing reverb, layered in Latin:]\n\nGloria in excelsis Deo,\net in terra pax hominibus bonae voluntatis.\nLaudamus te, benedicimus te,\nadoramus te, glorificamus te.\n\n[A slow, synthetic heartbeat begins — 100 BPM — airy ambient pads swelling.\nGlitched choirs flicker like spirits in the static.\nFiltered hi-hats hiss like incense in the air.]\n\n\n\n\n[Verse 1 – Spoken, robotic tone]\nLight breaks the code of the past.\nFaith dissolves in frequency.\nThe sky is silent.\nThe beat remains.\n\n[Instrumental Build]\n[A high-pitched synth enters, mimicking stained-glass arpeggios.]\n[Pulsing kick drums emerge under the chant — steady, reverent.]\n[Low-end bass swells beneath like subterranean thunder.]\n[A vocoder voice layers softly:]“Gloria… Gloria…”\n\n\n[Chant Loop – Latin Fragment]\nLaudamus te. Benedicimus te.\nAdoramus te. Glorificamus te.\n\n[Verse 2 – Whispered, human tone]\nWe do not kneel.\nWe move.\nCathedrals fall, but rhythm stands.\nThe divine is now digital.\n\n[Instrumental Break]\n[Full techno beat kicks in —\nfiltered hats, analog synth waves,\na modulated Gregorian choir drifting over it all.]\n[Laser-like melodies rise in sweeping arcs — cold, cosmic, transcendent.]\n\n[Bridge – Chant meets Machine]\nJesu Christe, cum Sancto Spiritu,\nin gloria Dei Patris… Amen.\n[Spoken beneath:]\nAmen…\nIn echo…\nIn binary…\nAmen.\n\n[Final Chorus – Instrumental Only]\n[The fusion reaches its peak:]\nchant syllables] (“Glo—ri—a”) [chopped and looped into polyrhythms,]\n[synth pads swell like digital choirs,\nthe beat glitches, breaks, and reforms.\nIt climbs… collapses… and reforms again.]\n\n\n[Outro]\n[The chant echoes once more:]\n“Gloria in excelsis Deo…”\n[One final sustained synth note glows like stained light through smoke,\nthen vanishes into silence.]\n",
-//               "type": "gen",
-//               "duration": 303.76,
-//               "refund_credits": false,
-//               "stream": true,
-//               "can_remix": true,
-//               "is_remix": false,
-//               "priority": 10
-//             },
-//             "is_liked": false,
-//             "user_id": "697797eb-d70c-43d8-83bc-d689f050b986",
-//             "display_name": "©️ Killeen3000",
-//             "handle": "killeen",
-//             "is_handle_updated": true,
-//             "avatar_image_url": "https://cdn1.suno.ai/eca76568.webp",
-//             "is_trashed": false,
-//             "explicit": false,
-//             "comment_count": 20,
-//             "flag_count": 2,
-//             "display_tags": "Gregorian chant, techno, sacred",
-//             "created_at": "2025-05-01T17:29:24.248Z",
-//             "status": "complete",
-//             "title": "Gloria in Techno",
-//             "play_count": 4841,
-//             "upvote_count": 275,
-//             "is_public": true,
-//             "allow_comments": true
-//           },
-//           {
-//             "id": "cfe5fe98-f753-4c8a-8724-9e7c9e217870",
-//             "entity_type": "song_schema",
-//             "video_url": "https://cdn1.suno.ai/cfe5fe98-f753-4c8a-8724-9e7c9e217870.mp4",
-//             "audio_url": "https://cdn1.suno.ai/cfe5fe98-f753-4c8a-8724-9e7c9e217870.mp3",
-//             "image_url": "https://cdn2.suno.ai/cfe5fe98-f753-4c8a-8724-9e7c9e217870_c4dacc8e.jpeg",
-//             "image_large_url": "https://cdn2.suno.ai/cfe5fe98-f753-4c8a-8724-9e7c9e217870_c4dacc8e.jpeg",
-//             "major_model_version": "v4.5",
-//             "model_name": "chirp-auk",
-//             "metadata": {
-//               "tags": "atmospheric, ethereal, and hypnotic, built on a steady four-on-the-floor beat (120–126 BPM) with soft, rounded kicks and delicate, syncopated percussion that breathes rather than pounds. The bass is smooth and fluid, serving the groove without overpowering the space.\n\nThe focus is on melodic repetition and slow evolution — shimmering arpeggios, airy synth pads, and bell-like plucks that rise and fall like waves. One or two high, crystalline notes repeat steadily, perfectly suspended between tension and release, creating a sense of longing, anticipation, and quiet euphoria. These notes feel almost like they’re whispering to the listener, circling closer with each loop, never fully giving in, always holding just enough back to remain tantalizing.\n\nModulation happens gently: filter sweeps, panning delays, and soft reverb tails stretch the sounds outward, creating a lush, spacious environment. The track should feel like floating inside a dream, weightless and endless, where each element br",
-//               "prompt": "",
-//               "type": "gen",
-//               "duration": 385.8,
-//               "refund_credits": false,
-//               "stream": true,
-//               "can_remix": true,
-//               "is_remix": false,
-//               "priority": 0
-//             },
-//             "is_liked": false,
-//             "user_id": "f977b85f-4022-4f4c-9718-fc0d520c797d",
-//             "display_name": "ali from suno",
-//             "handle": "kant",
-//             "is_handle_updated": true,
-//             "avatar_image_url": "https://cdn1.suno.ai/8b765cfc.webp",
-//             "is_trashed": false,
-//             "explicit": false,
-//             "comment_count": 15,
-//             "flag_count": 1,
-//             "created_at": "2025-04-23T20:05:02.526Z",
-//             "status": "complete",
-//             "title": "hypnosis",
-//             "play_count": 4122,
-//             "upvote_count": 142,
-//             "is_public": true,
-//             "allow_comments": true
-//           }
-//         ],
-//         "preview_items_count": 4
-//       },
-//       {
-//         "title": "Now in Motion",
-//         "id": "7679c335-16d4-419b-8254-5cd2c3f16b99",
-//         "link": "/playlist/7679c335-16d4-419b-8254-5cd2c3f16b99",
-//         "section_name": "campaign_playlists",
-//         "style_type": "normal",
-//         "section_type": "playlist",
-//         "items": [
-//           {
-//             "id": "f04dc954-6900-42db-a096-d813ba523e6f",
-//             "entity_type": "song_schema",
-//             "video_url": "https://cdn1.suno.ai/f04dc954-6900-42db-a096-d813ba523e6f.mp4",
-//             "video_cover_url": "https://cdn1.suno.ai/video_upload_f44032e5-3634-4312-8f0c-610d42360988.mp4",
-//             "preview_url": "https://cdn1.suno.ai/video_upload_f44032e5-3634-4312-8f0c-610d42360988_preview.mp4",
-//             "audio_url": "https://cdn1.suno.ai/f04dc954-6900-42db-a096-d813ba523e6f.mp3",
-//             "image_url": "https://cdn2.suno.ai/image_video_upload_f44032e5-3634-4312-8f0c-610d42360988_snapshot_0s.jpeg",
-//             "image_large_url": "https://cdn2.suno.ai/image_large_video_upload_f44032e5-3634-4312-8f0c-610d42360988_snapshot_0s.jpeg",
-//             "major_model_version": "v4",
-//             "model_name": "chirp-v4",
-//             "metadata": {
-//               "tags": "reggaeton,  perreo",
-//               "prompt": "Verso 1\nSalíamos sin plan, solas por ahí,\nCon mi amiga, siempre sabes cómo es.\nNada de preocupaciones, solo pasarla bien,\nUnas risas, una cerveza, y todo es cien.\nCoro\nTú y yo, sin pensar en nada,\nRiendo todo el día, sin drama.\nNo hace falta mucho para disfrutar,\nCon mi mejor amiga, no hay más que hablar.\nVerso 2\nCalle, música y un par de historias,\nHablando de todo, sin apuros ni glorias.\nLo bueno se da fácil cuando estamos juntas,\nAsí somos, sin estrés, sin vueltas.\nCoro\nTú y yo, sin pensar en nada,\nRiendo todo el día, sin drama.\nNo hace falta mucho para disfrutar,\nCon mi mejor amiga, no hay más que hablar.\nPuente\nY si el día se acaba, ya nos da igual,\nSeguimos en lo nuestro, siempre real.\nLo importante es estar, nada más,\nTodo fluye con ella, siempre al compás.\nCoro\nTú y yo, sin pensar en nada,\nRiendo todo el día, sin drama.\nNo hace falta mucho para disfrutar,\nCon mi mejor amiga, no hay más que hablar.\nCoro\nTú y yo, sin pensar en nada,\nRiendo todo el día, sin drama.\nNo hace falta mucho para disfrutar,\nCon mi mejor amiga, no hay más que hablar.\n",
-//               "concat_history": [
-//                 {
-//                   "id": "164c55a3-8546-4de9-9a00-d7ce67050f68",
-//                   "type": "gen",
-//                   "infill": true,
-//                   "source": "web",
-//                   "infill_dur_s": 9.68,
-//                   "infill_end_s": 9.68,
-//                   "infill_lyrics": "Verso 1\nSalíamos sin plan, solas por ahí,\nCon mi amiga, siempre sabes cómo es.",
-//                   "infill_start_s": 0.0,
-//                   "include_future_s": 2.0,
-//                   "include_history_s": 2.0,
-//                   "infill_context_end_s": 39.68,
-//                   "infill_context_start_s": 0
-//                 },
-//                 {
-//                   "id": "5b05284f-87ce-4dde-8009-0f6332f1c368"
-//                 }
-//               ],
-//               "type": "concat_infilling",
-//               "duration": 164.92,
-//               "video_upload_width": 1080,
-//               "video_upload_height": 1920,
-//               "edit_session_id": "3ef674de-0318-4f71-b213-479f1c670950",
-//               "can_remix": true,
-//               "is_remix": false
-//             },
-//             "is_liked": false,
-//             "user_id": "be7a2ab8-d60e-4a1e-866b-185a5777116e",
-//             "display_name": "Clara",
-//             "handle": "claraco",
-//             "is_handle_updated": true,
-//             "avatar_image_url": "https://cdn1.suno.ai/5d29d3bf.webp",
-//             "is_trashed": false,
-//             "explicit": false,
-//             "comment_count": 246,
-//             "flag_count": 40,
-//             "created_at": "2025-03-26T02:13:05.554Z",
-//             "status": "complete",
-//             "title": "Siempre ready",
-//             "play_count": 111746,
-//             "upvote_count": 3220,
-//             "is_public": true,
-//             "allow_comments": true
-//           },
-//           {
-//             "id": "2d375dfc-6f74-4460-b483-739733e1b703",
-//             "entity_type": "song_schema",
-//             "video_url": "https://cdn1.suno.ai/2d375dfc-6f74-4460-b483-739733e1b703.mp4",
-//             "video_cover_url": "https://cdn1.suno.ai/video_upload_dc4a2a0f-9797-4c51-9866-683251e83e1d.mp4",
-//             "preview_url": "https://cdn1.suno.ai/video_upload_dc4a2a0f-9797-4c51-9866-683251e83e1d_preview.mp4",
-//             "audio_url": "https://cdn1.suno.ai/2d375dfc-6f74-4460-b483-739733e1b703.mp3",
-//             "image_url": "https://cdn2.suno.ai/image_video_upload_dc4a2a0f-9797-4c51-9866-683251e83e1d_snapshot_0s.jpeg",
-//             "image_large_url": "https://cdn2.suno.ai/image_large_video_upload_dc4a2a0f-9797-4c51-9866-683251e83e1d_snapshot_0s.jpeg",
-//             "major_model_version": "v4",
-//             "model_name": "chirp-v4",
-//             "metadata": {
-//               "tags": "bossa nova, uk garage, jazz, jazz voices, smooth voices, smooth vocals, house, house",
-//               "negative_tags": "pop, edm, pop, edm",
-//               "prompt": "[Verse]\nHey\nMy name is Stanley\nAnd I've been lying to my friends\nAnd I have been ignoring my family\nAnd I've been sneaking in my house at night\nAnd I have been taking some things\nThat don't belong to me\n\n[Verse]\nI got a job in a factory\nI don't care if it kills me\nAnd I don't care about the company\nBut I just can't let my girl see\nWhat it takes to get me through the week\n\n[Chorus]\nIt's got me crying on the floor\nI don't know how I made it home\nI guess I found my way to the door\nBut I don't know how long that I was gone\n\n[Verse]\nI swear that I was better before\nBut now I don't know where I'm going\nSo I might as well run\nI might as well run\nI might as well run\nI might as well run\n\n[Chorus]\nI guess you heard it all before\nI think that you should know\nThat I don't wanna do this anymore\nBut I don't know how long that I was gone\n\n[Verse]\nI swear that I was better before\nBut now I don't know where I'm going\nSo I might as well run\nI might as well run\nI might as well run\nI might as well run",
-//               "edited_clip_id": "f781163a-3bfa-4015-afd3-d117d2ee05c4",
-//               "type": "gen",
-//               "duration": 160.44,
-//               "refund_credits": false,
-//               "stream": true,
-//               "has_vocal": false,
-//               "cover_clip_id": "f781163a-3bfa-4015-afd3-d117d2ee05c4",
-//               "video_upload_width": 606,
-//               "video_upload_height": 1080,
-//               "task": "cover",
-//               "can_remix": false,
-//               "is_remix": false,
-//               "priority": 0
-//             },
-//             "caption": "have you ever been Stanley?",
-//             "is_liked": false,
-//             "user_id": "f7b83424-83f1-474e-b14e-69121473e6ed",
-//             "display_name": "sonoa",
-//             "handle": "sonoa",
-//             "is_handle_updated": true,
-//             "avatar_image_url": "https://cdn1.suno.ai/75e92980.webp",
-//             "is_trashed": false,
-//             "explicit": false,
-//             "comment_count": 193,
-//             "flag_count": 24,
-//             "created_at": "2025-03-28T17:51:29.384Z",
-//             "status": "complete",
-//             "title": "My Name Is Stanley",
-//             "play_count": 111350,
-//             "upvote_count": 2233,
-//             "is_public": true,
-//             "allow_comments": true
-//           }
-//         ],
-//         "preview_items_count": 4
-//       },
-//       {
-//         "title": "Featured",
-//         "id": "featured_playlists",
-//         "section_name": "tastemaker_playlists",
-//         "style_type": "featured",
-//         "section_type": "playlist_list",
-//         "items": [
-//           {
-//             "id": "219fd699-79ad-4e55-b774-46cfaeb3de54",
-//             "entity_type": "playlist_schema",
-//             "image_url": "https://cdn2.suno.ai/901db426.jpeg",
-//             "playlist_clips": [],
-//             "current_page": 0,
-//             "num_total_results": 20,
-//             "is_owned": false,
-//             "is_trashed": false,
-//             "is_public": false,
-//             "user_display_name": "❄️🅢🅝🅞🅦 ❄️",
-//             "user_handle": "sn_ow",
-//             "user_avatar_image_url": "https://cdn1.suno.ai/f9911e4c.webp",
-//             "upvote_count": 4,
-//             "dislike_count": 0,
-//             "flag_count": 0,
-//             "skip_count": 0,
-//             "play_count": 419,
-//             "song_count": 20,
-//             "name": "JUNGLE",
-//             "description": "{ Outing: Underground Club Night }\n{ Theme: The world is a JUNGLE and were prey living in it.}",
-//             "is_discover_playlist": false
-//           },
-//           {
-//             "id": "77c88d36-ec6d-4cad-ad92-02186bf84b53",
-//             "entity_type": "playlist_schema",
-//             "image_url": "https://cdn2.suno.ai/GENRE_COVER_IMG_TrapR&B.jpeg",
-//             "playlist_clips": [],
-//             "current_page": 0,
-//             "num_total_results": 16,
-//             "is_owned": false,
-//             "is_trashed": false,
-//             "is_public": true,
-//             "user_display_name": "GROOVEBOT",
-//             "user_handle": "groovebot",
-//             "user_avatar_image_url": "https://cdn1.suno.ai/defaultBlue.webp",
-//             "upvote_count": 19,
-//             "dislike_count": 0,
-//             "flag_count": 0,
-//             "skip_count": 0,
-//             "play_count": 4095,
-//             "song_count": 16,
-//             "name": "Trap R&B",
-//             "description": "Late night texts you'll regret in the morning",
-//             "is_discover_playlist": true
-//           }
-//         ]
-//       },
-//       {
-//         "title": "New Songs",
-//         "id": "new_songs_playlist",
-//         "section_name": "new_songs_playlist",
-//         "style_type": "normal",
-//         "section_type": "playlist",
-//         "items": [
-//           {
-//             "id": "ac47229a-e94e-4324-9b44-cd4f07a5ba5b",
-//             "entity_type": "song_schema",
-//             "video_url": "https://cdn1.suno.ai/ac47229a-e94e-4324-9b44-cd4f07a5ba5b.mp4",
-//             "audio_url": "https://cdn1.suno.ai/ac47229a-e94e-4324-9b44-cd4f07a5ba5b.mp3",
-//             "image_url": "https://cdn2.suno.ai/ac47229a-e94e-4324-9b44-cd4f07a5ba5b_97cfb482.jpeg",
-//             "image_large_url": "https://cdn2.suno.ai/ac47229a-e94e-4324-9b44-cd4f07a5ba5b_97cfb482.jpeg",
-//             "major_model_version": "v4.5",
-//             "model_name": "chirp-auk",
-//             "metadata": {
-//               "tags": "A reflective slow rock ballad with spacious clean guitars, lo-fi textures, and ambient layering. The rhythm section maintains a subtle groove while piano and reverb-soaked leads create a sense of quiet movement. Vocal delivery is intimate and restrained, supported by soft harmonies and emotional build-ups. The track evokes introspection without sadness — a grounded serenity in moving at your own pace.",
-//               "prompt": "[Intro – clean, layered guitar harmonics + slow ambient swell]\n[Soft lo-fi beat kicks in with gentle snare brushes and deep kick drum]\n\n[Verse 1 – calm and introspective vocal delivery]\nThe train rolls past, I missed it again\nNot in a rush — just out of sync\nCrowds flow like current, I watch them drift\nWhile time slips by in thoughts I think\n\n[Pre-Chorus – delayed piano notes enter, light vocal echo FX]\nI’m not lost, I’m not asleep\nJust chasing echoes no one keeps\n\n[Chorus – full slow-rock groove enters, guitars warm and wide]\nI’m always seconds behind\nWatching life from the side\nLike a clock that ticks too soft\nIn a room too loud to find\nI’m not falling behind\nJust on a different line\nI move slower\nBut I still arrive\n\n[Verse 2 – bassline gets heavier, subtle string pad enters]\nStreetlight turns, but I stay still\nLet the moment pass, just for the thrill\nEvery screen says: \"move, be more\"\nBut I’ve found peace in moving poor\n\n[Pre-Chorus – harmonies begin to layer in]\nThey chase hours, I steal time\nOne breath, one step, one crooked rhyme\n\n[Chorus – repeat, more harmonized backing vocals]\nI’m always seconds behind\nWatching life from the side\nLike a flame that burns too slow\nTo light up someone’s sky\nI’m not fading in time\nJust tuned to my own chime\nI walk quieter\nBut I still arrive\n\n[Bridge – ambient guitar textures, half-time feel, spoken word overlay]\nWhat if the world is just too fast\nFor moments that were made to last?\n\n[Guitar Solo – clean tone with heavy reverb and emotional phrasing]\n\n[Final Chorus – full dynamic swell, layered vocals + orchestral strings subtly behind]\nI’m always seconds behind\nBut I’m not left behind\nIn this quiet, I find\nA rhythm truly mine\nI’m not breaking the line\nI just rewrite the time\nI breathe slower\nBut I still arrive\n\n[Outro – single guitar arpeggio fading out like a ticking clock]",
-//               "type": "gen",
-//               "duration": 239.92,
-//               "refund_credits": false,
-//               "stream": true,
-//               "can_remix": true,
-//               "is_remix": false,
-//               "priority": 10
-//             },
-//             "is_liked": false,
-//             "user_id": "73d03012-f2fe-4740-9345-582fe89db4f7",
-//             "display_name": "Fox Grey (rock music)",
-//             "handle": "foxgreyrock",
-//             "is_handle_updated": true,
-//             "avatar_image_url": "https://cdn1.suno.ai/c48c4838.webp",
-//             "is_trashed": false,
-//             "explicit": false,
-//             "comment_count": 1,
-//             "flag_count": 0,
-//             "display_tags": "rock, ballad, ambient",
-//             "created_at": "2025-05-02T21:43:59.221Z",
-//             "status": "complete",
-//             "title": "Seconds Behind",
-//             "play_count": 69,
-//             "upvote_count": 29,
-//             "is_public": true,
-//             "allow_comments": true
-//           },
-//           {
-//             "id": "3c9c874d-c8b4-4b72-929a-70c574fac16b",
-//             "entity_type": "song_schema",
-//             "video_url": "https://cdn1.suno.ai/3c9c874d-c8b4-4b72-929a-70c574fac16b.mp4",
-//             "audio_url": "https://cdn1.suno.ai/3c9c874d-c8b4-4b72-929a-70c574fac16b.mp3",
-//             "image_url": "https://cdn2.suno.ai/image_3c9c874d-c8b4-4b72-929a-70c574fac16b.jpeg",
-//             "image_large_url": "https://cdn2.suno.ai/image_large_3c9c874d-c8b4-4b72-929a-70c574fac16b.jpeg",
-//             "major_model_version": "v4.5",
-//             "model_name": "chirp-auk",
-//             "metadata": {
-//               "tags": "Christian rap, Deep house, Ambient techno, wobble fx,Doom metal,  atmospheric, rebetiko, bouzouki, cat ,female choir",
-//               "prompt": "**Mirage in Marrakesh**\n\n*(Intro – whispered)*\nFeelin’ like a ghost in my own skin…\nبين الماضي والحاضر — I’m somewhere in between.\n\n---\n\n**\\[Verse 1]**\nMidnight train through Casablanca haze,\nFell asleep with sand in my veins,\nWoke up in Fez, heart still ablaze,\nBut love don’t last in Medina lanes.\n\nSilhouettes dance on terracotta walls,\nHer eyes said stay, but the silence calls,\n\"Who are you when no one claps?\"\nFame fades fast in desert maps.\n\nCrooked alleyways where truth bends,\nChasin’ echoes that don’t pretend,\nفي القلب جرح — I carry the scar,\nBut who heals the soul of a fallen star?\n\n---\n\n**\\[Chorus – spoken with subtle melody]**\nI’m just a shadow on a sunburnt street,\nSwitchin' tongues, forgettin’ sleep.\nI lost my name in a whispered prayer,\nNow I drift like smoke in Tangier air.\n\n---\n\n**\\[Verse 2]**\nRed city walls and saffron skies,\nMint tea cools while my past still cries.\nSpoke to the moon, she ain’t reply,\nJust watched my thoughts drift up and die.\n\nDo I belong where I’m adored or where I’m broken?\nIs the truth what’s said or what’s unspoken?\nFeelin’ like two lives split in flight,\nOne chasing love, one chasing light.\n\nوش بقي؟ — What’s left to chase?\nMy heart don’t beat in a single place.\nCaught between Allah and neon signs,\nBetween headlines and sacred lines.\n\n---\n\n**\\[Bridge – ambient interlude, echoing whispers]**\nMorocco dreams, where silence sings,\nI traded gold for empty rings.\nMy soul wears robes of past regrets,\nBut the wind still chants, \"Not done yet.\"\n\n---\n\n**\\[Outro – soft, fading]**\nبين الحب والهوية...\n(I walk between love and identity…)\nAnd every step feels like goodbye.\n\n---\n\n\n",
-//               "type": "gen",
-//               "duration": 217.04,
-//               "refund_credits": false,
-//               "stream": true,
-//               "can_remix": true,
-//               "is_remix": false,
-//               "priority": 10
-//             },
-//             "is_liked": false,
-//             "user_id": "2ffaae69-921c-4f96-8d09-6e9167365694",
-//             "display_name": "Mark j ",
-//             "handle": "cunningmachine2892",
-//             "is_handle_updated": true,
-//             "avatar_image_url": "https://cdn1.suno.ai/0b5a8309.webp",
-//             "is_trashed": false,
-//             "explicit": false,
-//             "comment_count": 0,
-//             "flag_count": 0,
-//             "display_tags": "Christian rap, Deep house, Ambient techno",
-//             "created_at": "2025-05-02T21:39:11.456Z",
-//             "status": "complete",
-//             "title": "\n\nMirage in Marrakesh\n\n\n",
-//             "play_count": 20,
-//             "upvote_count": 9,
-//             "is_public": true,
-//             "allow_comments": true
-//           }
-//         ],
-//         "preview_items_count": 2
-//       },
-//       {
-//         "title": "Top Categories",
-//         "id": "top_categories",
-//         "section_name": "top_categories",
-//         "section_type": "style_list",
-//         "items": [
-//           {
-//             "id": "Rock",
-//             "entity_type": "style_schema",
-//             "name": "Rock",
-//             "image_url": "https://cdn1.suno.ai/Rock-480.jpg"
-//           },
-//           {
-//             "id": "Pop",
-//             "entity_type": "style_schema",
-//             "name": "Pop",
-//             "image_url": "https://cdn1.suno.ai/Pop-480.jpg"
-//           },
-//           {
-//             "id": "EDM",
-//             "entity_type": "style_schema",
-//             "name": "EDM",
-//             "image_url": "https://cdn1.suno.ai/EDM-480.jpg"
-//           },
-//           {
-//             "id": "Rap",
-//             "entity_type": "style_schema",
-//             "name": "Rap",
-//             "image_url": "https://cdn1.suno.ai/Metal-480.jpg"
-//           },
-//           {
-//             "id": "Country",
-//             "entity_type": "style_schema",
-//             "name": "Country",
-//             "image_url": "https://cdn1.suno.ai/Synthwave-480.jpg"
-//           },
-//           {
-//             "id": "Jazz",
-//             "entity_type": "style_schema",
-//             "name": "Jazz",
-//             "image_url": "https://cdn1.suno.ai/Jazz-480.jpg"
-//           },
-//           {
-//             "id": "Funk",
-//             "entity_type": "style_schema",
-//             "name": "Funk",
-//             "image_url": "https://cdn1.suno.ai/Funk-480.jpg"
-//           },
-//           {
-//             "id": "Instrumental",
-//             "entity_type": "style_schema",
-//             "name": "Instrumental",
-//             "image_url": "https://cdn1.suno.ai/Instrumental-480.jpg"
-//           },
-//           {
-//             "id": "Folk",
-//             "entity_type": "style_schema",
-//             "name": "Folk",
-//             "image_url": "https://cdn1.suno.ai/Folk-480.jpg"
-//           },
-//           {
-//             "id": "Metal",
-//             "entity_type": "style_schema",
-//             "name": "Metal",
-//             "image_url": "https://cdn1.suno.ai/Rap-480.jpg"
-//           }
-//         ]
-//       }
-//     ],
-//     "page": 0,
-//     "total_sections": 12,
-//     "page_size": 7,
-//     "start_index": 0
-//   }
-
+import { trendingStatus } from '../swagger/example_responses/trending_status.js';
+import {
+    extendZodWithOpenApi
+} from '@asteasolutions/zod-to-openapi';
 import { z } from "zod";
+
+extendZodWithOpenApi(z);
 
 const TrendingFeedMetadataSchema = z.object({
     feed_metadata_type: z.string(),
@@ -633,7 +44,7 @@ const MetadataSchema = z.object({
 
 const SongItemSchema = z.object({
     id: z.string(),
-    entity_type: z.literal("song_schema"),
+    entity_type: z.string(),
     video_url: z.string().optional(),
     video_cover_url: z.string().optional(),
     preview_url: z.string().optional(),
@@ -664,9 +75,9 @@ const SongItemSchema = z.object({
     display_tags: z.string().optional(),
 });
 
-const PlaylistItemSchema = z.object({
+export const PlaylistItemSchema = z.object({
     id: z.string(),
-    entity_type: z.literal("playlist_schema").optional(),
+    entity_type: z.string().optional(),
     image_url: z.string().optional(),
     playlist_clips: z.array(z.any()).optional(),
     current_page: z.number().optional(),
@@ -683,35 +94,37 @@ const PlaylistItemSchema = z.object({
     skip_count: z.number().optional(),
     play_count: z.number().optional(),
     song_count: z.number().optional(),
-    name: z.string().optional(),
+    name: z.string()
+        .optional()
+        .transform(val => {
+            if (!val) return val;
+            return val.replace(/^"(.*)"$/, '$1');
+        }),
     description: z.string().optional(),
     is_discover_playlist: z.boolean().optional(),
-}).partial();
+});
 
 const StyleItemSchema = z.object({
     id: z.string(),
-    entity_type: z.literal("style_schema"),
+    entity_type: z.string().optional(),
     name: z.string(),
     image_url: z.string(),
 });
 
-const FeedItemSchema: z.ZodType<any> = z.lazy(() =>
-    z.object({
-        id: z.string(),
-        title: z.string(),
-        link: z.string(),
-        mobile_link: z.string(),
-        items: z.array(
-            z.union([
-                SongItemSchema,
-                PlaylistItemSchema,
-                StyleItemSchema,
-                FeedItemSchema,
-            ])
-        ),
-        item_type: z.string(),
-    })
-);
+const FeedItemSchema = z.object({
+    id: z.string(),
+    title: z.string(),
+    link: z.string(),
+    mobile_link: z.string(),
+    items: z.array(
+        z.union([
+            SongItemSchema,
+            PlaylistItemSchema,
+            StyleItemSchema,
+        ])
+    ),
+    item_type: z.string(),
+})
 
 const SectionSchema = z.object({
     title: z.string(),
@@ -734,10 +147,24 @@ const SectionSchema = z.object({
     feed_metadata_type: z.string().optional(),
 });
 
-export const SunoStatusSchema = z.object({
+export const SunoStatusResponseSchema = z.object({
     sections: z.array(SectionSchema),
     page: z.number().optional(),
     total_sections: z.number().optional(),
     page_size: z.number().optional(),
     start_index: z.number().optional(),
+}).openapi({
+    description: "Suno status response schema",
+    required: ["sections"],
+    example: trendingStatus
 });
+
+export type SunoStatus = z.infer<typeof SunoStatusResponseSchema>;
+
+export type SunoStatusSection = z.infer<typeof SectionSchema>;
+export type SunoStatusItem = z.infer<typeof FeedItemSchema>;
+export type SunoStatusSongItem = z.infer<typeof SongItemSchema>;
+export type SunoStatusPlaylistItem = z.infer<typeof PlaylistItemSchema>;
+export type SunoStatusStyleItem = z.infer<typeof StyleItemSchema>;
+export type SunoStatusMetadata = z.infer<typeof MetadataSchema>;
+export type SunoStatusTrendingFeedMetadata = z.infer<typeof TrendingFeedMetadataSchema>;

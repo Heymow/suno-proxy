@@ -16,11 +16,15 @@ export async function fetchAndCache<T>(
         method?: 'GET' | 'POST',
         body?: any,
         headers?: Record<string, string>,
+        maxRetries?: number,
+        retryDelay?: number,
+        timeout?: number,
+        normalizer?: (data: any) => any
     }
 ): Promise<T | { error: string; details?: any }> {
     const {
         cacheType, id, forceRefresh, url, schema,
-        notFoundMessage, logPrefix, method = 'GET', body, headers
+        notFoundMessage, logPrefix, method = 'GET', body, headers, maxRetries, retryDelay, timeout, normalizer
     } = params;
 
     const cached = getCachedItem<T>(cacheType, id, forceRefresh);
@@ -42,21 +46,35 @@ export async function fetchAndCache<T>(
 
                 },
                 data: JSON.stringify(body),
-            });
+            },
+                maxRetries,
+                retryDelay,
+                timeout
+            );
         } else {
             response = await fetchWithRetry(url, {
                 method: 'GET',
                 headers: {
                     ...(headers || {})
                 }
-            });
+            },
+                maxRetries,
+                retryDelay,
+                timeout
+            );
         }
 
-        if (!response.data || (cacheType === 'comments' && !response.data.results)) {
+        let data = response.data;
+
+        if (normalizer) {
+            data = normalizer(data);
+        }
+
+        if (!data || (cacheType === 'comments' && !data.results)) {
             return { error: notFoundMessage };
         }
 
-        const parseResult = schema.safeParse(response.data);
+        const parseResult = schema.safeParse(data);
         if (!parseResult.success) {
             console.error(`Invalid API response:`, parseResult.error.format());
             return { error: `Invalid ${cacheType} response from API`, details: parseResult.error.format() };

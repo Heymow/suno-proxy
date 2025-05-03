@@ -1,8 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import { Request, Response } from 'express';
-import { fetchWithRetry } from '../utils/fetchWithRetry.js';
-import { ClipSchema, Song, CommentSchemaResponse, CommentsResponse } from '../schemas/songSchema.js';
+import { SongResponseSchema, Song, CommentsResponseSchema, CommentsResponse } from '../schemas/songSchema.js';
 import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { isValidSongId, isSharedSongId } from '../utils/regex.js';
 import { z } from 'zod';
@@ -68,7 +67,7 @@ export const getClipInfo = async (
         id: songId,
         forceRefresh,
         url: `${clip_url}${songId}`,
-        schema: ClipSchema,
+        schema: SongResponseSchema,
         notFoundMessage: 'Clip not found',
         logPrefix: 'clip'
     });
@@ -105,7 +104,7 @@ export const getClipComments = async (req: Request, res: Response): Promise<Resp
         id: songId,
         forceRefresh,
         url: `${gen_url}${songId}/comments?order=newest`,
-        schema: CommentSchemaResponse,
+        schema: CommentsResponseSchema.omit({ next_cursor: true }),
         notFoundMessage: 'Clip not found',
         logPrefix: 'comments'
     });

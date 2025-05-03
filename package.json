@@ -13,6 +13,7 @@
     "dev:frontend": "cd monitoring-ui && npm run dev"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.3.0",
     "@visx/visx": "^3.12.0",
     "axios": "^1.8.4",
     "cors": "^2.8.5",

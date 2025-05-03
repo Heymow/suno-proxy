@@ -5,8 +5,8 @@ interface CacheEntry<T> {
     timestamp: number;
 }
 
-const CACHE_EXPIRY_TIME = 60 * 60 * 1000;
-const MAX_CACHE_SIZE = 1000;
+const CACHE_EXPIRY_TIME = Number(process.env.CACHE_EXPIRY_TIME_MINUTES) * 60 * 3600 || 60 * 60 * 1000;
+const MAX_CACHE_SIZE = Number(process.env.MAX_CACHE_SIZE) || 1000;
 
 const caches: Record<string, Record<CacheKey, CacheEntry<any>>> = {};
 

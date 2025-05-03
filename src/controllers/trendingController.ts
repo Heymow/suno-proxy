@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import { Request, Response } from 'express';
-import { PlaylistResponseSchema as SunoStatusSchema } from '../schemas/playlistSchema.js';
+import { SunoStatusResponseSchema, SunoStatus } from '../schemas/sunoStatusSchema.js';
 import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { TrendingResponseSchema } from '../schemas/trendingSchema.js';
 
@@ -126,12 +126,12 @@ export async function getStatus(
     console.time('API Call Time');
 
     try {
-        const result = await fetchAndCache<typeof SunoStatusSchema._type>({
+        const result = await fetchAndCache<SunoStatus>({
             cacheType: 'sunoStatus',
             id: `sunoStatus`,
             forceRefresh,
             url: `${trendUrl}`,
-            schema: SunoStatusSchema,
+            schema: SunoStatusResponseSchema,
             notFoundMessage: 'Status list not found',
             logPrefix: 'sunoStatus',
             method: 'POST',
