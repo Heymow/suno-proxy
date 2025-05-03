@@ -1,4 +1,4 @@
-import { Button } from "./button";
+import { Button } from "../button";
 import { Activity, LayoutDashboard, Settings, Moon } from "lucide-react";
 
 export default function LeftMenu({ handleWithBlur, toggleDarkMode, setView }: { handleWithBlur: (callback: () => void) => () => void; toggleDarkMode: () => void; setView: (view: string) => void; }) {

@@ -1,6 +1,6 @@
 import { handleWithBlur } from "@/utils/theme";
-import MetricCheckbox from "./RequestTimeline/MetricCheckbox";
-import { ALL_METRICS } from "./RequestTimeline/timelineConstants";
+import MetricCheckbox from "../../requestTimeline/MetricCheckbox";
+import { ALL_METRICS } from "../../requestTimeline/timelineConstants";
 import { MetricType } from "@/types";
 import React from "react";
 import ZoomLevel from "./ZoomLevel";

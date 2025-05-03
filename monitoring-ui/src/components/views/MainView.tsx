@@ -1,32 +1,34 @@
 import OverviewView from "./OverviewView";
-import LiveStats from "./LiveStats";
+import LiveStats from "./LiveStatsView";
+import Settings from "@/components/views/SettingsView";
 
 // import EndpointView from "./EndpointView";
 // import StatusCodeView from "./StatusCodeView";
 // import ErrorView from "./ErrorView";
 
-export default function MainView({ view = "overview", ...props }) {
+export default function MainView({
+    view = "overview",
+    ...props
+}
+) {
     switch (view) {
         case "Overview":
             return (
                 <OverviewView
                     stats={props.stats}
-                    loading={props.loading}
                     error={props.error}
-                    resetStats={props.resetStats}
-                    toggleDarkMode={props.toggleDarkMode}
                 />
             );
         case "Live Stats":
             return <LiveStats
                 stats={props.stats}
-                loading={props.loading}
                 error={props.error}
-                resetStats={props.resetStats}
-                toggleDarkMode={props.toggleDarkMode}
             />;
-        // case "Settings":
-        //     return <ErrorView {...props} />;
+        case "Settings":
+            return <Settings
+                error={props.error}
+                className="ml-10 "
+            />;
         // case "Status Code":
         //     return <StatusCodeView {...props} />;
         // case "Endpoint":

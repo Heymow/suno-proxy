@@ -2,13 +2,13 @@ import { useState } from "react";
 import { ApiStats } from "@/types";
 import { handleWithBlur, toggleDarkMode } from "@/utils/theme";
 import { fetchStats as fetchStatsApi, resetStats as resetStatsApi } from "@/services/apiService";
-import SidebarDrawer from "@/components/ui/SidebarDrawer";
-import MainView from "@/components/ui/MainView";
-import Header from "@/components/ui/Header";
-import LastUpdated from "@/components/ui/LastUpdated";
-import LeftMenu from "@/components/ui/LeftMenu";
-import RightMenu from "@/components/ui/RightMenu";
-import ActionButtons from "@/components/ui/ActionButtons";
+import SidebarDrawer from "@/components/ui/items/SidebarDrawer";
+import MainView from "@/components/views/MainView";
+import Header from "@/components/ui/items/Header";
+import LastUpdated from "@/components/ui/items/LastUpdated";
+import LeftMenu from "@/components/ui/items/LeftMenu";
+import RightMenu from "@/components/ui/items/RightMenu";
+import ActionButtons from "@/components/ui/items/ActionButtons";
 import { Dialog, DialogContent, DialogHeader, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import useAutoRefresh from "@/hooks/useAutoRefresh";
@@ -68,23 +68,32 @@ export default function MonitoringDashboard() {
   const handleCancelReset = () => setShowResetModal(false);
 
   return (
-    <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-[16rem_minmax(0,1fr)_24rem]">
+    <div className={"grid min-h-screen w-full grid-cols-1 " + (
+      view == 'Settings' ?
+        "lg:flex flex-1" :
+        "lg:grid-cols-[16rem_minmax(0,1fr)_24rem]"
+    )
+    }>
       <SidebarDrawer handleWithBlur={handleWithBlur} toggleDarkMode={toggleDarkMode} setView={setView} />
 
       <aside className="w-64 p-6 border-r bg-card text-card-foreground shadow hidden lg:flex flex-col justify-between">
         <LeftMenu handleWithBlur={handleWithBlur} toggleDarkMode={toggleDarkMode} setView={setView} />
       </aside>
 
-      <main className="flex flex-col px-2 md:px-10 py-8 w-full min-w-0 bg-background lg:mt-0 mt-8">
+      <main className="flex flex-col px-2 md:px-10 py-8 w-full min-w-0 bg-background lg:mt-0 mt-8 mr-10">
         <Header subheader={false} title="Suno API calls" />
         <Header subheader={true} title={view} />
-        <ActionButtons
-          autoRefresh={autoRefresh}
-          setAutoRefresh={setAutoRefresh}
-          fetchStats={fetchStats}
-          resetStats={async () => handleResetClick()}
-        />
-        <LastUpdated loading={loading} error={error} />
+        {view != "Settings" && (
+          <>
+            <ActionButtons
+              autoRefresh={autoRefresh}
+              setAutoRefresh={setAutoRefresh}
+              fetchStats={fetchStats}
+              resetStats={async () => handleResetClick()}
+            />
+            <LastUpdated loading={loading} error={error} />
+          </>
+        )}
         <MainView
           stats={stats}
           loading={loading}
@@ -96,14 +105,17 @@ export default function MonitoringDashboard() {
         />
       </main>
 
-      <aside className="md:flex flex-col w-full p-4 border-l bg-card text-card-foreground shadow">
-        <RightMenu
-          stats={stats}
-          perStatus={stats.perStatus}
-          perEndpoint={stats.perEndpoint}
-          lastErrors={stats.lastErrors}
-        />
-      </aside>
+      {
+        view != "Settings" &&
+        <aside className="md:flex flex-col w-full p-4 border-l bg-card text-card-foreground shadow">
+          <RightMenu
+            stats={stats}
+            perStatus={stats.perStatus}
+            perEndpoint={stats.perEndpoint}
+            lastErrors={stats.lastErrors}
+          />
+        </aside>
+      }
 
       <Dialog open={showResetModal} onOpenChange={setShowResetModal}>
         <DialogContent>
@@ -117,6 +129,6 @@ export default function MonitoringDashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </div >
   );
 }

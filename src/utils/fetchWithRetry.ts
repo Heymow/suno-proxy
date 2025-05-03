@@ -12,7 +12,11 @@ export async function fetchWithRetry<T = any>(
 
     while (attempt < maxRetries) {
         try {
-            const response = await axios.get<T>(url, { timeout: 15000, ...config });
+            const response = await axios.request<T>({
+                url,
+                timeout: 15000,
+                ...config,
+            });
             logApiCall(url, response.status);
             return response;
         } catch (error: any) {

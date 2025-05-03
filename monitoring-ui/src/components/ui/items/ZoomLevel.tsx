@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ZOOM_LABELS } from "./RequestTimeline/timelineConstants";
+import { ZOOM_LABELS } from "../../requestTimeline/timelineConstants";
 
 function getZoomLabel(zoom: number) {
     return ZOOM_LABELS[zoom] ?? `${zoom}x`;

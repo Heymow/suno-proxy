@@ -1,7 +1,7 @@
-import { PlaylistData } from "@/types";
+import { Playlist } from "@/schemas/playlistSchema";
 
 interface CacheEntry {
-    data: PlaylistData;
+    data: Playlist;
     timestamp: number;
 }
 
@@ -9,7 +9,7 @@ const userCache: { [key: string]: CacheEntry } = {};
 const CACHE_EXPIRY_TIME = 60 * 60 * 1000;
 const MAX_CACHE_SIZE = 1000;
 
-export async function getCachedPlaylistInfo(handle: string, forceRefresh = false): Promise<PlaylistData | null> {
+export async function getCachedPlaylistInfo(handle: string, forceRefresh = false): Promise<Playlist | null> {
     const entry = userCache[handle];
     if (!forceRefresh && entry && (Date.now() - entry.timestamp) < CACHE_EXPIRY_TIME) {
         console.log(`Cache hit for user: ${handle}`);
@@ -19,7 +19,7 @@ export async function getCachedPlaylistInfo(handle: string, forceRefresh = false
     return null;
 }
 
-export function setCachePlaylistInfo(handle: string, data: PlaylistData): void {
+export function setCachePlaylistInfo(handle: string, data: Playlist): void {
     if (Object.keys(userCache).length >= MAX_CACHE_SIZE) {
         cleanOldCache();
     }

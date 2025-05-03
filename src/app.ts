@@ -5,6 +5,7 @@ import express, { Request, Response } from 'express';
 import songRoutes from './routes/songRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import playlistRoutes from './routes/playlistRoutes.js';
+import trendingRoutes from './routes/trendingRoutes.js';
 import adminMonitoringRoutes from './routes/systemRoutes.js';
 import { retryOnRateLimit } from './middlewares/retryOnRateLimit.js';
 import { setupWebSocket } from './websocket/wsServer.js';
@@ -21,7 +22,7 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'x-monitor-token'],
 }));
@@ -38,8 +39,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(retryOnRateLimit);
 
 app.use('/song', songRoutes);
-app.use('/user', userRoutes);
 app.use('/playlist', playlistRoutes);
+app.use('/trending', trendingRoutes);
+app.use('/user', userRoutes);
+
 app.use('/api/internal', adminMonitoringRoutes);
 
 setupWebSocket(server);

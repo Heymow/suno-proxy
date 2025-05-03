@@ -1,10 +1,10 @@
 import { RightMenuProps } from "@/types";
 import { useState, useCallback } from "react";
 import { Separator } from "@/components/ui/separator";
-import LastErrors from "@/components/ui/LastErrors";
+import LastErrors from "@/components/ui/items/LastErrors";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { StatusCodes } from "@/components/ui/StatusCodes";
-import { Endpoints } from "@/components/ui/Endpoints";
+import { StatusCodes } from "@/components/ui/items/StatusCodes";
+import { Endpoints } from "@/components/ui/items/Endpoints";
 
 type LastError = { url: string; status: number; message?: string; timestamp: number };
 

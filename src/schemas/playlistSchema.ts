@@ -1,16 +1,17 @@
 import { z } from "zod";
 
-export const ClipMetadataSchema = z.object({
+const ClipMetadataSchema = z.object({
     tags: z.string(),
     prompt: z.string(),
     edited_clip_id: z.string().optional(),
     type: z.string(),
     duration: z.number(),
     edit_session_id: z.string().optional(),
-    can_remix: z.boolean()
+    can_remix: z.boolean(),
+    is_remix: z.boolean()
 });
 
-export const ClipSchema = z.object({
+const ClipSchema = z.object({
     id: z.string(),
     entity_type: z.string(),
     video_url: z.string(),
@@ -20,6 +21,7 @@ export const ClipSchema = z.object({
     major_model_version: z.string(),
     model_name: z.string(),
     metadata: ClipMetadataSchema,
+    caption: z.string().optional(),
     is_liked: z.boolean(),
     user_id: z.string(),
     display_name: z.string(),
@@ -39,15 +41,24 @@ export const ClipSchema = z.object({
     allow_comments: z.boolean()
 });
 
-export const PlaylistClipSchema = z.object({
+const PlaylistClipSchema = z.object({
     clip: ClipSchema,
     relative_index: z.number()
 });
 
 export const PlaylistResponseSchema = z.object({
-    user_display_name: z.string(),
-    user_handle: z.string(),
-    user_avatar_image_url: z.string(),
+    entity_type: z.string(),
+    id: z.string(),
+    playlist_clips: z.array(PlaylistClipSchema),
+    image_url: z.string().optional(),
+    num_total_results: z.number(),
+    current_page: z.number(),
+    is_owned: z.boolean(),
+    is_trashed: z.boolean(),
+    is_public: z.boolean(),
+    user_display_name: z.string().optional(),
+    user_handle: z.string().optional(),
+    user_avatar_image_url: z.string().optional(),
     upvote_count: z.number(),
     dislike_count: z.number(),
     flag_count: z.number(),
@@ -57,11 +68,9 @@ export const PlaylistResponseSchema = z.object({
     description: z.string(),
     is_discover_playlist: z.boolean(),
     song_count: z.number(),
-    image_url: z.string(),
-    num_total_results: z.number(),
-    current_page: z.number(),
-    is_owned: z.boolean(),
-    is_trashed: z.boolean(),
-    is_public: z.boolean(),
-    playlist_clips: z.array(PlaylistClipSchema)
 });
+
+export type Playlist = z.infer<typeof PlaylistResponseSchema>;
+export type PlaylistClipsSection = z.infer<typeof PlaylistClipSchema>;
+export type PlaylistClip = z.infer<typeof ClipSchema>;
+export type PlaylistClipMetadata = z.infer<typeof ClipMetadataSchema>;

@@ -1,12 +1,12 @@
 import { useEffect, useState, useMemo } from "react";
 import { Point, ApiStats } from "@/types";
-import RequestTimeline from "./RequestTimeline";
-import Stat from "@/components/ui/Stat";
+import RequestTimeline from "../ui/items/RequestTimeline";
+import Stat from "@/components/ui/items/Stat";
 import { fetchTimeline } from "@/services/apiService";
 import { useTimelineSync } from "@/hooks/useTimelineSync";
 import { handleWithBlur } from "@/utils/theme";
-import { ZOOM_STORAGE_KEY, ALL_METRICS } from "./RequestTimeline/timelineConstants";
-import ZoomLevel from "./ZoomLevel";
+import { ZOOM_STORAGE_KEY, ALL_METRICS } from "../requestTimeline/timelineConstants";
+import ZoomLevel from "../ui/items/ZoomLevel";
 import useTimeWindow from "@/hooks/useTimeWindow";
 import { getStatItems } from "@/utils/statItemsConfig";
 
@@ -16,10 +16,7 @@ export default function LiveStats({
     error,
 }: {
     stats: ApiStats | null;
-    loading: boolean;
     error: string | null;
-    resetStats: () => void;
-    toggleDarkMode: () => void;
 }) {
     const [currentZoomLevel, setCurrentZoomLevel] = useState(() => {
         const stored = localStorage.getItem(ZOOM_STORAGE_KEY);

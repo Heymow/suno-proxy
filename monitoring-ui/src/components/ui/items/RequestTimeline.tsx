@@ -4,12 +4,12 @@ import { curveBasis } from "@visx/curve";
 import useTimeWindow from "@/hooks/useTimeWindow";
 import useVisibleData from "@/hooks/useVisibleData";
 import useTimelineScales from "@/hooks/useTimelineScales";
-import TimelineContainer from "@/components/ui/TimelineContainer";
+import TimelineContainer from "@/components/ui/items/TimelineContainer";
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import { useTooltip, TooltipWithBounds } from "@visx/tooltip";
 import { localPoint } from "@visx/event";
-import { getSeries, filterSeriesByWindow } from "./RequestTimeline/series";
-import CustomAreaClosed from "./RequestTimeline/customAreaClosed";
+import { getSeries, filterSeriesByWindow } from "../../requestTimeline/series";
+import CustomAreaClosed from "../../requestTimeline/customAreaClosed";
 
 function RequestTimelineVisx({
     data,

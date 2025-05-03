@@ -1,102 +1,94 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import { Request, Response } from 'express';
-import { getCachedSongInfo, setCachesongInfo } from '../services/songService.js';
 import { fetchWithRetry } from '../utils/fetchWithRetry.js';
+import { ClipSchema, Song, CommentSchemaResponse, CommentsResponse } from '../schemas/songSchema.js';
+import { fetchAndCache } from '../utils/fetchAndCache.js';
+import { isValidSongId, isSharedSongId } from '../utils/regex.js';
+import { z } from 'zod';
 
-const isValidSongId = (songId: string): boolean => {
-    const regex = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
-    return regex.test(songId);
-};
-
-// const profileUrl = process.env.PROFILE_URL;
-// const lastUrl = process.env.LAST_URL;
 const clip_url = process.env.CLIP_URL;
 const gen_url = process.env.GEN_URL;
+const shareUrl = process.env.SHARE_URL;
 
-// export async function getClipDataFromUser(handle: string) {
-//     if (!profileUrl || !lastUrl) {
-//         return { error: 'Server configuration error' };
-//     }
-//     try {
-//         const clipsUrl = `${profileUrl}${handle}${lastUrl}`;
-//         const { data } = await fetchWithRetry(clipsUrl);
-//         return data;
-//     } catch (error) {
-//         console.error('Error retrieving songs:', error);
-//         throw new Error('Error retrieving songs');
-//     }
-// }
+async function resolveSharedSongId(
+    shareUrl: string,
+    songId: string,
+    forceRefresh: boolean
+): Promise<string | { error: string }> {
+    const result = await fetchAndCache<{ content_id: string }>({
+        cacheType: 'share_link',
+        id: songId,
+        forceRefresh,
+        url: `${shareUrl}${songId}`,
+        schema: z.object({ content_id: z.string() }),
+        notFoundMessage: 'Share link conversion error',
+        logPrefix: 'share_link'
+    });
 
-export const getClipInfo = async (req: Request, res: Response): Promise<Response | void> => {
-    const songId: string = req.params.songId;
+    if ('error' in result) {
+        return { error: result.error };
+    }
+    return result.content_id;
+}
+
+export const getClipInfo = async (
+    req: Request,
+    res: Response
+): Promise<Response | void> => {
+
+    if (!clip_url || !gen_url || !shareUrl) {
+        console.error('Server configuration error: Missing URLs');
+        return res.status(500).json({ error: 'Server configuration error' });
+    }
+
+    let songId: string = req.params.songId;
+    const forceRefresh = req.query.refresh === 'true' || req.query.forceRefresh === 'true';
 
     if (!songId) {
         return res.status(400).json({ error: 'Missing songId' });
     }
 
-    if (!isValidSongId(songId)) {
+    if (isSharedSongId(songId)) {
+        const resolved = await resolveSharedSongId(shareUrl, songId, forceRefresh);
+        if (typeof resolved === 'object' && resolved.error) {
+            return res.status(404).json({ error: resolved.error });
+        }
+        songId = resolved as string;
+    }
+
+    if (!isValidSongId(songId) && !isSharedSongId(songId)) {
         return res.status(400).json({ error: 'Invalid songId' });
     }
 
     console.time('API Call Time');
 
-    try {
-        const clipUrl = `${clip_url}${songId}`;
-        const clipsResponse = await fetchWithRetry(clipUrl);
+    const result = await fetchAndCache<Song>({
+        cacheType: 'song',
+        id: songId,
+        forceRefresh,
+        url: `${clip_url}${songId}`,
+        schema: ClipSchema,
+        notFoundMessage: 'Clip not found',
+        logPrefix: 'clip'
+    });
 
-        if (!clipsResponse.data) {
-            return res.status(404).json({ error: 'Clip not found' });
+    if ('error' in result) {
+        if (result.details) {
+            return res.status(502).json({ error: result.error, details: result.details });
         }
-
-        const clip = clipsResponse.data;
-
-        const songInfo = {
-            id: clip.id,
-            title: clip.title,
-            lyrics: clip.metadata?.prompt || null,
-            tags: clip.metadata?.tags || null,
-            created_at: clip.created_at,
-            artist: {
-                handle: clip.handle,
-                name: clip.display_name,
-                avatar: clip.avatar_image_url
-            },
-            play_count: clip.play_count,
-            upvote_count: clip.upvote_count,
-            is_public: clip.is_public,
-            audio_url: clip.audio_url,
-            video_url: clip.video_url,
-            image_url: clip.image_url,
-            model_name: clip.model_name,
-            duration: clip.duration,
-            suno_url: `https://suno.com/song/${clip.id}`,
-            image_large_url: clip.image_large_url,
-            major_model_version: clip.major_model_version,
-            metadata: clip.metadata,
-            is_liked: clip.is_liked,
-            user_id: clip.user_id,
-            status: clip.status,
-            allow_comments: clip.allow_comments
-        };
-
-        setCachesongInfo(clip.handle, songId);
-
-        console.timeEnd('API Call Time');
-        return res.json(songInfo);
-
-    } catch (err) {
-        console.error('Error fetching clip data:', err);
-        console.timeEnd('API Call Time');
-
-        if (!res.headersSent) {
-            return res.status(500).json({ error: 'Internal error' });
-        }
+        return res.status(404).json({ error: result.error });
     }
+    console.timeEnd('API Call Time');
+    return res.json(result);
 };
 
 export const getClipComments = async (req: Request, res: Response): Promise<Response | void> => {
+    if (!gen_url) {
+        return res.status(500).json({ error: 'Server configuration error' });
+    }
     const songId: string = req.params.songId;
+    const forceRefresh = req.query.refresh === 'true' || req.query.forceRefresh === 'true';
 
     if (!songId) {
         return res.status(400).json({ error: 'Missing songId' });
@@ -108,103 +100,22 @@ export const getClipComments = async (req: Request, res: Response): Promise<Resp
 
     console.time('API Call Time');
 
-    try {
-        const clipUrl = `${gen_url}${songId}/comments?order=newest`;
-        const clipsResponse = await fetchWithRetry(clipUrl);
+    const result = await fetchAndCache<CommentsResponse>({
+        cacheType: 'comments',
+        id: songId,
+        forceRefresh,
+        url: `${gen_url}${songId}/comments?order=newest`,
+        schema: CommentSchemaResponse,
+        notFoundMessage: 'Clip not found',
+        logPrefix: 'comments'
+    });
 
-        if (!clipsResponse.data || !clipsResponse.data.results) {
-            return res.status(404).json({ error: 'Clip not found' });
+    if ('error' in result) {
+        if (result.details) {
+            return res.status(502).json({ error: result.error, details: result.details });
         }
-
-        const comments = clipsResponse.data.results;
-
-        const commentsInfo = {
-            allow_comment: clipsResponse.data.allow_comment,
-            total_count: clipsResponse.data.total_count,
-            comments: comments.map((comment: any) => ({
-                id: comment.id,
-                text: comment.content,
-                created_at: comment.created_at,
-                user_id: comment.user_id,
-                user_name: comment.user_display_name,
-                user_avatar: comment.user_avatar_url,
-                num_likes: comment.num_likes
-            }))
-        };
-
-        console.timeEnd('API Call Time');
-        return res.json(commentsInfo);
-
-    } catch (err) {
-        console.error('Error fetching clip data:', err);
-        console.timeEnd('API Call Time');
-
-        if (!res.headersSent) {
-            return res.status(500).json({ error: 'Internal error' });
-        }
+        return res.status(404).json({ error: result.error });
     }
+    console.timeEnd('API Call Time');
+    return res.json(result);
 };
-
-// export const getSongInfo = async (req: Request, res: Response): Promise<Response> => {
-//     const songId: string = req.params.songId;
-
-//     if (!profileUrl || !lastUrl) {
-//         return res.status(500).json({ error: 'Server configuration error' });
-//     }
-
-//     if (!songId) {
-//         return res.status(400).json({ error: 'Missing songId' });
-//     }
-
-//     if (!isValidSongId(songId)) {
-//         return res.status(400).json({ error: 'Invalid songId' });
-//     }
-
-//     console.time('API Call Time');
-
-//     try {
-//         const handle = await getCachedSongInfo(songId);
-
-//         if (!handle) {
-//             return res.status(404).json({ error: 'Handle not found' });
-//         }
-
-//         const clipsUrl = `${profileUrl}${handle}${lastUrl}`;
-//         const clipsResponse = await fetchWithRetry(clipsUrl);
-//         const clip = clipsResponse.data.clips.find((c: { id: string }) => c.id === songId);
-
-//         if (!clip) {
-//             return res.status(404).json({ error: 'Song not found in recent clips' });
-//         }
-
-//         const songInfo = {
-//             id: clip.id,
-//             title: clip.title,
-//             lyrics: clip.metadata?.prompt || null,
-//             tags: clip.metadata?.tags || null,
-//             created_at: clip.created_at,
-//             artist: {
-//                 handle: clip.handle,
-//                 name: clip.display_name,
-//                 avatar: clip.avatar_image_url
-//             },
-//             play_count: clip.play_count,
-//             upvote_count: clip.upvote_count,
-//             is_public: clip.is_public,
-//             audio_url: clip.audio_url,
-//             video_url: clip.video_url,
-//             image_url: clip.image_url,
-//             model_name: clip.model_name,
-//             duration: clip.duration,
-//             suno_url: `https://suno.com/song/${clip.id}`
-//         };
-
-//         console.timeEnd('API Call Time');
-//         return res.json(songInfo);
-
-//     } catch (err) {
-//         console.error(err);
-//         console.timeEnd('API Call Time');
-//         return res.status(500).json({ error: 'Internal error' });
-//     }
-// };
