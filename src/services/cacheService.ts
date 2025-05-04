@@ -21,7 +21,6 @@ export async function setCachedItem<T>(type: string, id: string, data: T, expiry
     await redisClient.set(key, JSON.stringify(data), { EX: expiry });
 }
 
-// Helpers pour playlist (optionnel, pour compatibilité)
 export async function getCachedPlaylistInfo(id: string, forceRefresh = false) {
     return getCachedItem('playlist', id, forceRefresh);
 }

@@ -16,6 +16,7 @@ import { setupWebSocket } from './websocket/wsServer.js';
 import cors from 'cors';
 import fs from 'fs';
 import redisClient from './redisClient.js';
+import { requireMonitorToken } from './middlewares/requireMonitorToken.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -48,7 +49,7 @@ app.use('/playlist', playlistRoutes);
 app.use('/trending', trendingRoutes);
 app.use('/user', userRoutes);
 
-app.use('/api/internal', adminMonitoringRoutes);
+app.use('/api/internal', requireMonitorToken, adminMonitoringRoutes);
 
 setupWebSocket(server);
 
