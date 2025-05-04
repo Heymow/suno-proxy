@@ -4,7 +4,7 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon dist/app.js",
+    "start": "node dist/app.js",
     "build": "tsc && npm run copy:public",
     "copy:public": "npx cpx2 \"src/public/**/*\" dist/public --clean",
     "dev:copy": "cpx2 \"src/public/monitoring/**/*\" dist/public/monitoring --watch",
