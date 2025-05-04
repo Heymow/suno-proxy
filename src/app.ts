@@ -55,7 +55,7 @@ setupWebSocket(server);
 (async () => {
     await redisClient.connect();
     server.listen(PORT, () => {
-        console.log(`✅ Suno Analyzer watching on http://localhost:${PORT}`);
-        console.log(`Swagger UI available at http://localhost:${PORT}/docs`);
+        console.log(`✅ New Suno API watching on http://${process.env.HOST || "localhost"}:${PORT}`);
+        console.log(`Swagger UI available at http://${process.env.HOST || "localhost"}:${PORT}/docs`);
     });
 })();
