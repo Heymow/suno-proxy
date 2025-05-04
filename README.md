@@ -1,8 +1,8 @@
-# SUNOLYTICS
+# NEW SUNO API
 ## A Suno API interface
 ---
 This is an application that serves as an interface or proxy to interact with an external API (likely related to Suno, a music generation service). The project consists of two main parts:
-## Backend (API server):
+# Backend (API server):
 * Handles requests to the external API to retrieve information about:
     - Playlists (playlistController.ts)
     - Individual songs/clips (songController.ts)
