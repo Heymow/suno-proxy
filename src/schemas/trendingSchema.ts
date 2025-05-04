@@ -33,7 +33,7 @@ const MetadataSchema = z.object({
 const PersonaSchema = z.object({
     id: z.string(),
     name: z.string(),
-    image_s3_id: z.string().url(),
+    image_s3_id: z.string().url().optional(),
     root_clip_id: z.string(),
     user_handle: z.string(),
     user_display_name: z.string(),
