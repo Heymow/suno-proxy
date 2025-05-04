@@ -34,6 +34,10 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'x-monitor-token'],
 }));
 
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
 const monitoringUiPath = path.join(__dirname, '../monitoring-ui/dist');
 app.use('/monitoring-ui', express.static(monitoringUiPath));
 app.get('/monitoring-ui/*', (req, res) => {
