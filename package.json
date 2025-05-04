@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon dist/app.js",
     "build": "tsc && npm run copy:public",
-    "copy:public": "cpx2 \"src/public/**/*\" dist/public --clean",
+    "copy:public": "npx cpx2 \"src/public/**/*\" dist/public --clean",
     "dev:copy": "cpx2 \"src/public/monitoring/**/*\" dist/public/monitoring --watch",
     "dev": "concurrently -n BACK,FRONT -c green,blue \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "tsc-watch --onSuccess \"nodemon dist/app.js --ignore dist/public/**\" --noClear",
