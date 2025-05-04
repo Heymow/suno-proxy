@@ -27,7 +27,7 @@ export async function fetchAndCache<T>(
         notFoundMessage, logPrefix, method = 'GET', body, headers, maxRetries, retryDelay, timeout, normalizer
     } = params;
 
-    const cached = getCachedItem<T>(cacheType, id, forceRefresh);
+    const cached = await getCachedItem<T>(cacheType, id, forceRefresh);
     if (cached) {
         console.log(`Returning cached ${cacheType} for id:`, id);
         return cached;
@@ -48,7 +48,6 @@ export async function fetchAndCache<T>(
                 data: JSON.stringify(body),
             },
                 maxRetries,
-                retryDelay,
                 timeout
             );
         } else {
@@ -59,7 +58,6 @@ export async function fetchAndCache<T>(
                 }
             },
                 maxRetries,
-                retryDelay,
                 timeout
             );
         }
@@ -81,7 +79,7 @@ export async function fetchAndCache<T>(
         }
 
         const typedData = parseResult.data;
-        setCachedItem<T>(cacheType, id, typedData);
+        await setCachedItem<T>(cacheType, id, typedData);
         console.log(`Cached ${cacheType} data for id:`, id);
 
         return typedData;

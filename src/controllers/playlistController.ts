@@ -1,10 +1,8 @@
-import dotenv from 'dotenv';
-dotenv.config();
 import { Request, Response } from 'express';
 import { isValidPlaylistId, isValidPageNumber } from '../utils/regex.js';
-import { getCachedPlaylistInfo, setCachePlaylistInfo } from '../services/playlistService.js';
-import { PlaylistResponseSchema } from '../schemas/playlistSchema.js';
+import { Playlist, PlaylistResponseSchema } from '../schemas/playlistSchema.js';
 import { fetchAndCache } from '../utils/fetchAndCache.js';
+import { getCachedItem, setCachedItem } from '../services/cacheService.js';
 
 const listUrl = process.env.LIST_URL;
 
@@ -19,7 +17,7 @@ async function fetchAllPlaylistPages(
 
     for (let currentPage = 2; currentPage <= totalPages; currentPage++) {
         const pageUrl = `${baseUrl}${playlistId}?page=${currentPage}`;
-        const result = await fetchAndCache<typeof PlaylistResponseSchema._type>({
+        const result = await fetchAndCache<Playlist>({
             cacheType: 'playlist_page',
             id: `${playlistId}_page_${currentPage}`,
             forceRefresh,
@@ -49,6 +47,7 @@ export const getPlaylistInfo = async (
     const { playlistId } = req.params;
     const forceRefresh = req.query.refresh === 'true' || req.query.forceRefresh === 'true';
 
+
     if (!playlistId) {
         return res.status(400).json({ error: 'Missing playlistId' });
     }
@@ -56,7 +55,7 @@ export const getPlaylistInfo = async (
         return res.status(400).json({ error: 'Invalid playlistId' });
     }
 
-    const cachedPlaylist = await getCachedPlaylistInfo(playlistId, forceRefresh);
+    const cachedPlaylist = await getCachedItem("playlist", playlistId, forceRefresh);
     if (cachedPlaylist) {
         console.log('Returning cached playlist data for playlistId:', playlistId);
         return res.json(cachedPlaylist);
@@ -64,10 +63,10 @@ export const getPlaylistInfo = async (
 
     console.time('API Call Time');
     try {
-        const firstPage = await fetchAndCache<typeof PlaylistResponseSchema._type>({
+        const firstPage = await fetchAndCache<Playlist>({
             cacheType: 'playlist_page',
             id: `${playlistId}_page_1`,
-            forceRefresh: false,
+            forceRefresh,
             url: `${listUrl}${playlistId}?page=1`,
             schema: PlaylistResponseSchema,
             notFoundMessage: 'Playlist not found',
@@ -75,17 +74,21 @@ export const getPlaylistInfo = async (
         });
 
         if ('error' in firstPage) {
-            return res.status(502).json({ error: firstPage.error, details: firstPage.details });
+            return res.status(502).json({
+                error: firstPage.error, details: firstPage.details,
+                message: 'Error fetching playlist data'
+            });
         }
 
         const playlist = firstPage;
         const totalClips = playlist.num_total_results || 0;
-        const totalPages = Math.ceil(totalClips / 50);
+        const pageSize = Math.ceil(totalClips / playlist.playlist_clips.length || 50);
+        console.log('Total pages for', playlistId, pageSize);
+        const allClips = await fetchAllPlaylistPages(listUrl, playlistId, pageSize, PlaylistResponseSchema, forceRefresh);
+        playlist.playlist_clips = playlist.playlist_clips.concat(allClips);
 
-        const allClips = await fetchAllPlaylistPages(listUrl, playlistId, totalPages, PlaylistResponseSchema, forceRefresh);
-        playlist.playlist_clips = allClips;
-
-        await setCachePlaylistInfo(playlistId, playlist);
+        await setCachedItem('playlist', playlistId, playlist);
+        console.log('Cached playlist data for playlistId:', playlistId);
         return res.json(playlist);
     } catch (error) {
         console.error('Error fetching playlist data:', error);
@@ -142,4 +145,4 @@ export const getPlaylistPage = async (
     } finally {
         console.timeEnd('API Call Time');
     }
-}
+};

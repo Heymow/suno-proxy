@@ -1,51 +1,30 @@
-type CacheKey = string;
+import redisClient from '../redisClient.js';
 
-interface CacheEntry<T> {
-    data: T;
-    timestamp: number;
-}
+const DEFAULT_EXPIRY = Number(process.env.CACHE_EXPIRY_TIME_MINUTES) * 60 || 60 * 60; // seconds
 
-const CACHE_EXPIRY_TIME = Number(process.env.CACHE_EXPIRY_TIME_MINUTES) * 60 * 3600 || 60 * 60 * 1000;
-const MAX_CACHE_SIZE = Number(process.env.MAX_CACHE_SIZE) || 1000;
-
-const caches: Record<string, Record<CacheKey, CacheEntry<any>>> = {};
-
-function getCache<T>(type: string): Record<CacheKey, CacheEntry<T>> {
-    if (!caches[type]) caches[type] = {};
-    return caches[type];
-}
-
-function cleanExpiredCache<T>(type: string) {
-    const cache = getCache<T>(type);
-    for (const key in cache) {
-        if (cache[key].timestamp + CACHE_EXPIRY_TIME < Date.now()) {
-            delete cache[key];
-        }
+export async function getCachedItem<T>(type: string, id: string, forceRefresh = false): Promise<T | null> {
+    if (!id) return null;
+    if (forceRefresh) return null;
+    const key = `${type}:${id}`;
+    const cached = await redisClient.get(key);
+    if (!cached) return null;
+    try {
+        return JSON.parse(cached) as T;
+    } catch {
+        return null;
     }
 }
 
-function cleanOldCache<T>(type: string) {
-    const cache = getCache<T>(type);
-    const sortedKeys = Object.keys(cache).sort((a, b) => cache[a].timestamp - cache[b].timestamp);
-    if (sortedKeys.length === 0) return;
-    delete cache[sortedKeys[0]];
-}
-
-export function getCachedItem<T>(type: string, id: string, forceRefresh = false): T | null {
-    const cache = getCache<T>(type);
-    const entry = cache[id];
-    if (!forceRefresh && entry && (Date.now() - entry.timestamp) < CACHE_EXPIRY_TIME) {
-        return entry.data;
-    }
-    return null;
-}
-
-export function setCachedItem<T>(type: string, id: string, data: T): void {
+export async function setCachedItem<T>(type: string, id: string, data: T, expiry: number = DEFAULT_EXPIRY): Promise<void> {
     if (!id || !data) return;
-    cleanExpiredCache<T>(type);
-    const cache = getCache<T>(type);
-    if (Object.keys(cache).length >= MAX_CACHE_SIZE) {
-        cleanOldCache<T>(type);
-    }
-    cache[id] = { data, timestamp: Date.now() };
+    const key = `${type}:${id}`;
+    await redisClient.set(key, JSON.stringify(data), { EX: expiry });
+}
+
+// Helpers pour playlist (optionnel, pour compatibilité)
+export async function getCachedPlaylistInfo(id: string, forceRefresh = false) {
+    return getCachedItem('playlist', id, forceRefresh);
+}
+export async function setCachePlaylistInfo(id: string, data: any, expiry?: number) {
+    return setCachedItem('playlist', id, data, expiry);
 }
