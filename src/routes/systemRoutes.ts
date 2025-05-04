@@ -55,4 +55,15 @@ router.get('/monitoring/timeline', (req, res) => {
     }
 });
 
+router.get('/monitoring/health', (req, res) => {
+    if (!checkToken(req, res)) return;
+
+    try {
+        res.status(200).json({ status: 'OK' });
+    } catch (error) {
+        console.error('Error checking health:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 export default router;
