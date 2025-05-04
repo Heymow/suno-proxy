@@ -2,7 +2,7 @@
   "name": "suno-analyzer",
   "version": "1.0.0",
   "type": "module",
-  "main": "app.js",
+  "main": "dist/app.js",
   "scripts": {
     "start": "node dist/app.js",
     "build": "tsc && npm run copy:public",
