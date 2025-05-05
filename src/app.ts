@@ -31,6 +31,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDoc));
 const rawOrigins = process.env.CORS_ORIGINS || '';
 const allowedOrigins = rawOrigins.split(',').map(origin => origin.trim());
 
+
 app.use(cors({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
@@ -47,10 +48,13 @@ app.use(cors({
 app.use((req, res, next) => {
     const ua = req.headers['user-agent'] || '';
     const isBrowser = /mozilla|chrome|safari|firefox/i.test(ua);
-    const isApiRoute = req.path.startsWith('/api');
+    const acceptHeader = req.headers.accept || '';
+    const isApiRequest = acceptHeader.includes('application/json');
+    const isApiRoute = ['/api', '/user', '/song', '/playlist', '/trending'].some(prefix =>
+        req.path.startsWith(prefix)
+    );
 
-    if (isBrowser && !isApiRoute) {
-        // redirige vers uptime kuma en interne dans Railway
+    if (isBrowser && !isApiRoute && !isApiRequest) {
         return res.redirect('http://uptime-kuma:8080');
     }
 
