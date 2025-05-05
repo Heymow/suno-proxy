@@ -28,6 +28,19 @@ const PORT = process.env.PORT || 3000;
 const openApiDoc = JSON.parse(fs.readFileSync('./src/swagger/openapi.json', 'utf8'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDoc));
 
+app.use((req, res, next) => {
+    const ua = req.headers['user-agent'] || '';
+    const isBrowser = /mozilla|chrome|safari|firefox/i.test(ua);
+    const isApiRoute = req.path.startsWith('/api');
+
+    if (isBrowser && !isApiRoute) {
+        // redirige vers uptime kuma en interne dans Railway
+        return res.redirect('http://uptime-kuma:3001');
+    }
+
+    next();
+});
+
 app.use(cors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     methods: ['GET', 'POST'],
