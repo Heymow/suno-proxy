@@ -108,7 +108,7 @@ export const getAllClipsFromUser = async (handle: string, forceRefresh = false):
     }
 
     if (!forceRefresh) {
-        const cachedUser = getCachedItem<User>('user', handle, forceRefresh);
+        const cachedUser = await getCachedItem<User>('user', handle, forceRefresh);
         if (cachedUser) {
             console.log('Returning cached user data for handle:', handle);
             return cachedUser;
