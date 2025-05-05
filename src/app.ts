@@ -28,19 +28,6 @@ const PORT = process.env.PORT || 3000;
 const openApiDoc = JSON.parse(fs.readFileSync('./src/swagger/openapi.json', 'utf8'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDoc));
 
-app.use((req, res, next) => {
-    const ua = req.headers['user-agent'] || '';
-    const isBrowser = /mozilla|chrome|safari|firefox/i.test(ua);
-    const isApiRoute = req.path.startsWith('/api');
-
-    if (isBrowser && !isApiRoute) {
-        // redirige vers uptime kuma en interne dans Railway
-        return res.redirect('http://uptime-kuma:8080');
-    }
-
-    next();
-});
-
 const rawOrigins = process.env.CORS_ORIGINS || '';
 const allowedOrigins = rawOrigins.split(',').map(origin => origin.trim());
 
@@ -56,6 +43,19 @@ app.use(cors({
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'x-monitor-token'],
 }));
+
+app.use((req, res, next) => {
+    const ua = req.headers['user-agent'] || '';
+    const isBrowser = /mozilla|chrome|safari|firefox/i.test(ua);
+    const isApiRoute = req.path.startsWith('/api');
+
+    if (isBrowser && !isApiRoute) {
+        // redirige vers uptime kuma en interne dans Railway
+        return res.redirect('http://uptime-kuma:8080');
+    }
+
+    next();
+});
 
 app.get('/health', (req, res) => {
     res.status(200).send('OK');
