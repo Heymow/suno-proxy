@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 
     if (isBrowser && !isApiRoute) {
         // redirige vers uptime kuma en interne dans Railway
-        return res.redirect('http://uptime-kuma:3001');
+        return res.redirect('http://uptime-kuma:8080');
     }
 
     next();
