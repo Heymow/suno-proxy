@@ -41,8 +41,18 @@ app.use((req, res, next) => {
     next();
 });
 
+const rawOrigins = process.env.CORS_ORIGINS || '';
+const allowedOrigins = rawOrigins.split(',').map(origin => origin.trim());
+
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.warn(`CORS blocked for origin: ${origin}`);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'x-monitor-token'],
 }));
