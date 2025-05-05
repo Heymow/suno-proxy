@@ -55,7 +55,7 @@ export const getPlaylistInfo = async (
         return res.status(400).json({ error: 'Invalid playlistId' });
     }
 
-    const cachedPlaylist = await getCachedItem("playlist", playlistId, forceRefresh);
+    const cachedPlaylist = await getCachedItem<Playlist>("playlist", playlistId, forceRefresh);
     if (cachedPlaylist) {
         console.log('Returning cached playlist data for playlistId:', playlistId);
         return res.json(cachedPlaylist);
