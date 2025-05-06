@@ -17,6 +17,7 @@ import cors from 'cors';
 import fs from 'fs';
 import redisClient from './redisClient.js';
 import { requireMonitorToken } from './middlewares/requireMonitorToken.js';
+import { options } from './swagger/swagger-options.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,7 +27,8 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
 const openApiDoc = JSON.parse(fs.readFileSync('./src/swagger/openapi.json', 'utf8'));
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDoc));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDoc, options));
+app.use('/public', express.static(path.join(__dirname, '../public')));
 
 const rawOrigins = process.env.CORS_ORIGINS || '';
 const allowedOrigins = rawOrigins.split(',').map(origin => origin.trim());
