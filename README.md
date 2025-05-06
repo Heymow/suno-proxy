@@ -3,6 +3,7 @@
 <p align="center">
   <img src="./public/suno_proxy.webp" alt="Suno proxy" />
 </p>
+
 ---
 ### Demo:
 - API entrypoint: https://api.suno-proxy.click/
