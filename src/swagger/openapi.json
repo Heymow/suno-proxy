@@ -3333,7 +3333,7 @@
     "parameters": {}
   },
   "paths": {
-    "/playlists/{playlistId}": {
+    "/playlist/{playlistId}": {
       "get": {
         "summary": "Get playlist info",
         "tags": [
@@ -3363,7 +3363,7 @@
         }
       }
     },
-    "/playlists/{playlistId}/{page}": {
+    "/playlist/{playlistId}/{page}": {
       "get": {
         "summary": "Get playlist page",
         "tags": [

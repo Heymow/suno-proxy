@@ -32,7 +32,7 @@ const openApiDoc = generator.generateDocument({
 
 openApiDoc.paths = {
     ...(openApiDoc.paths || {}),
-    "/playlists/{playlistId}": {
+    "/playlist/{playlistId}": {
         get: {
             summary: "Get playlist info",
             tags: ["Playlists"],
@@ -58,7 +58,7 @@ openApiDoc.paths = {
             }
         }
     },
-    "/playlists/{playlistId}/{page}": {
+    "/playlist/{playlistId}/{page}": {
         get: {
             summary: "Get playlist page",
             tags: ["Playlists"],
