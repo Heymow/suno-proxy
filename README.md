@@ -10,7 +10,7 @@
 - Documentation: https://api.suno-proxy.click/docs
 - Status page: https://suno-proxy.click
 ---
-This is an application that serves as an interface or proxy to interact with an external API (related to Suno, a music generation service). The project consists of two main parts:
+This is an application that serves as an interface or proxy to retrieve data from an external website (Suno, a music generation service). The project consists of two main parts:
 # Backend (API server):
 * Handles requests to the external API to retrieve information about:
     - Playlists (playlistController.ts)
