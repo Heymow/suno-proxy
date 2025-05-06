@@ -18,6 +18,7 @@ import fs from 'fs';
 import redisClient from './redisClient.js';
 import { requireMonitorToken } from './middlewares/requireMonitorToken.js';
 import { options } from './swagger/swagger-options.js';
+import { connectMongo } from './models/connection.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -77,6 +78,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(retryOnRateLimit);
 
+
 app.use('/song', songRoutes);
 app.use('/playlist', playlistRoutes);
 app.use('/trending', trendingRoutes);
@@ -87,6 +89,7 @@ app.use('/api/internal', requireMonitorToken, adminMonitoringRoutes);
 setupWebSocket(server);
 
 (async () => {
+    await connectMongo();
     await redisClient.connect();
     server.listen(PORT, () => {
         console.log(`✅ New Suno API watching on http://${process.env.HOST || "localhost"}:${PORT}`);
