@@ -3,7 +3,11 @@
 <p align="center">
   <img src="./public/suno_proxy.webp" alt="Suno proxy" />
 </p>
-
+---
+### Demo:
+- API entrypoint: https://api.suno-proxy.click/
+- Documentation: https://api.suno-proxy.click/docs
+- Status page: https://suno-proxy.click
 ---
 This is an application that serves as an interface or proxy to interact with an external API (related to Suno, a music generation service). The project consists of two main parts:
 # Backend (API server):
