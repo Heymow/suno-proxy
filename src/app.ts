@@ -55,7 +55,7 @@ app.use((req, res, next) => {
     );
 
     if (isBrowser && !isApiRoute && !isApiRequest) {
-        return res.redirect('http://uptime-kuma:8080');
+        return res.redirect('https://status.suno-proxy.click');
     }
 
     next();

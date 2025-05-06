@@ -1,12 +1,17 @@
-# NEW SUNO API
+# SUNO PROXY
 ## A Suno API interface
+<p align="center">
+  <img src="./public/suno_proxy.png" alt="Suno proxy" />
+</p>
+
 ---
-This is an application that serves as an interface or proxy to interact with an external API (likely related to Suno, a music generation service). The project consists of two main parts:
+This is an application that serves as an interface or proxy to interact with an external API (related to Suno, a music generation service). The project consists of two main parts:
 # Backend (API server):
 * Handles requests to the external API to retrieve information about:
     - Playlists (playlistController.ts)
     - Individual songs/clips (songController.ts)
     - User profiles (userController.ts)
+    - Trending lists (trendingController.ts)
 * Implements a caching system to optimize performance
 * Includes an API call monitoring system (apiMonitor.ts) that:
     - Logs call statistics (successes, errors, timeouts, etc.)
@@ -21,11 +26,12 @@ This is an application that serves as an interface or proxy to interact with an 
     - useVisibleData.ts to optimize the display of data points
 * Displays charts and statistics on API calls
 * Shows recent errors and their distribution
-
+---
+# Features
 * The project emphasizes reliability and performance, with mechanisms such as:
-    - Validation of identifiers (UUID for songs)
-    - Retry logic for requests with fetchWithRetry
-    - Caching of frequently requested results
+    - Validation of identifiers (UUID for songs, integers for pages, strings for lists, etc.)
+    - Retry logic for requests with fetchWithRetry, automatic retry timer adaptation to avoid rate limit
+    - Caching of recentlyently requested results
     - Detailed monitoring of API performance
     - Error and exception handling
 
@@ -35,7 +41,10 @@ This application facilitates access to Suno's data while providing a monitoring 
 
 ## Installation
 
-Sunolytics requires [Node.js](https://nodejs.org/) v10+ to run.
+### Prerequisites
+- [Node.js]([node.js]) v18 or higher
+- [npm](https://www.npmjs.com/) (comes with Node.js)
+- (Optional) [Redis](https://redis.io/) if you want to enable caching
 
 Install the dependencies and devDependencies and start the server.
 
@@ -50,86 +59,111 @@ npm install --production
 NODE_ENV=production node app
 ```
 
+### 1. Clone the repository
+```sh
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+```
+
+### 2. Install dependencies
+```sh
+npm install
+```
+
+### 3. Build the project
+```sh
+npm run build
+```
+
+### 4. Configure environment variables
+Create a `.env` file at the root of the project (example):
+```
+PORT=3000
+REDIS_URL=redis://localhost:6379
+CORS_ORIGINS=http://localhost:3000
+LIST_URL=https://api.suno.ai/playlists/
+```
+
+### 5. Start the server
+```sh
+npm start
+```
+
+The server will be available at [http://localhost:3000](http://localhost:3000).
+
+---
+
+### Development
+
+- To start the backend in watch mode:
+  ```sh
+  npm run dev:backend
+  ```
+- To start the monitoring frontend (in another terminal):
+  ```sh
+  npm run dev:frontend
+  ```
+
+---
+
+### Production
+
+- Build and start:
+  ```sh
+  npm run build
+  npm start
+  ```
+
+---
+
+Replace the placeholder repo URL with your actual repository URL.  
+You can now copy-paste this block into your README under the **Installation** section!
+
+
 ## Scripts
 
-Sunolytics actually supports the following commands.
+Suno proxy actually supports the following commands.
 Instructions on how to use them in your own application are linked below.
 
-| Scripts | Usage |
-| ------ | ------ |
-| script 1 | usage |
-| script 2 | usage |
+| Scripts | Usage | Description
+| ------ | ------ | ------ |
+| start | npm run start | Start the app (production) |
+| build | npm run build | Build the app |
+| copy:public | npm copy:public | Copy data from src/public/ to dist/public |
 
-## Installation
 
-
-Open your favorite Terminal and run these commands.
-
-First Tab:
-
-```sh
-command
-```
-
-Second Tab:
-
-```sh
-command --watch
-```
-
-(optional) Third:
-
-```sh
-command test
-```
-
-#### Building for source
-
-For production release:
-
-```sh
-command build --prod
-```
-
-Generating pre-built zip archives for distribution:
-
-```sh
-command build dist --prod
-```
 
 ## Docker
 
-Sunolytics is very easy to install and deploy in a Docker container.
+You can easily build and run Suno Proxy in a Docker container.
 
-By default, the Docker will expose port 8080, so change this within the
-Dockerfile if necessary. When ready, simply use the Dockerfile to
-build the image.
+### 1. Build the Docker image
 
 ```sh
-cd dir
-docker build -t <youruser>/sunolytics:${package.json.version} .
+docker build -t youruser/suno-proxy:latest .
 ```
 
-This will create the sunolytics image and pull in the necessary dependencies.
-Be sure to swap out `${package.json.version}` with the actual
-version of Sunolytics.
-
-Once done, run the Docker image and map the port to whatever you wish on
-your host. In this example, we simply map port 8000 of the host to
-port 8080 of the Docker (or whatever port was exposed in the Dockerfile):
+### 2. Run the Docker container
 
 ```sh
-docker run -d -p 8000:8080 --restart=always --cap-add=SYS_ADMIN --name=sunolytics <youruser>/sunolytics:${package.json.version}
+docker run -d \
+  -p 3000:3000 \
+  --env-file .env \
+  --name suno-proxy \
+  youruser/suno-proxy:latest
 ```
 
-> Note: `--capt-add=SYS-ADMIN` is required for PDF rendering.
+- The app will be available at [http://localhost:3000](http://localhost:3000).
+- Make sure to provide a valid `.env` file with your configuration (see the example in the installation section).
 
-Verify the deployment by navigating to your server address in
-your preferred browser.
+### Notes
 
-```sh
-127.0.0.1:8000
-```
+- If you want to use Redis, make sure to run a Redis container or connect to an existing Redis instance, and set `REDIS_URL` accordingly in your `.env`.
+- You can change the mapped port (`-p 3000:3000`) if needed.
+
+---
+
+Replace `youruser` with your Docker Hub username or your preferred image name.
 
 ## License
 ⚠️ This code is provided for demonstration purposes only. Any reuse, copying, or distribution without written permission is strictly prohibited.
