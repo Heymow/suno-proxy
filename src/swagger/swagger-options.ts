@@ -26,7 +26,7 @@ export const options = {
       }
       .swagger-ui .topbar-wrapper a.link::after {
         content: "Suno Proxy";
-        font-size: 1.3rem; /* Reduced size */
+        font-size: 1.3rem;
         font-weight: bold;
         color: #fff;
         letter-spacing: 1px;
