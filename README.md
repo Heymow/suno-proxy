@@ -1,7 +1,7 @@
 # SUNO PROXY
 ## A Suno API interface
 <p align="center">
-  <img src="./public/suno_proxy.webp" alt="Suno proxy" />
+  <img src="./public/suno_proxy.svg" alt="Suno proxy" />
 </p>
 
 ---
