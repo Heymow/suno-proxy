@@ -35,7 +35,7 @@ app.set('trust proxy', true);
 
 if (process.env.NODE_ENV === 'production') {
     app.use((req, res, next) => {
-        // if (req.path === '/health') return next();
+        if (req.path === '/health') return next();
 
         if (req.headers['x-forwarded-proto'] !== 'https') {
             return res.redirect(`https://${req.headers.host}${req.url}`);
