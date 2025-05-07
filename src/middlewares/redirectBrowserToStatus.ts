@@ -12,6 +12,7 @@ export default function redirectBrowserToStatus(app: express.Application) {
         );
 
         if (isBrowser && !isApiRoute && !isApiRequest) {
+            console.log(`Redirecting browser request to status page: ${req.path}`);
             return res.redirect('https://status.suno-proxy.click');
         }
 

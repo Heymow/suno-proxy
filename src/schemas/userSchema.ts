@@ -78,7 +78,7 @@ const PersonasSchema = z.object({
     id: z.string(),
     name: z.string(),
     description: z.string(),
-    image_s3_id: z.string().url(),
+    image_s3_id: z.string().url().optional(),
     root_clip_id: z.string(),
     clip: z.object({
         id: z.string(),
