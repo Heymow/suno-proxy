@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
         if (req.path === '/health') return next();
 
         if (req.headers['x-forwarded-proto'] !== 'https') {
-            return res.redirect(`https://${req.headers.host}${req.url}`);
+            res.status(403).send('HTTPS required');
         }
         next();
     });
