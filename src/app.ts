@@ -32,6 +32,8 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
 app.use((req, res, next) => {
+    if (req.path === '/health') return next();
+
     if (req.headers['x-forwarded-proto'] !== 'https') {
         return res.redirect(`https://${req.headers.host}${req.url}`);
     }
@@ -61,6 +63,7 @@ app.use(cors({
 }));
 
 app.use((req, res, next) => {
+    if (req.path === '/health') return next();
     const ua = req.headers['user-agent'] || '';
     const isBrowser = /mozilla|chrome|safari|firefox/i.test(ua);
     const acceptHeader = req.headers.accept || '';
