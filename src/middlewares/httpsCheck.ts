@@ -11,6 +11,7 @@ export default function httpsCheck(app: express.Application) {
 
             const proto = req.headers['x-forwarded-proto'];
             const host = req.headers.host || '';
+            console.log('Proto:', proto, 'Host:', host);
 
             const isHttpOrUnknown = proto !== 'https' || !proto;
             const isLocal = host.startsWith('localhost') || host.startsWith('127.0.0.1');

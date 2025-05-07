@@ -24,7 +24,7 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
 
-// httpsCheck(app);
+httpsCheck(app);
 loadSwaggerUi(app);
 setupCors(app);
 redirectBrowserToStatus(app);
