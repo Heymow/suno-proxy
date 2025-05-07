@@ -1,4 +1,8 @@
-import redisClient from '../redisClient.js';
+import { getRedisClient } from '../redisClient.js';
+
+function redis() {
+    return getRedisClient();
+}
 
 const DEFAULT_EXPIRY = Number(process.env.CACHE_EXPIRY_TIME_MINUTES) * 60 || 60 * 60; // seconds
 
@@ -6,7 +10,8 @@ export async function getCachedItem<T>(type: string, id: string, forceRefresh = 
     if (!id) return null;
     if (forceRefresh) return null;
     const key = `${type}:${id}`;
-    const cached = await redisClient.get(key);
+    // const cached = await redisClient.get(key);
+    const cached = await redis().get(key);
     if (!cached) return null;
     try {
         return JSON.parse(cached) as T;
@@ -18,7 +23,7 @@ export async function getCachedItem<T>(type: string, id: string, forceRefresh = 
 export async function setCachedItem<T>(type: string, id: string, data: T, expiry: number = DEFAULT_EXPIRY): Promise<void> {
     if (!id || !data) return;
     const key = `${type}:${id}`;
-    await redisClient.set(key, JSON.stringify(data), { EX: expiry });
+    await redis().set(key, JSON.stringify(data), { EX: expiry });
 }
 
 export async function getCachedPlaylistInfo(id: string, forceRefresh = false) {

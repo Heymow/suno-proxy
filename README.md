@@ -11,7 +11,7 @@
 - Status page: https://suno-proxy.click
 ---
 This is an application that serves as an interface or proxy to retrieve data from an external website (Suno, a music generation service). The project consists of two main parts:
-# Backend (API server):
+# API server:
 * Handles requests to the external API to retrieve information about:
     - Playlists (playlistController.ts)
     - Individual songs/clips (songController.ts)
@@ -22,15 +22,6 @@ This is an application that serves as an interface or proxy to retrieve data fro
     - Logs call statistics (successes, errors, timeouts, etc.)
     - Maintains an error history
     - Saves this data for analysis
----
-# Frontend (monitoring-ui):
-* User interface to visualize API performance
-* Includes custom React hooks:
-    - useTimeWindow.ts to manage the temporal display of data
-    - useAutoRefresh.ts to automatically refresh data
-    - useVisibleData.ts to optimize the display of data points
-* Displays charts and statistics on API calls
-* Shows recent errors and their distribution
 ---
 # Features
 * The project emphasizes reliability and performance, with mechanisms such as:
@@ -54,20 +45,21 @@ This application facilitates access to Suno's data while providing a monitoring 
 Install the dependencies and devDependencies and start the server.
 
 ```sh
-instructions
+npm install
+npm run dev
 ```
 
 For production environments...
 
 ```sh
 npm install --production
-NODE_ENV=production node app
+npm run start
 ```
 
 ### 1. Clone the repository
 ```sh
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
+git clone https://github.com/Heymow/suno-proxy.git
+cd suno-proxy
 ```
 
 ### 2. Install dependencies
@@ -83,6 +75,7 @@ npm run build
 ### 4. Configure environment variables
 Create a `.env` file at the root of the project (example):
 ```
+HOST_=http://localhost
 PORT=3000
 REDIS_URL=redis://localhost:6379
 CORS_ORIGINS=http://localhost:3000

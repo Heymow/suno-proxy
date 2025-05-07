@@ -4,7 +4,7 @@ import { Playlist, PlaylistResponseSchema } from '../schemas/playlistSchema.js';
 import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { getCachedItem, setCachedItem } from '../services/cacheService.js';
 
-const listUrl = process.env.LIST_URL;
+const listUrl = process.env.LIST_URL || "https://studio-api.prod.suno.com/api/playlist/";
 
 async function fetchAllPlaylistPages(
     baseUrl: string,

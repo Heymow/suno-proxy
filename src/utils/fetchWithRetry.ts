@@ -1,6 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { logApiCall } from '../monitoring/apiMonitor.js';
-import redisClient from '../redisClient.js';
+import { getRedisClient } from '../redisClient.js';
+
+function redis() {
+    return getRedisClient();
+}
 
 const RETRY_KEY = 'adaptive_retry_delay_ms';
 const COUNT_KEY = 'adaptive_retry_count';
@@ -9,21 +13,21 @@ const MIN_DELAY = 100;     // ms
 const MAX_DELAY = 5000;    // ms
 
 async function getAdaptiveDelay() {
-    const val = await redisClient.get(RETRY_KEY);
+    const val = await redis().get(RETRY_KEY);
     return val ? Number(val) : DEFAULT_DELAY;
 }
 
 async function setAdaptiveDelay(delay: number) {
-    await redisClient.set(RETRY_KEY, Math.round(delay));
+    await redis().set(RETRY_KEY, Math.round(delay));
 }
 
 async function getRetryCount() {
-    const val = await redisClient.get(COUNT_KEY);
+    const val = await redis().get(COUNT_KEY);
     return val ? Number(val) : 1;
 }
 
 async function setRetryCount(count: number) {
-    await redisClient.set(COUNT_KEY, count);
+    await redis().set(COUNT_KEY, count);
 }
 
 function randomize(base: number, spread: number) {
