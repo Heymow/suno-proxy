@@ -31,14 +31,18 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
-app.use((req, res, next) => {
-    if (req.path === '/health') return next();
+app.set('trust proxy', true);
 
-    if (req.headers['x-forwarded-proto'] !== 'https') {
-        return res.redirect(`https://${req.headers.host}${req.url}`);
-    }
-    next();
-});
+if (process.env.NODE_ENV === 'production') {
+    app.use((req, res, next) => {
+        // if (req.path === '/health') return next();
+
+        if (req.headers['x-forwarded-proto'] !== 'https') {
+            return res.redirect(`https://${req.headers.host}${req.url}`);
+        }
+        next();
+    });
+}
 
 const openApiDoc = JSON.parse(fs.readFileSync('./src/swagger/openapi.json', 'utf8'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDoc, options));
