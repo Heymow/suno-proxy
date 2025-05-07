@@ -35,11 +35,19 @@ app.set('trust proxy', true);
 
 if (process.env.NODE_ENV === 'production') {
     app.use((req, res, next) => {
-        if (req.path === '/health') return next();
+        const proto = req.headers['x-forwarded-proto'];
+        const host = req.headers.host || '';
 
-        if (req.headers['x-forwarded-proto'] !== 'https') {
-            res.status(403).send('HTTPS required');
+        // ✅ Si on est en HTTP OU s'il n'y a PAS de proto (requête directe)
+        const isHttpOrUnknown = proto !== 'https' || !proto;
+
+        // ✅ Et on veut bloquer seulement si ce n'est PAS une requête depuis localhost (utile en dev)
+        const isLocal = host.startsWith('localhost') || host.startsWith('127.0.0.1');
+
+        if (isHttpOrUnknown && !isLocal) {
+            res.status(403).send('Access denied: HTTPS required');
         }
+
         next();
     });
 }
