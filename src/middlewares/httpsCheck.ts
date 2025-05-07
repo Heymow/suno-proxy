@@ -3,7 +3,7 @@ import express from 'express';
 export default function httpsCheck(app: express.Application) {
     app.set('trust proxy', true);
 
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
         const policy = process.env.HTTPS_POLICY || 'forbid'; // allow | redirect | forbid
 
         app.use(((req: express.Request, res: express.Response, next: express.NextFunction) => {

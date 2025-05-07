@@ -35,6 +35,7 @@ test-results/
 .env.*.local
 .env.local
 .env.dev
+.env.staging
 
 # IDEs and editors
 .vscode/

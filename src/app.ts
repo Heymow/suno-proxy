@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config(
-    process.env.NODE_ENV === 'production' ? { path: '.env' } : { path: '.env.dev' }
+    process.env.NODE_ENV === 'production' ? { path: '.env' } :
+        process.env.NODE_ENV === 'staging' ? { path: '.env.staging' } :
+            { path: '.env.dev' }
 );
 import http from 'http';
 import express from 'express';
