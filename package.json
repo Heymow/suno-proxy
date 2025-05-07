@@ -7,8 +7,7 @@
     "start": "cross-env NODE_ENV=production node dist/app.js",
     "build": "cross-env NODE_ENV=production tsc && npm run copy:public",
     "copy:public": "npx cpx2 \"src/public/**/*\" dist/public --clean",
-    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"nodemon dist/app.js --ignore dist/public/**\" --noClear",
-    "postinstall": "npm install --omit=dev"
+    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"nodemon dist/app.js --ignore dist/public/**\" --noClear"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.3.0",
