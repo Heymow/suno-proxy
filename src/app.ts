@@ -25,9 +25,9 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
 
 setupCors(app);
-// httpsCheck(app);
+httpsCheck(app);
 loadSwaggerUi(app);
-// redirectBrowserToStatus(app);
+redirectBrowserToStatus(app);
 
 app.get('/health', (req, res) => {
     res.status(200).send('OK');
