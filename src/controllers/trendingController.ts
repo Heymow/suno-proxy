@@ -1,11 +1,9 @@
-import dotenv from 'dotenv';
-dotenv.config();
 import { Request, Response } from 'express';
 import { SunoStatusResponseSchema, SunoStatus } from '../schemas/sunoStatusSchema.js';
 import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { TrendingResponseSchema } from '../schemas/trendingSchema.js';
 
-const trendUrl = process.env.TREND_URL;
+const trendUrl = process.env.TREND_URL || 'https://studio-api.prod.suno.com/api/discover';
 
 export async function getTrending(
     req: Request,

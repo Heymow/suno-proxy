@@ -54,20 +54,21 @@ This application facilitates access to Suno's data while providing a monitoring 
 Install the dependencies and devDependencies and start the server.
 
 ```sh
-instructions
+npm install
+npm run dev
 ```
 
 For production environments...
 
 ```sh
 npm install --production
-NODE_ENV=production node app
+npm run start
 ```
 
 ### 1. Clone the repository
 ```sh
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
+git clone https://github.com/Heymow/suno-proxy.git
+cd suno-proxy
 ```
 
 ### 2. Install dependencies
@@ -83,6 +84,7 @@ npm run build
 ### 4. Configure environment variables
 Create a `.env` file at the root of the project (example):
 ```
+HOST_=http://localhost
 PORT=3000
 REDIS_URL=redis://localhost:6379
 CORS_ORIGINS=http://localhost:3000

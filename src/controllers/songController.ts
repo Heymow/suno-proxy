@@ -1,14 +1,12 @@
-import dotenv from 'dotenv';
-dotenv.config();
 import { Request, Response } from 'express';
 import { SongResponseSchema, Song, CommentsResponseSchema, CommentsResponse } from '../schemas/songSchema.js';
 import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { isValidSongId, isSharedSongId } from '../utils/regex.js';
 import { z } from 'zod';
 
-const clip_url = process.env.CLIP_URL;
-const gen_url = process.env.GEN_URL;
-const shareUrl = process.env.SHARE_URL;
+const clip_url = process.env.CLIP_URL || 'https://studio-api.prod.suno.com/api/clip/';
+const gen_url = process.env.GEN_URL || 'https://studio-api.prod.suno.com/api/gen/';
+const shareUrl = process.env.SHARE_URL || 'https://studio-api.prod.suno.com/api/share/code/';
 
 async function resolveSharedSongId(
     shareUrl: string,

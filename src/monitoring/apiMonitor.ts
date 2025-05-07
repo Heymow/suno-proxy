@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { normalizeUrl } from '../utils/normaizeUrl.js';
+import { normalizeUrl } from '../utils/normalizeUrl.js';
 import { ApiStats, TimelinePoint } from '../types/ApiTypes.js';
 import { broadcastTimelinePoint } from '../websocket/wsServer.js';
 

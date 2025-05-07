@@ -1,13 +1,11 @@
-import dotenv from 'dotenv';
-dotenv.config();
 import { Request, Response } from 'express';
 import { User, UserRecent, UserRecentPageResponseSchema, UserPageResponseSchema } from '../schemas/userSchema.js';
 import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { getCachedItem, setCachedItem } from '../services/cacheService.js';
 import { isValidPageNumber } from '../utils/regex.js';
 
-const profileUrl = process.env.PROFILE_URL;
-const lastUrl = process.env.LAST_URL;
+const profileUrl = process.env.PROFILE_URL || 'https://studio-api.prod.suno.com/api/profiles/';
+const lastUrl = process.env.LAST_URL || '/recent_clips';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 

@@ -1,6 +1,10 @@
 import dotenv from 'dotenv';
-import 'dotenv/config';
-dotenv.config();
+dotenv.config(
+    process.env.NODE_ENV === 'production' ? { path: '.env' } : { path: '.env.dev' }
+);
+console.log(`Environment: ${process.env.NODE_ENV}`);
+console.log(`Host: ${process.env.HOST_}`);
+console.log(`Redis URL: ${process.env.REDIS_URL}`);
 import path from 'path';
 import http from 'http';
 import { fileURLToPath } from 'url';
@@ -15,7 +19,7 @@ import { retryOnRateLimit } from './middlewares/retryOnRateLimit.js';
 import { setupWebSocket } from './websocket/wsServer.js';
 import cors from 'cors';
 import fs from 'fs';
-import redisClient from './redisClient.js';
+import { getRedisClient, connectRedis } from './redisClient.js';
 import { requireMonitorToken } from './middlewares/requireMonitorToken.js';
 import { options } from './swagger/swagger-options.js';
 import { connectMongo } from './models/connection.js';
@@ -27,6 +31,13 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 
+app.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+        return res.redirect(`https://${req.headers.host}${req.url}`);
+    }
+    next();
+});
+
 const openApiDoc = JSON.parse(fs.readFileSync('./src/swagger/openapi.json', 'utf8'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDoc, options));
 app.use('/public', express.static(path.join(__dirname, '../public')));
@@ -34,10 +45,11 @@ app.use('/public', express.static(path.join(__dirname, '../public')));
 const rawOrigins = process.env.CORS_ORIGINS || '';
 const allowedOrigins = rawOrigins.split(',').map(origin => origin.trim());
 
-
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (allowedOrigins.includes('*')) {
+            callback(null, true);
+        } else if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             console.warn(`CORS blocked for origin: ${origin}`);
@@ -90,9 +102,9 @@ setupWebSocket(server);
 
 (async () => {
     await connectMongo();
-    await redisClient.connect();
+    await connectRedis();
     server.listen(PORT, () => {
-        console.log(`✅ New Suno API watching on http://${process.env.HOST || "localhost"}:${PORT}`);
-        console.log(`Swagger UI available at http://${process.env.HOST || "localhost"}:${PORT}/docs`);
+        console.log(`✅ New Suno API watching on ${process.env.NODE_ENV == 'production' ? process.env.HOST_ : `http://localhost:${PORT}`}`);
+        console.log(`Swagger UI available at ${process.env.NODE_ENV == 'production' ? process.env.HOST_ : `http://localhost:${PORT}/docs`}`);
     });
 })();
