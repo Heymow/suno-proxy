@@ -22,7 +22,7 @@ import setupCors from './middlewares/corsSetup.js';
 
 const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 httpsCheck(app);
 loadSwaggerUi(app);
