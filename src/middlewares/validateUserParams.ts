@@ -2,7 +2,7 @@ import { z } from "zod";
 import { Request, Response, NextFunction } from "express";
 
 const userParamsSchema = z.object({
-    handle: z.string().min(1),
+    handle: z.string().min(1).trim().min(1),
     forceRefresh: z
         .string()
         .optional()
@@ -17,6 +17,7 @@ export function validateUserParams(req: Request, res: Response, next: NextFuncti
 
     if (!parseResult.success) {
         res.status(400).json({ error: "Invalid user parameters" });
+        return;
     }
 
     (req as any).userParams = parseResult.data;

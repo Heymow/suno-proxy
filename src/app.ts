@@ -2,7 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config(
     process.env.NODE_ENV === 'production' ? { path: '.env' } :
         process.env.NODE_ENV === 'staging' ? { path: '.env.staging' } :
-            { path: '.env.dev' }
+            process.env.NODE_ENV === 'development' ? { path: '.env.dev' } :
+                { path: '.env.dev' }
 );
 import http from 'http';
 import express from 'express';
@@ -13,9 +14,7 @@ import trendingRoutes from './routes/trendingRoutes.js';
 import adminMonitoringRoutes from './routes/systemRoutes.js';
 import { retryOnRateLimit } from './middlewares/retryOnRateLimit.js';
 import { setupWebSocket } from './websocket/wsServer.js';
-import { connectRedis } from './redisClient.js';
 import { requireMonitorToken } from './middlewares/requireMonitorToken.js';
-import { connectMongo } from './models/connection.js';
 import httpsCheck from './middlewares/httpsCheck.js';
 import loadSwaggerUi from './middlewares/loadSwaggerUi.js';
 import loadMonitoringUi from './middlewares/loadMonitoringUi.js';
@@ -47,11 +46,4 @@ loadMonitoringUi(app);
 app.use('/api/internal', requireMonitorToken, adminMonitoringRoutes);
 setupWebSocket(server);
 
-(async () => {
-    await connectMongo();
-    await connectRedis();
-    server.listen(PORT, () => {
-        console.log(`✅ New Suno API watching on ${process.env.NODE_ENV == 'production' ? process.env.HOST_ : `http://localhost:${PORT}`}`);
-        console.log(`Swagger UI available at ${process.env.NODE_ENV == 'production' ? process.env.HOST_ : `http://localhost:${PORT}/docs`}`);
-    });
-})();
+export default app;

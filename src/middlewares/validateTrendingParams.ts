@@ -1,9 +1,16 @@
 import { z } from "zod";
 import { Request, Response, NextFunction } from "express";
+import { allowedLists, allowedTimeSpans } from "../controllers/trendingController.js";
 
 const trendingParamsSchema = z.object({
-    list: z.string().min(1),
-    timeSpan: z.string().min(1),
+    list: z
+        .enum(allowedLists as [string, ...string[]], {
+            errorMap: () => ({ message: "Invalid list parameter" }),
+        })
+        .transform((val) => val.toLowerCase()),
+    timeSpan: z.enum(allowedTimeSpans as [string, ...string[]], {
+        errorMap: () => ({ message: "Invalid time span parameter" }),
+    }),
     forceRefresh: z
         .union([z.string(), z.boolean()])
         .optional()

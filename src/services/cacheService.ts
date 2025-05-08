@@ -10,7 +10,6 @@ export async function getCachedItem<T>(type: string, id: string, forceRefresh = 
     if (!id) return null;
     if (forceRefresh) return null;
     const key = `${type}:${id}`;
-    // const cached = await redisClient.get(key);
     const cached = await redis().get(key);
     if (!cached) return null;
     try {

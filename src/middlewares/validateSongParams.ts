@@ -2,7 +2,7 @@ import { z } from "zod";
 import { Request, Response, NextFunction } from "express";
 
 const songParamsSchema = z.object({
-    songId: z.string().min(1),
+    songId: z.string().min(1).trim().min(1),
     forceRefresh: z
         .string()
         .optional()

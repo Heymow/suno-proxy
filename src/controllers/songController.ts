@@ -71,10 +71,8 @@ export const getClipInfo = async (
     });
 
     if ('error' in result) {
-        if (result.details) {
-            return res.status(502).json({ error: result.error, details: result.details });
-        }
-        return res.status(404).json({ error: result.error });
+        const statusCode = result.statusCode ?? (result.details ? 502 : 404);
+        return res.status(statusCode).json({ error: result.error, details: result.details });
     }
     console.timeEnd('API Call Time');
     return res.json(result);
@@ -108,10 +106,8 @@ export const getClipComments = async (req: Request, res: Response): Promise<Resp
     });
 
     if ('error' in result) {
-        if (result.details) {
-            return res.status(502).json({ error: result.error, details: result.details });
-        }
-        return res.status(404).json({ error: result.error });
+        const statusCode = result.statusCode ?? (result.details ? 502 : 404);
+        return res.status(statusCode).json({ error: result.error, details: result.details });
     }
     console.timeEnd('API Call Time');
     return res.json(result);
