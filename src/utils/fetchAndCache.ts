@@ -4,6 +4,15 @@ import { getCachedItem, setCachedItem } from '../services/cacheService.js';
 
 const userAgent = process.env.USER_AGENT || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3';
 
+function isNotFound(responseOrError: any): boolean {
+    return (
+        responseOrError?.status === 404 ||
+        responseOrError?.data?.detail === "Not found." ||
+        responseOrError?.response?.status === 404 ||
+        responseOrError?.response?.data?.detail === "Not found."
+    );
+}
+
 export async function fetchAndCache<T>(
     params: {
         cacheType: string,
@@ -21,7 +30,7 @@ export async function fetchAndCache<T>(
         timeout?: number,
         normalizer?: (data: any) => any
     }
-): Promise<T | { error: string; details?: any }> {
+): Promise<T | { error: string; details?: any; statusCode?: number }> {
     const {
         cacheType, id, forceRefresh, url, schema,
         notFoundMessage, logPrefix, method = 'GET', body, headers, maxRetries, retryDelay, timeout, normalizer
@@ -43,23 +52,20 @@ export async function fetchAndCache<T>(
                     "Accept": "*/*",
                     "User-Agent": userAgent,
                     ...(headers || {}),
-
                 },
                 data: JSON.stringify(body),
-            },
-                maxRetries,
-                timeout
-            );
+            }, maxRetries, timeout);
         } else {
             response = await fetchWithRetry(url, {
                 method: 'GET',
                 headers: {
                     ...(headers || {})
                 }
-            },
-                maxRetries,
-                timeout
-            );
+            }, maxRetries, timeout);
+        }
+
+        if (isNotFound(response)) {
+            return { error: notFoundMessage, statusCode: 404 };
         }
 
         let data = response.data;
@@ -69,13 +75,13 @@ export async function fetchAndCache<T>(
         }
 
         if (!data || (cacheType === 'comments' && !data.results)) {
-            return { error: notFoundMessage };
+            return { error: notFoundMessage, statusCode: 404 };
         }
 
         const parseResult = schema.safeParse(data);
         if (!parseResult.success) {
             console.error(`Invalid API response:`, parseResult.error.format());
-            return { error: `Invalid ${cacheType} response from API`, details: parseResult.error.format() };
+            return { error: `Invalid ${cacheType} response from API`, details: parseResult.error.format(), statusCode: 502 };
         }
 
         const typedData = parseResult.data;
@@ -86,6 +92,9 @@ export async function fetchAndCache<T>(
 
     } catch (err) {
         console.error(`Error fetching ${cacheType} data:`, err);
-        return { error: 'Internal error' };
+        if (isNotFound(err)) {
+            return { error: notFoundMessage, statusCode: 404 };
+        }
+        return { error: 'Internal error', statusCode: 502 };
     }
 }

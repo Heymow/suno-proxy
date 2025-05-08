@@ -4,6 +4,51 @@ import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { TrendingResponseSchema } from '../schemas/trendingSchema.js';
 
 const trendUrl = process.env.TREND_URL || 'https://studio-api.prod.suno.com/api/discover';
+export const allowedLists = [
+    "Global",
+    "Arabic",
+    "Bengali",
+    "Chinese",
+    "Czech",
+    "Dutch",
+    "English",
+    "Finnish",
+    "French",
+    "German",
+    "Greek",
+    "Gujarati",
+    "Hebrew",
+    "Hindi",
+    "Hungarian",
+    "Indonesian",
+    "Italian",
+    "Japanese",
+    "Kazakh",
+    "Korean",
+    "Malay",
+    "Persian",
+    "Polish",
+    "Portuguese",
+    "Panjabi",
+    "Russian",
+    "Spanish",
+    "Swedish",
+    "Tagalog",
+    "Tamil",
+    "Telugu",
+    "Thai",
+    "Turkish",
+    "Ukrainian",
+    "Urdu",
+    "Vietnamese"
+];
+
+export const allowedTimeSpans = [
+    "Now",
+    "Weekly",
+    "Monthly",
+    "All Time"
+];
 
 export async function getTrending(
     req: Request,
@@ -14,50 +59,6 @@ export async function getTrending(
     }
 
     const { list, timeSpan } = req.params;
-    const allowedLists = [
-        "Global",
-        "Arabic",
-        "Bengali",
-        "Chinese",
-        "Czech",
-        "Dutch",
-        "English",
-        "Finnish",
-        "French",
-        "German",
-        "Greek",
-        "Gujarati",
-        "Hebrew",
-        "Hindi",
-        "Hungarian",
-        "Indonesian",
-        "Italian",
-        "Japanese",
-        "Kazakh",
-        "Korean",
-        "Malay",
-        "Persian",
-        "Polish",
-        "Portuguese",
-        "Panjabi",
-        "Russian",
-        "Spanish",
-        "Swedish",
-        "Tagalog",
-        "Tamil",
-        "Telugu",
-        "Thai",
-        "Turkish",
-        "Ukrainian",
-        "Urdu",
-        "Vietnamese"
-    ];
-    const allowedTimeSpans = [
-        "Now",
-        "Weekly",
-        "Monthly",
-        "All Time"
-    ];
 
     if (!allowedLists.includes(list) || !allowedTimeSpans.includes(timeSpan)) {
         return res.status(400).json({ error: 'Invalid list or time span parameter' });

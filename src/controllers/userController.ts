@@ -49,22 +49,26 @@ async function fetchAllUserPages(
 
 export const getUserPageInfo = async (req: Request,
     res: Response
-): Promise<Response> => {
+): Promise<void> => {
     if (!profileUrl) {
-        return res.status(500).json({ error: 'Server configuration error' });
+        res.status(500).json({ error: 'Server configuration error' });
+        return;
     }
 
     const { handle, page } = req.params;
     if (!handle) {
-        return res.status(400).json({ error: 'Missing handle' });
+        res.status(400).json({ error: 'Missing handle' });
+        return;
     }
     const forceRefresh = req.query.forceRefresh === 'true' || req.query.refresh === 'true';
 
     if (!isValidPageNumber(page)) {
-        return res.status(400).json({ error: 'Invalid page number' });
+        res.status(400).json({ error: 'Invalid page number' });
+        return;
     }
     if (!isValidPageNumber(page)) {
-        return res.status(400).json({ error: 'Invalid page number' });
+        res.status(400).json({ error: 'Invalid page number' });
+        return;
     }
     const pageNumber = parseInt(req.params.page, 10);
     console.log('Page number:', pageNumber);
@@ -84,32 +88,45 @@ export const getUserPageInfo = async (req: Request,
         });
 
         if ('error' in result) {
-            return res.status(502).json({ error: result.error, details: result.details });
+            const statusCode = result.statusCode ?? 502;
+            res.status(statusCode).json({ error: result.error, details: result.details });
+            return;
         }
 
-        return res.json(result);
+        res.json(result);
+        return;
     } catch (err) {
         console.error('Error fetching user data:', err);
-        return res.status(500).json({ error: 'Internal error' });
+        res.status(500).json({ error: 'Internal error' });
+        return;
     } finally {
         console.timeEnd('API Call Time');
     }
 };
 
 
-export const getAllClipsFromUser = async (handle: string, forceRefresh = false): Promise<any> => {
+export const getAllClipsFromUser = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
     if (!profileUrl) {
-        return { error: 'Server configuration error' };
+        res.status(500).json({ error: 'Server configuration error' });
+        return;
     }
+    const { handle } = req.params;
+    const forceRefresh = req.query.forceRefresh === 'true' || req.query.refresh === 'true';
+
     if (!handle) {
-        return { error: 'Missing handle' };
+        res.status(400).json({ error: 'Missing handle' });
+        return;
     }
 
     if (!forceRefresh) {
         const cachedUser = await getCachedItem<User>('user', handle, forceRefresh);
         if (cachedUser) {
             console.log('Returning cached user data for handle:', handle);
-            return cachedUser;
+            res.json(cachedUser);
+            return;
         }
     }
 
@@ -125,7 +142,9 @@ export const getAllClipsFromUser = async (handle: string, forceRefresh = false):
         });
 
         if ('error' in firstPage) {
-            return firstPage;
+            const statusCode = firstPage.statusCode ?? 502;
+            res.status(statusCode).json({ error: firstPage.error, details: firstPage.details });
+            return;
         }
 
         const totalClips = firstPage.num_total_clips || 0;
@@ -142,27 +161,34 @@ export const getAllClipsFromUser = async (handle: string, forceRefresh = false):
         const typedUser = UserPageResponseSchema.safeParse(firstPage);
         if (!typedUser.success) {
             console.error('Error rebuilding user data:', typedUser.error.format());
-            return { error: 'Error rebuilding user data:', details: typedUser.error.format() };
+            res.status(500).json({ error: 'Error rebuilding user data:', details: typedUser.error.format() });
+            return;
         }
 
         setCachedItem<User>('user', handle, typedUser.data);
         console.log('Cached user data for handle:', handle);
 
-        return firstPage;
+        res.json(firstPage);
+        return;
     } catch (error) {
         console.error('Error fetching user data:', error);
-        return { error: 'Internal error' };
+        res.status(500).json({ error: 'Internal error' });
+        return;
     }
 };
 
-export const getRecentClips = async (req: Request, res: Response): Promise<Response> => {
+export const getRecentClips = async (req: Request, res: Response): Promise<void> => {
     if (!profileUrl || !lastUrl) {
-        return res.status(500).json({ error: 'Server configuration error' });
+        res.status(500).json({ error: 'Server configuration error' });
+        return;
     }
     const { handle } = req.params;
     const forceRefresh = req.query.forceRefresh === 'true' || req.query.refresh === 'true';
 
-    if (!handle) return res.status(400).json({ error: 'Missing handle' });
+    if (!handle) {
+        res.status(400).json({ error: 'Missing handle' });
+        return;
+    }
 
     const url = `${profileUrl}${handle}${lastUrl}`;
 
@@ -179,13 +205,17 @@ export const getRecentClips = async (req: Request, res: Response): Promise<Respo
         });
 
         if ('error' in result) {
-            return res.status(502).json({ error: result.error, details: result.details });
+            const statusCode = result.statusCode ?? 502;
+            res.status(statusCode).json({ error: result.error });
+            return;
         }
 
-        return res.json(result);
+        res.json(result);
+        return;
     } catch (err) {
         console.error('Error fetching user recent clips:', err);
-        return res.status(500).json({ error: 'Internal error' });
+        res.status(500).json({ error: 'Internal error' });
+        return;
     } finally {
         console.timeEnd('API Call Time');
     }

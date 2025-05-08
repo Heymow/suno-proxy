@@ -74,9 +74,11 @@ export const getPlaylistInfo = async (
         });
 
         if ('error' in firstPage) {
-            return res.status(502).json({
-                error: firstPage.error, details: firstPage.details,
-                message: 'Error fetching playlist data'
+            const statusCode = firstPage.statusCode ?? 502;
+            return res.status(statusCode).json({
+                error: firstPage.error,
+                details: firstPage.details,
+                message: statusCode === 404 ? 'Playlist not found' : 'Error fetching playlist data'
             });
         }
 
@@ -135,7 +137,8 @@ export const getPlaylistPage = async (
         });
 
         if ('error' in result) {
-            return res.status(502).json({ error: result.error, details: result.details });
+            const statusCode = result.statusCode ?? 502;
+            return res.status(statusCode).json({ error: result.error, details: result.details });
         }
 
         return res.json(result);
