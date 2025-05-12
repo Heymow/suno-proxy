@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { SunoStatusResponseSchema, SunoStatus } from '../schemas/sunoStatusSchema.js';
 import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { TrendingResponseSchema } from '../schemas/trendingSchema.js';
+import { getRedisClient } from '../redisClient.js';
 
 const trendUrl = process.env.TREND_URL || 'https://studio-api.prod.suno.com/api/discover';
 export const allowedLists = [
@@ -80,16 +81,19 @@ export async function getTrending(
         "disable_shuffle": true
     }
 
+    const cacheId = `trending:${list}:${timeSpan}`;
+
     const result = await fetchAndCache<typeof TrendingResponseSchema._type>({
         cacheType: 'trending',
-        id: `${list}_${timeSpan}`,
+        id: cacheId,
         forceRefresh,
         url: `${trendUrl}`,
         schema: TrendingResponseSchema,
         notFoundMessage: 'Trending list not found',
         logPrefix: 'trending',
         method: 'POST',
-        body
+        body,
+        httpCacheOptions: { useCache: false }
     });
 
     if ('error' in result) {
@@ -121,20 +125,23 @@ export async function getStatus(
         "disable_shuffle": true
     }
 
+    const cacheId = `status:global`;
+
     console.log('Fetching Suno global status...');
     console.time('API Call Time');
 
     try {
         const result = await fetchAndCache<SunoStatus>({
             cacheType: 'sunoStatus',
-            id: `sunoStatus`,
+            id: cacheId,
             forceRefresh,
             url: `${trendUrl}`,
             schema: SunoStatusResponseSchema,
             notFoundMessage: 'Status list not found',
             logPrefix: 'sunoStatus',
             method: 'POST',
-            body
+            body,
+            httpCacheOptions: { useCache: false }
         });
 
         if ('error' in result) {
@@ -151,5 +158,30 @@ export async function getStatus(
     }
     finally {
         console.timeEnd('API Call Time');
+    }
+}
+
+export const invalidateTrendingCache = async (req: Request, res: Response, next: Function): Promise<Response | void> => {
+    try {
+        const redis = getRedisClient();
+        const keys = await redis.keys('trending:*');
+
+        if (keys.length > 0) {
+            await redis.del(keys);
+            return res.json({
+                success: true,
+                message: `Invalidated ${keys.length} trending cache entries`
+            });
+        }
+
+        return res.json({
+            success: true,
+            message: 'No trending cache entries to invalidate'
+        });
+    } catch (error) {
+        console.error('Error invalidating trending cache:', error);
+
+        res.status(500).json({ error: 'Failed to invalidate cache' });
+        next();
     }
 }
