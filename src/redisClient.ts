@@ -16,7 +16,7 @@ export function getRedisClient(): RedisClientType {
             console.log('Redis Client is ready to use');
         });
     }
-    if (!redisClient.isOpen && process.env.NODE_ENV !== 'production') {
+    if (!redisClient.isOpen && process.env.NODE_ENV == 'development') {
         console.warn('[Redis] getRedisClient() called but client is closed');
     }
 
@@ -44,7 +44,7 @@ export async function connectRedis(): Promise<RedisClientType> {
 
 export function getSafeRedisClient() {
     const client = getRedisClient();
-    if (!client || !client.isOpen && process.env.NODE_ENV !== 'production') {
+    if (!client || !client.isOpen && process.env.NODE_ENV == 'development') {
         console.warn('[Redis] getSafeRedisClient() called but client is closed', client);
     }
     return client;
