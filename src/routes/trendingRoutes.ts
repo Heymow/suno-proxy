@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { getTrending, getStatus } from '../controllers/trendingController.js';
 import { validateStatusParams, validateTrendingParams } from '../middlewares/validateTrendingParams.js';
+import { invalidateTrendingCache } from '../controllers/trendingController.js';
 
 const router = express.Router();
 
@@ -21,6 +22,15 @@ router.get('/:list/:timeSpan', validateTrendingParams, async (req: Request, res:
     }
     catch (error) {
         console.error('Error in /trending route:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.post('/invalidate-cache', async (req: Request, res: Response, next: Function) => {
+    try {
+        await invalidateTrendingCache(req, res, next);
+    } catch (error) {
+        console.error('Error in /invalidate-cache route:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });

@@ -121,7 +121,10 @@ export async function fetchWithRetry<T = any>(
                         statusText: response.statusText || '',
                         config: response.config || {},
                     };
-                    await httpCache.set(url, cacheable, ttl);
+
+                    // Ajouter le corps à la mise en cache
+                    const requestBody = config.data ? JSON.parse(config.data) : undefined;
+                    await httpCache.set(url, cacheable, ttl, requestBody);
                 }
 
                 metrics.requestCount++;

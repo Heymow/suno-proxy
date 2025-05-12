@@ -1,5 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { getRedisClient } from '../redisClient.js';
+import { normalizeUrl } from '../utils/normalizeUrl.js';
+import crypto from 'crypto';
 
 interface CacheEntry<T> {
     response: AxiosResponse<T>;
@@ -13,8 +15,21 @@ export interface HttpCacheService {
 }
 
 export class RedisHttpCacheService implements HttpCacheService {
-    private getCacheKey(url: string): string {
-        return `http_cache:${url}`;
+    private getCacheKey(url: string, body?: any): string {
+        const normalizedUrl = normalizeUrl(url);
+        let cacheKey = `http_cache:${normalizedUrl}`;
+
+        // Ajouter un hash du corps pour les requêtes POST
+        if (body) {
+            const bodyHash = crypto
+                .createHash('md5')
+                .update(JSON.stringify(body))
+                .digest('hex')
+                .substring(0, 10); // Utiliser seulement 10 caractères pour garder les clés compactes
+            cacheKey += `:${bodyHash}`;
+        }
+
+        return cacheKey;
     }
 
     private getDomainCacheKey(domain: string): string {
@@ -25,8 +40,17 @@ export class RedisHttpCacheService implements HttpCacheService {
         return getRedisClient();
     }
 
-    async get<T>(url: string): Promise<AxiosResponse<T> | null> {
-        const cacheKey = this.getCacheKey(url);
+    async get<T>(url: string, params?: Record<string, any>): Promise<AxiosResponse<T> | null> {
+        let cacheKey = this.getCacheKey(url);
+
+        if (params) {
+            const paramString = Object.entries(params)
+                .sort(([a], [b]) => a.localeCompare(b))
+                .map(([k, v]) => `${k}=${v}`)
+                .join('&');
+            cacheKey += `:${paramString}`;
+        }
+
         const cached = await this.redis().get(cacheKey);
 
         if (!cached) {
@@ -42,8 +66,9 @@ export class RedisHttpCacheService implements HttpCacheService {
         }
     }
 
-    async set<T>(url: string, response: AxiosResponse<T>, ttlSeconds: number = 300): Promise<void> {
-        const cacheKey = this.getCacheKey(url);
+    async set<T>(url: string, response: AxiosResponse<T>, ttlSeconds: number = 300, body?: any): Promise<void> {
+        // Passer le corps à getCacheKey pour créer une clé unique
+        const cacheKey = this.getCacheKey(url, body);
 
         // Don't cache error responses
         if (response.status >= 400) {
@@ -79,6 +104,11 @@ export class RedisHttpCacheService implements HttpCacheService {
         if (keys.length > 0) {
             await this.redis().del(keys);
         }
+    }
+
+    async invalidateUrl(url: string): Promise<void> {
+        const cacheKey = this.getCacheKey(url);
+        await this.redis().del(cacheKey);
     }
 }
 
