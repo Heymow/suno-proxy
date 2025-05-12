@@ -26,7 +26,8 @@ export function getRedisClient(): RedisClientType {
 export async function connectRedis(): Promise<RedisClientType> {
     const client = getRedisClient();
 
-    // ✅ Évite de reconnecter si déjà connecté
+    console.log('✅ Redis open?', getRedisClient().isOpen);
+
     if (!client.isOpen) {
         await client.connect();
     }

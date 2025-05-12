@@ -44,6 +44,5 @@ app.use('/user', userRoutes);
 
 loadMonitoringUi(app);
 app.use('/api/internal', requireMonitorToken, adminMonitoringRoutes);
-setupWebSocket(server);
 
 export default app;
