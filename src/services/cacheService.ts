@@ -1,7 +1,9 @@
-import { getRedisClient } from '../redisClient.js';
+import { getSafeRedisClient } from '../redisClient.js';
 
 function redis() {
-    return getRedisClient();
+    const client = getSafeRedisClient();
+    if (!client?.isOpen) throw new Error('Redis client is closed');
+    return client;
 }
 
 const DEFAULT_EXPIRY = Number(process.env.CACHE_EXPIRY_TIME_MINUTES) * 60 || 60 * 60; // seconds

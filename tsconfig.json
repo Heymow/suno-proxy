@@ -112,11 +112,12 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/vitest.config.ts"
-  ], // Include all TS files in /src
+    "src/vitest.config.tsg.ts"
+, "vitest.config.ts"  ], // Include all TS files in /src
   "exclude": [
     "node_modules", // Exclure node_modules
-    "dist" // Exclure le dossier de sortie
+    "dist", // Exclure le dossier de sortie
+    "vitest.config.ts" // Exclure le fichier de config de vitest
   ],
   "scripts": {
     "build": "tsc && mkdir -p dist/public/monitoring && cp -r src/public/monitoring dist/public/monitoring"
