@@ -16,3 +16,7 @@ const PORT = process.env.PORT || 8000;
         console.log(`Swagger UI available at ${process.env.NODE_ENV == 'production' ? process.env.HOST_ : `http://localhost:${PORT}/docs`}`);
     });
 })();
+
+export function createServer() {
+    return server;
+}

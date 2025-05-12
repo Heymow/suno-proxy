@@ -1,15 +1,8 @@
-import { setCachedItem, getCachedItem } from '../../services/cacheService.js';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { setCachedItem, getCachedItem } from '../../services/cacheService.js';
+import { getSafeRedisClient } from '../../redisClient.js';
 
-
-const mRedis: any = {
-    get: vi.fn(),
-    set: vi.fn(),
-};
-
-vi.mock('../../redisClient', () => ({
-    getRedisClient: () => mRedis,
-}));
+const mRedis = getSafeRedisClient() as any;
 
 describe('cacheService', () => {
     beforeEach(() => {
@@ -47,11 +40,12 @@ describe('cacheService', () => {
         });
 
         it('should set and get cached playlist info', async () => {
+            await setCachedItem('playlist', '123', { foo: 'bar' }, 60);
+            expect(mRedis.set).toHaveBeenCalledWith('playlist:123', JSON.stringify({ foo: 'bar' }), { EX: 60 });
+
             mRedis.get.mockResolvedValueOnce(JSON.stringify({ foo: 'bar' }));
             const result = await getCachedItem('playlist', '123');
             expect(result).toEqual({ foo: 'bar' });
-            await setCachedItem('playlist', '123', { foo: 'bar' }, 60);
-            expect(mRedis.set).toHaveBeenCalledWith('playlist:123', JSON.stringify({ foo: 'bar' }), { EX: 60 });
         });
     });
 
