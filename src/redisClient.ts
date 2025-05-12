@@ -16,7 +16,7 @@ export function getRedisClient(): RedisClientType {
             console.log('Redis Client is ready to use');
         });
     }
-    if (!redisClient.isOpen) {
+    if (!redisClient.isOpen && process.env.NODE_ENV !== 'production') {
         console.warn('[Redis] getRedisClient() called but client is closed');
     }
 
