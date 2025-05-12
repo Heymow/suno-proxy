@@ -44,7 +44,7 @@ export async function connectRedis(): Promise<RedisClientType> {
 
 export function getSafeRedisClient() {
     const client = getRedisClient();
-    if (!client || !client.isOpen) {
+    if (!client || !client.isOpen && process.env.NODE_ENV !== 'production') {
         console.warn('[Redis] getSafeRedisClient() called but client is closed', client);
     }
     return client;
