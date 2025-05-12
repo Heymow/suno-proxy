@@ -13,8 +13,8 @@ const PORT = process.env.PORT || 8000;
         await connectRedis();
         setupWebSocket(server);
         server.listen(PORT, () => {
-            console.log(`✅ New Suno API watching on ${process.env.NODE_ENV == 'production' ? process.env.HOST_ : `http://localhost:${PORT}`}`);
-            console.log(`Swagger UI available at ${process.env.NODE_ENV == 'production' ? process.env.HOST_ : `http://localhost:${PORT}/docs`}`);
+            console.log(`✅ New Suno API watching on ${process.env.NODE_ENV !== 'development' ? process.env.HOST_ : `http://localhost:${PORT}`}`);
+            console.log(`Swagger UI available at ${process.env.NODE_ENV !== 'development' ? process.env.HOST_ : `http://localhost:${PORT}/docs`}`);
         });
     }
     catch (err) {
