@@ -4,6 +4,7 @@ import {
     resetApiStats,
     getTimeline,
 } from '../monitoring/apiMonitor.js';
+import { runArchiveNow, testArchives } from '../cron/scheduleArchives.js';
 
 const router = express.Router();
 
@@ -42,6 +43,28 @@ router.get('/monitoring/health', (req, res) => {
     } catch (error) {
         console.error('Error checking health:', error);
         res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.get('/archive/test', async (req, res) => {
+    try {
+        const result = await testArchives();
+        res.status(200).json({ message: 'Archive test completed successfully', result });
+    } catch (error) {
+        console.error('Error running archive test:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+        throw error;
+    }
+});
+
+router.get('/archive/now', async (req, res) => {
+    try {
+        const result = await runArchiveNow();
+        res.status(200).json({ message: 'Archive run completed successfully', result });
+    } catch (error) {
+        console.error('Error running archive now:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+        throw error;
     }
 });
 

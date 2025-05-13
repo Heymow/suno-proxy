@@ -5,7 +5,6 @@ dotenv.config(
             process.env.NODE_ENV === 'development' ? { path: '.env.dev' } :
                 { path: '.env.dev' }
 );
-import http from 'http';
 import express from 'express';
 import songRoutes from './routes/songRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -13,22 +12,21 @@ import playlistRoutes from './routes/playlistRoutes.js';
 import trendingRoutes from './routes/trendingRoutes.js';
 import adminMonitoringRoutes from './routes/systemRoutes.js';
 import { retryOnRateLimit } from './middlewares/retryOnRateLimit.js';
-import { setupWebSocket } from './websocket/wsServer.js';
 import { requireMonitorToken } from './middlewares/requireMonitorToken.js';
 import httpsCheck from './middlewares/httpsCheck.js';
 import loadSwaggerUi from './middlewares/loadSwaggerUi.js';
 import loadMonitoringUi from './middlewares/loadMonitoringUi.js';
 import redirectBrowserToStatus from './middlewares/redirectBrowserToStatus.js';
 import setupCors from './middlewares/corsSetup.js';
+import { setupArchiveSchedule } from './cron/scheduleArchives.js';
 
 const app = express();
-const server = http.createServer(app);
-const PORT = process.env.PORT || 8000;
 
 setupCors(app);
 httpsCheck(app);
 loadSwaggerUi(app);
 redirectBrowserToStatus(app);
+setupArchiveSchedule();
 
 app.get('/health', (req, res) => {
     res.status(200).send('OK');
