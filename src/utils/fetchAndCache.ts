@@ -5,7 +5,7 @@ import { getCachedItem, setCachedItem } from '../services/cacheService.js';
 const userAgent = process.env.USER_AGENT || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3';
 
 function isNotFound(responseOrError: any): boolean {
-    // S'assurer que l'objet existe avant de vérifier ses propriétés
+    // Ensure the object exists before checking its properties
     if (!responseOrError) return false;
 
     return !!(
@@ -13,7 +13,7 @@ function isNotFound(responseOrError: any): boolean {
         responseOrError?.data?.detail === "Not found." ||
         responseOrError?.response?.status === 404 ||
         responseOrError?.response?.data?.detail === "Not found." ||
-        // Cas supplémentaire pour les résultats vides
+        // Additional case for empty results
         (responseOrError?.data?.results && Array.isArray(responseOrError.data.results) && responseOrError.data.results.length === 0)
     );
 }
@@ -94,19 +94,19 @@ export async function fetchAndCache<T>(
                 );
             }
         } catch (fetchError) {
-            // Log l'erreur mais continue le traitement
+            // Log the error but continue processing
             console.error(`Network error in fetchWithRetry: ${logPrefix}`, fetchError);
 
-            // Si l'erreur contient des informations de réponse HTTP, on vérifie si c'est un "not found"
+            // If the error contains HTTP response information, check if it's a "not found"
             if (isNotFound(fetchError)) {
                 return { error: notFoundMessage, statusCode: 404 };
             }
 
-            // Sinon, c'est une erreur réseau générique
-            throw fetchError; // Re-throw pour être géré par le bloc catch externe
+            // Otherwise, it's a generic network error
+            throw fetchError; // Re-throw to be handled by the outer catch block
         }
 
-        // Vérifier si la réponse existe
+        // Check if the response exists
         if (!response) {
             console.error(`Empty response received from API: ${logPrefix}`);
             return { error: 'Empty response from API', statusCode: 502 };
@@ -141,12 +141,12 @@ export async function fetchAndCache<T>(
     } catch (err) {
         console.error(`Error fetching ${cacheType} data:`, err);
 
-        // Vérifier si c'est une erreur "not found"
+        // Check if it's a "not found" error
         if (isNotFound(err)) {
             return { error: notFoundMessage, statusCode: 404 };
         }
 
-        // Pour toute autre erreur
+        // For any other error
         return { error: 'Internal error', statusCode: 502 };
     }
 }
