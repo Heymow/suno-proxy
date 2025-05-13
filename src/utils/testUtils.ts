@@ -80,7 +80,7 @@ export async function mockFetchAndExpectError({
   expectedStatusCode: number;
   logPrefix?: string;
   forceRefresh?: boolean;
-  customMock?: boolean; // true si on veut gérer le mock manuellement
+  customMock?: boolean; // true if we want to use a custom mock instead of the default one
 }) {
   if (!customMock) {
     mockAxiosResponse({ data: responseData, status: expectedStatusCode });

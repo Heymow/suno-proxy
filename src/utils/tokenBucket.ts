@@ -9,7 +9,7 @@ export async function acquireToken(key: string, limit: number = 10, refillTime: 
         redis.get(`${bucketKey}:tokens`).then(v => parseInt(v || '0')),
         redis.get(`${bucketKey}:lastRefill`).then(v => parseInt(v || '0'))
     ]);
-    const lastRefill = lastRefillRaw || (now - refillTime); // Correction ici
+    const lastRefill = lastRefillRaw || (now - refillTime);
     const timePassed = now - lastRefill;
     const refillAmount = Math.floor(timePassed / refillTime) * limit;
     const newTokens = Math.min(limit, tokens + refillAmount);

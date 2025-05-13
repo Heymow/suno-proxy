@@ -66,10 +66,6 @@ export const getUserPageInfo = async (req: Request,
         res.status(400).json({ error: 'Invalid page number' });
         return;
     }
-    if (!isValidPageNumber(page)) {
-        res.status(400).json({ error: 'Invalid page number' });
-        return;
-    }
     const pageNumber = parseInt(req.params.page, 10);
     console.log('Page number:', pageNumber);
 

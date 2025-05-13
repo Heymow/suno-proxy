@@ -77,12 +77,12 @@ export async function fetchWithRetry<T = any>(
                     ...config,
                 });
 
-                // Vérification défensive
+                // Defensive check
                 if (!response) {
                     console.error('Received empty response from axios.request');
                     logApiCall(url, 500, 'Empty response from server');
 
-                    // En environnement de test, fournir une réponse factice au lieu d'échouer
+                    // In test environment, provide a mock response instead of failing
                     if (process.env.NODE_ENV === 'test') {
                         console.warn('Using mock response in test environment');
                         return {
@@ -122,7 +122,7 @@ export async function fetchWithRetry<T = any>(
                         config: response.config || {},
                     };
 
-                    // Ajouter le corps à la mise en cache
+                    // Add the request body to the cache
                     const requestBody = config.data ? JSON.parse(config.data) : undefined;
                     await httpCache.set(url, cacheable, ttl, requestBody);
                 }
@@ -134,7 +134,7 @@ export async function fetchWithRetry<T = any>(
                 attempt++;
                 metrics.retryCount++;
 
-                // Vérifier explicitement les erreurs de réseau
+                // Explicitly check for network errors
                 if (error && (
                     error.code === 'ENOTFOUND' ||
                     error.code === 'ECONNREFUSED' ||
@@ -154,7 +154,7 @@ export async function fetchWithRetry<T = any>(
                 if (error?.message?.includes('Circuit breaker open')) {
                     logApiCall(url, 503, error.message);
 
-                    // En environnement de test, retourner une réponse d'erreur plutôt que de lancer une exception
+                    // In test environment, return an error response instead of throwing an exception
                     if (process.env.NODE_ENV === 'test') {
                         return {
                             status: 503,

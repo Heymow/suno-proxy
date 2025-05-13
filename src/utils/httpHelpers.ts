@@ -3,7 +3,7 @@ import { acquireToken } from './tokenBucket.js';
 
 export const MIN_DELAY = 100; // ms
 
-// Métriques partagées 
+// Shared metrics
 export const metrics = {
     requestCount: 0,
     retryCount: 0,

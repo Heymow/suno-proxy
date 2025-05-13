@@ -19,13 +19,13 @@ export class RedisHttpCacheService implements HttpCacheService {
         const normalizedUrl = normalizeUrl(url);
         let cacheKey = `http_cache:${normalizedUrl}`;
 
-        // Ajouter un hash du corps pour les requêtes POST
+        // Add a hash of the body for POST requests
         if (body) {
             const bodyHash = crypto
                 .createHash('md5')
                 .update(JSON.stringify(body))
                 .digest('hex')
-                .substring(0, 10); // Utiliser seulement 10 caractères pour garder les clés compactes
+                .substring(0, 10); // 10 chars only to keep it short
             cacheKey += `:${bodyHash}`;
         }
 
@@ -67,7 +67,7 @@ export class RedisHttpCacheService implements HttpCacheService {
     }
 
     async set<T>(url: string, response: AxiosResponse<T>, ttlSeconds: number = 300, body?: any): Promise<void> {
-        // Passer le corps à getCacheKey pour créer une clé unique
+        // Pass the body to getCacheKey to create a unique key
         const cacheKey = this.getCacheKey(url, body);
 
         // Don't cache error responses
