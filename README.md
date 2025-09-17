@@ -8,7 +8,7 @@
 ### Demo:
 - API entrypoint: https://api.suno-proxy.click/
 - Documentation: https://api.suno-proxy.click/docs
-- Status page: https://suno-proxy.click
+- Status page: https://status.suno-proxy.click
 ---
 This is an application that serves as an interface or proxy to retrieve data from an external website (Suno, a music generation service). The project consists of two main parts:
 # API server:
