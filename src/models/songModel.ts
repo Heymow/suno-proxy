@@ -90,7 +90,6 @@ export async function updateSongWithHistory(
     const db = await getDb();
     const songsCollection = db.collection<SongDocument>('songs');
     const changesCollection = db.collection<SongChange>('song_changes');
-
     // Récupérer l'état actuel
     const currentSong = await songsCollection.findOne({ _id: songId });
     if (!currentSong) throw new Error(`Song ${songId} not found`);
@@ -115,18 +114,18 @@ export async function updateSongWithHistory(
     // Traiter les champs metadata séparément
     if (updates.metadata) {
         if (updates.metadata.prompt !== undefined &&
-            currentSong.metadata.prompt !== updates.metadata.prompt) {
+            currentSong.metadata?.prompt !== updates.metadata.prompt) {
             changes.push({
                 field: 'metadata.prompt',
-                oldValue: currentSong.metadata.prompt
+                oldValue: currentSong.metadata?.prompt
             });
         }
 
         if (updates.metadata.can_remix !== undefined &&
-            currentSong.metadata.can_remix !== updates.metadata.can_remix) {
+            currentSong.metadata?.can_remix !== updates.metadata.can_remix) {
             changes.push({
                 field: 'metadata.can_remix',
-                oldValue: currentSong.metadata.can_remix
+                oldValue: currentSong.metadata?.can_remix
             });
         }
     }

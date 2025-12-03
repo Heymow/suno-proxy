@@ -1,13 +1,13 @@
 import http from 'http';
 import app from './app.js';
 import { initRedisConnection } from './redisClient.js';
-import { connectMongo } from './models/connection.js';
+import { connectMongo, closeMongoConnection } from './models/connection.js';
 import { connectMongoArchive } from './models/archiveConnection.js';
 import { setupWebSocket } from './websocket/wsServer.js';
 import { archiveSongsMinimal } from './scripts/archiveOldSongs.js';
 import { setupIndexes } from './scripts/setupDatabase.js';
+import { pollTrendingLists } from './services/trendingPoller.js';
 import cron from 'node-cron';
-import { closeMongoConnection } from './models/connection.js';
 
 const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
@@ -28,6 +28,17 @@ const PORT = process.env.PORT || 8000;
                 console.log('✅ Archivage terminé avec succès');
             } catch (err) {
                 console.error('❌ Erreur lors de l\'archivage:', err);
+            }
+        });
+
+        // Programmer le polling des tendances toutes les 5 minutes
+        cron.schedule('*/5 * * * *', async () => {
+            console.log('📈 Exécution du polling des tendances...');
+            try {
+                await pollTrendingLists();
+                console.log('✅ Polling des tendances terminé');
+            } catch (err) {
+                console.error('❌ Erreur lors du polling des tendances:', err);
             }
         });
 

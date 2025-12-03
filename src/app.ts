@@ -11,6 +11,7 @@ import userRoutes from './routes/userRoutes.js';
 import playlistRoutes from './routes/playlistRoutes.js';
 import trendingRoutes from './routes/trendingRoutes.js';
 import adminMonitoringRoutes from './routes/systemRoutes.js';
+import statsRoutes from './routes/statsRoutes.js';
 import { retryOnRateLimit } from './middlewares/retryOnRateLimit.js';
 import { requireMonitorToken } from './middlewares/requireMonitorToken.js';
 import httpsCheck from './middlewares/httpsCheck.js';
@@ -39,6 +40,7 @@ app.use('/song', songRoutes);
 app.use('/playlist', playlistRoutes);
 app.use('/trending', trendingRoutes);
 app.use('/user', userRoutes);
+app.use('/stats', statsRoutes);
 
 loadMonitoringUi(app);
 app.use('/api/internal', requireMonitorToken, adminMonitoringRoutes);
