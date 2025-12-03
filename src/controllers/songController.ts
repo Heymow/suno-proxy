@@ -3,6 +3,7 @@ import { SongResponseSchema, Song, CommentsResponseSchema, CommentsResponse } fr
 import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { isValidSongId, isSharedSongId } from '../utils/regex.js';
 import { z } from 'zod';
+import { findSongById, saveSong } from '../models/songModel.js';
 
 const clip_url = process.env.CLIP_URL || 'https://studio-api.prod.suno.com/api/clip/';
 const gen_url = process.env.GEN_URL || 'https://studio-api.prod.suno.com/api/gen/';
@@ -58,6 +59,20 @@ export const getClipInfo = async (
         return res.status(400).json({ error: 'Invalid songId' });
     }
 
+    // Chercher d'abord en base de données si on ne force pas le rafraîchissement
+    if (!forceRefresh) {
+        try {
+            const dbSong = await findSongById(songId);
+            if (dbSong) {
+                console.log(`📦 Song found in database: ${songId}`);
+                return res.json(dbSong);
+            }
+        } catch (dbError) {
+            console.error('Error accessing database:', dbError);
+            // Continuer et essayer depuis l'API si la BD échoue
+        }
+    }
+
     console.time('API Call Time');
 
     const result = await fetchAndCache<Song>({
@@ -75,6 +90,20 @@ export const getClipInfo = async (
         return res.status(statusCode).json({ error: result.error, details: result.details });
     }
     console.timeEnd('API Call Time');
+
+    // Sauvegarder la chanson en base de données
+    try {
+        await saveSong({
+            _id: songId,
+            ...result,
+            cachedAt: new Date()
+        });
+        console.log(`💾 Song saved to database: ${songId}`);
+    } catch (saveError) {
+        console.error('Error saving song to database:', saveError);
+        // Continuer car même si la sauvegarde échoue, nous avons les données à renvoyer
+    }
+
     return res.json(result);
 };
 

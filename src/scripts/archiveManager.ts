@@ -2,7 +2,7 @@ import { getArchiveDb, getArchiveClient } from '../models/archiveConnection.js';
 import { getClient } from '../models/connection.js';
 import { Db, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
-import { archiveClipsMinimal } from './archiveOldClips.js';
+import { archiveSongsMinimal } from './archiveOldSongs.js';
 // Importer les nouveaux types
 import {
     PlaylistDocument,
@@ -11,7 +11,22 @@ import {
     ArchiveConfig as TypedArchiveConfig
 } from '../types/ArchiveTypes.js';
 
+// Charger les variables d'environnement
 dotenv.config();
+
+// Définir des constantes pour les seuils par défaut et lire les variables d'environnement
+const DEFAULT_THRESHOLD_SONGS = 90;   // 90 jours par défaut pour les songs
+const DEFAULT_THRESHOLD_PLAYLISTS = 60;  // 60 jours par défaut pour les playlists
+const DEFAULT_THRESHOLD_TRENDS = 30;     // 30 jours par défaut pour les tendances 
+const DEFAULT_THRESHOLD_USERS = 14; // 14 jours par défaut pour les users
+
+// Lire les seuils depuis les variables d'environnement ou utiliser les valeurs par défaut
+const THRESHOLD_SONGS = parseInt(process.env.ARCHIVE_THRESHOLD_SONGS || '', 10) || DEFAULT_THRESHOLD_SONGS;
+const THRESHOLD_PLAYLISTS = parseInt(process.env.ARCHIVE_THRESHOLD_PLAYLISTS || '', 10) || DEFAULT_THRESHOLD_PLAYLISTS;
+const THRESHOLD_TRENDS = parseInt(process.env.ARCHIVE_THRESHOLD_TRENDS || '', 10) || DEFAULT_THRESHOLD_TRENDS;
+const THRESHOLD_USERS = parseInt(process.env.ARCHIVE_THRESHOLD_USERS || '', 10) || DEFAULT_THRESHOLD_USERS;
+
+// Interfaces et fonctions utilitaires existantes...
 
 interface ArchiveConfig<T, U> {
     sourceCollection: string;
@@ -299,18 +314,28 @@ export async function runArchives(options: { dryRun?: boolean } = {}) {
     const isDryRun = options.dryRun === true;
 
     try {
+        // Afficher les seuils d'archivage configurés
         console.log(`${isDryRun ? '🔍 MODE SIMULATION (DRY RUN)' : '🚀 MODE PRODUCTION'}`);
+        console.log('📅 Seuils d\'archivage: ');
+        console.log(`   - Songs: ${THRESHOLD_SONGS} jours (ARCHIVE_THRESHOLD_SONGS)`);
+        console.log(`   - Playlists: ${THRESHOLD_PLAYLISTS} jours (ARCHIVE_THRESHOLD_PLAYLISTS)`);
+        console.log(`   - Tendances: ${THRESHOLD_TRENDS} jours (ARCHIVE_THRESHOLD_TRENDS)`);
+        console.log(`   - Activités: ${THRESHOLD_USERS} jours (ARCHIVE_THRESHOLD_USERS)`);
+
         const results = [];
 
-        // Archiver les clips
-        const clipsResult = await archiveClipsMinimal({ dryRun: isDryRun });
-        results.push({ collection: 'clips', ...clipsResult });
+        // Archiver les songs en utilisant le seuil configuré
+        const songsResult = await archiveSongsMinimal({
+            dryRun: isDryRun,
+            threshold: THRESHOLD_SONGS
+        });
+        results.push({ collection: 'songs', ...songsResult });
 
         // Archiver les playlists
         const playlistResult = await archiveCollection<PlaylistDocument, Partial<PlaylistDocument>>({
             sourceCollection: 'playlists',
-            archiveCollection: 'playlists_archive',
-            thresholdDays: 60,
+            archiveCollection: 'archived_playlists',  // Nom standardisé
+            thresholdDays: THRESHOLD_PLAYLISTS,
             transformer: createTransformer<PlaylistDocument, Partial<PlaylistDocument>>({
                 keepFields: ['_id', 'name', 'description', 'userId', 'createdAt', 'updatedAt'],
                 dateFields: [
@@ -328,29 +353,31 @@ export async function runArchives(options: { dryRun?: boolean } = {}) {
         // 3. Archiver les tendances
         const trendsResult = await archiveCollection<TrendDocument, Partial<TrendDocument>>({
             sourceCollection: 'trends',
-            archiveCollection: 'trends_archive',
-            thresholdDays: 30,
+            archiveCollection: 'archived_trends',  // Nom standardisé
+            thresholdDays: THRESHOLD_TRENDS,
             transformer: createTransformer<TrendDocument, Partial<TrendDocument>>({
                 keepFields: ['_id', 'date', 'topTags', 'topSongs'],
                 dateFields: [{ source: ['date'], target: 'date' }],
                 arrayFields: [
                     { source: ['topSongs'], target: 'topSongIds', maxLength: 20 }
                 ]
-            })
+            }),
+            dryRun: isDryRun
         });
         results.push(trendsResult);
 
         // 4. Archiver les activités utilisateurs
         const activitiesResult = await archiveCollection<UserActivityDocument, Partial<UserActivityDocument>>({
             sourceCollection: 'user_activities',
-            archiveCollection: 'user_activities_archive',
-            thresholdDays: 14,
+            archiveCollection: 'archived_user_activities',  // Nom standardisé
+            thresholdDays: THRESHOLD_USERS,
             transformer: createTransformer<UserActivityDocument, Partial<UserActivityDocument>>({
                 keepFields: ['_id', 'userId', 'type', 'objectId', 'createdAt'],
                 dateFields: [
                     { source: ['createdAt', 'timestamp'], target: 'createdAt' }
                 ]
-            })
+            }),
+            dryRun: isDryRun
         });
         results.push(activitiesResult);
 

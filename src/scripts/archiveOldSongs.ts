@@ -4,23 +4,40 @@ import { Db } from 'mongodb';
 import dotenv from 'dotenv';
 import { TrendingRecord } from '@/types/ArchiveSongTypes.js';
 import { fileURLToPath } from 'url';
+import { DatabaseError } from '../utils/errors.js';
+import { handleMongoError } from '../utils/errorHandler.js';
+import { ArchiveOptions } from '../types/ArchiveTypes.js';
 
 dotenv.config();
 
-const ARCHIVE_THRESHOLD_DAYS = 90;
-const BATCH_SIZE = 100;
+const DEFAULT_ARCHIVE_THRESHOLD_DAYS = 90;
+const DEFAULT_BATCH_SIZE = 100;
 
 /**
- * Archive les anciens clips en version minimale pour économiser l'espace
- * Optimisé pour fonctionner avec MongoDB Atlas Flex (5GB max)
+ * Archive les anciennes songs en version minimale pour économiser l'espace
+ * @param options Options pour l'archivage
+ * @param options.dryRun Si vrai, n'effectue pas de modifications
+ * @param options.threshold Nombre de jours pour considérer une song comme ancienne
+ * @param options.batchSize Taille du lot pour l'archivage
+ * @returns Nombre de songs archivées
  */
-export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
-    const isDryRun = options.dryRun === true;
+export async function archiveSongsMinimal(options: ArchiveOptions = {}) {
+    // Validation des options
+    if (typeof options !== 'object') {
+        throw new Error('Les options doivent être un objet');
+    }
+
+    const isDryRun = Boolean(options.dryRun);
+    const ARCHIVE_THRESHOLD_DAYS = options.threshold || DEFAULT_ARCHIVE_THRESHOLD_DAYS;
+    const BATCH_SIZE = options.batchSize || DEFAULT_BATCH_SIZE;
 
     // Déclarer ces variables en dehors de la boucle pour qu'elles soient accessibles plus tard
     let totalRelatedChanges = 0;
     let totalRelatedPresence = 0;
     let totalRelatedTrending = 0;
+
+    // Mesurer le temps d'exécution
+    const startTime = Date.now();
 
     try {
         // Utiliser les clients existants au lieu d'en créer de nouveaux
@@ -40,30 +57,27 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
         const sourceDb = sourceClient.db('suno');
         const targetDb = getArchiveDb('suno-archive');
 
-        // Le reste du code d'archivage reste inchangé
-        const clips = sourceDb.collection('clips');
-        const clipChanges = sourceDb.collection('clip_changes');
+        const songs = sourceDb.collection('songs');
+        const songChanges = sourceDb.collection('song_changes');
         const presenceLogs = sourceDb.collection('presence_logs');
-        const archive = targetDb.collection('clips_archive');
-
-        // Collection pour les statistiques de trending (à créer)
+        const songsArchive = targetDb.collection('archived_songs');
         const trendingStats = sourceDb.collection('trending_stats');
-        const trendingArchive = targetDb.collection('trending_stats_archive');
+        const trendingArchive = targetDb.collection('archived_trending_stats');
 
         // === Amélioration 1: Indexation optimisée ===
-        await archive.createIndex({ uuid: 1 }, { unique: true });
-        await archive.createIndex({ createdAt: 1 });
-        await archive.createIndex({ tags: 1 });
+        // await songsArchive.createIndex({ _id: 1 }, { unique: true });
+        await songsArchive.createIndex({ createdAt: 1 });
+        await songsArchive.createIndex({ tags: 1 });
         // Index composites pour les recherches fréquentes
-        await archive.createIndex({ userId: 1, createdAt: -1 });
+        await songsArchive.createIndex({ userId: 1, createdAt: -1 });
 
         const threshold = new Date();
         threshold.setDate(threshold.getDate() - ARCHIVE_THRESHOLD_DAYS);
 
-        console.log(`🔍 Recherche des clips plus anciens que ${threshold.toISOString()}`);
+        console.log(`🔍 Recherche des songs plus anciens que ${threshold.toISOString()}`);
 
         // === Amélioration 2: Query plus précise ===
-        // Recherche des clips inactifs avec une requête plus précise
+        // Recherche des songs inactifs avec une requête plus précise
         const query: any = {
             $or: [
                 { updatedAt: { $lt: threshold } },
@@ -71,16 +85,16 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
             ]
         };
 
-        // Récupérer les IDs de clip modifiés récemment (compatible API Version 1)
-        const recentlyModifiedClipIds = await clipChanges
+        // Récupérer les IDs de songs modifiés récemment (compatible API Version 1)
+        const recentlyModifiedSongsIds = await songChanges
             .find({ timestamp: { $gte: threshold } })
-            .project({ clipId: 1, _id: 0 })
-            .map(doc => doc.clipId)
+            .project({ songId: 1, _id: 0 })
+            .map(doc => doc.songId)
             .toArray();
 
-        // Si nous avons des clips récemment modifiés, les exclure de la requête
-        if (recentlyModifiedClipIds.length > 0) {
-            (query as any)._id = { $nin: recentlyModifiedClipIds };
+        // Si nous avons des songs récemment modifiés, les exclure de la requête
+        if (recentlyModifiedSongsIds.length > 0) {
+            (query as any)._id = { $nin: recentlyModifiedSongsIds };
         }
 
         let processed = 0;
@@ -88,27 +102,27 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
 
         while (hasMore) {
             // Récupérer un lot de documents
-            const clipsToArchive = await clips.find(query)
+            const songsToArchive = await songs.find(query)
                 .limit(BATCH_SIZE)
                 .toArray();
 
-            if (clipsToArchive.length === 0) {
+            if (songsToArchive.length === 0) {
                 hasMore = false;
                 continue;
             }
 
             // Extraire les IDs pour les opérations associées
-            const clipIds = clipsToArchive.map(doc => doc._id);
+            const songIds = songsToArchive.map(doc => doc._id);
 
             // Archiver les données associées
             // Avant d'interroger relatedChanges
-            const hasChanges = await clipChanges.countDocuments({}, { limit: 1 }) > 0;
+            const hasChanges = await songChanges.countDocuments({}, { limit: 1 }) > 0;
             const relatedChanges = hasChanges
-                ? await clipChanges.find({ clipId: { $in: clipIds } }).toArray()
+                ? await songChanges.find({ songId: { $in: songIds } }).toArray()
                 : [];
 
             const relatedPresence = await presenceLogs.find({
-                clipId: { $in: clipIds }
+                songId: { $in: songIds }
             }).toArray();
 
             // Vérifier si la collection existe avant de l'interroger
@@ -120,19 +134,19 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
             // Utilisation
             const hasTrendingStats = await collectionExists(sourceDb, 'trending_stats');
             const relatedTrending = hasTrendingStats
-                ? await trendingStats.find({ clipId: { $in: clipIds } }).toArray()
+                ? await trendingStats.find({ songId: { $in: songIds } }).toArray()
                 : [];
 
             // Créer des versions minimales des documents
-            const minimalDocs = clipsToArchive.map(doc => {
-                // Obtenir les variations historiques pour ce clip
-                const clipChanges = relatedChanges.filter(c =>
-                    c.clipId.toString() === doc._id.toString()
+            const minimalDocs = songsToArchive.map(doc => {
+                // Obtenir les variations historiques pour cette song
+                const songChanges = relatedChanges.filter(c =>
+                    c.songId.toString() === doc._id.toString()
                 );
 
-                // Obtenir les statistiques de trending pour ce clip
+                // Obtenir les statistiques de trending pour cette song
                 const trendingHistory = relatedTrending
-                    .filter(t => t.clipId && t.clipId.toString() === doc._id.toString())
+                    .filter(t => t && t.songId && t.songId.toString() === doc._id.toString())
                     .map(toTrendingRecord);
 
                 // Calculer les métriques dérivées des trending
@@ -144,7 +158,7 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
                     : null;
 
                 // Version complète des variations historiques
-                const changesHistory = clipChanges.map(change => ({
+                const changesHistory = songChanges.map(change => ({
                     timestamp: change.timestamp,
                     changedFields: change.changedFields || [],
                     // Versions compactées des états avant/après pour préserver l'historique
@@ -165,7 +179,7 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
                 }));
 
                 return {
-                    id: doc.uuid || doc.id,
+                    _id: doc._id,
                     image_url: doc.image_url,
                     audio_url: doc.audio_url,
                     title: doc.title,
@@ -174,9 +188,9 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
                     prompt: doc.metadata?.prompt.slice(0, 100) + '...' || '',
                     major_model_version: doc.major_model_version || '',
                     user_id: doc.user_id || doc.userId,
-                    created_at: doc.created_at || new Date(doc.created_at),
-                    updated_at: doc.updated_at || new Date(),
-                    archiveDate: new Date(),
+                    createdAt: doc.createdAt || new Date(doc.created_at),
+                    updatedAt: doc.updatedAt || new Date(),
+                    archivedAt: new Date(),
 
                     // Statistiques utiles pour l'analyse
                     play_count: doc.play_count || 0,
@@ -184,25 +198,25 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
                     comment_count: doc.comment_count || 0,
 
                     // Données sur les modifications
-                    changeCount: clipChanges.length,
+                    changeCount: songChanges.length,
                     changesHistory: changesHistory,
 
                     // Présence dans les playlists
                     playlistHistory: relatedPresence
-                        .filter(p => p.clipId.toString() === doc._id.toString())
+                        .filter(p => p.songId.toString() === doc._id.toString())
                         .map(p => ({
                             playlistId: p.playlistId,
                             firstSeen: p.timestamp,
                             lastSeen: p.lastSeen || p.timestamp
                         })),
 
-                    // Nouveau: historique des tendances
+                    // Statistiques de tendance
                     trendingStats: {
                         count: trendingHistory.length,
                         firstSeen: firstTrendingSeen,
                         lastSeen: lastTrendingSeen,
                         history: trendingHistory.map((t: TrendingRecord) => ({
-                            clipId: t.clipId,
+                            songId: t.songId,
                             list: t.list || 'Top',
                             timeSpan: t.timeSpan || 'Now',
                             position: t.position || 0,
@@ -215,50 +229,35 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
             });
 
             if (minimalDocs.length > 0) {
-                // === Amélioration 5: Opérations atomiques ===
-                const bulkOps = minimalDocs.map(doc => ({
-                    updateOne: {
-                        filter: { uuid: doc.id },
-                        update: { $set: doc },
-                        upsert: true
-                    }
-                }));
+                const archivePromises = minimalDocs.map(doc =>
+                    songsArchive.findOneAndUpdate(
+                        { uuid: doc._id },
+                        {
+                            $set: doc,
+                            $setOnInsert: { initiallyArchivedAt: new Date() }
+                        },
+                        {
+                            upsert: true,
+                            returnDocument: 'after'
+                        }
+                    )
+                );
 
-                const result = await archive.bulkWrite(bulkOps);
-
-                // === Amélioration 6: Archivage des données associées ===
-                if (relatedChanges.length > 0) {
-                    await targetDb.collection('clip_changes_archive').insertMany(
-                        relatedChanges.map(c => ({ ...c, archivedAt: new Date() }))
-                    );
-                    await clipChanges.deleteMany({ clipId: { $in: clipIds } });
-                }
-
-                if (relatedPresence.length > 0) {
-                    await targetDb.collection('presence_logs_archive').insertMany(
-                        relatedPresence.map(p => ({ ...p, archivedAt: new Date() }))
-                    );
-                    await presenceLogs.deleteMany({ clipId: { $in: clipIds } });
-                }
-
-                // Archiver les statistiques de trending associées
-                if (relatedTrending.length > 0) {
-                    await trendingArchive.insertMany(
-                        relatedTrending.map(t => ({ ...t, archivedAt: new Date() }))
-                    );
-                    await trendingStats.deleteMany({ clipId: { $in: clipIds } });
-                    console.log(`📊 ${relatedTrending.length} statistiques de trending archivées`);
-                }
-
-                // Supprimer les documents archivés
-                const deleteResult = await clips.deleteMany({
-                    _id: { $in: clipIds }
-                });
-
-                console.log(`📦 ${result.upsertedCount} nouveaux clips archivés, ${result.modifiedCount} mis à jour`);
-                console.log(`🧹 ${deleteResult.deletedCount} clips supprimés du cluster principal`);
-                processed += deleteResult.deletedCount;
+                const archivedDocs = await Promise.all(archivePromises);
+                const archivedCount = archivedDocs.filter(Boolean).length;
+                console.log(`📦 ${archivedCount} songs archivés`);
             }
+
+            // Extraire les IDs pour les opérations de suppression
+            const deleteIds = songsToArchive.map(doc => doc._id);
+
+            // Supprimer les documents archivés
+            const deleteResult = await songs.deleteMany({
+                _id: { $in: deleteIds }
+            });
+
+            console.log(`📦 ${deleteResult.deletedCount} songs supprimés du cluster principal`);
+            processed += deleteResult.deletedCount;
 
             // À ajouter après chaque opération associée
             totalRelatedChanges += relatedChanges.length;
@@ -266,7 +265,7 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
             totalRelatedTrending += relatedTrending.length;
         }
 
-        console.log(`✅ Archivage terminé. Total: ${processed} clips traités`);
+        console.log(`✅ Archivage terminé. Total: ${processed} songs traités`);
 
         // === Amélioration 7: Surveillance et alertes améliorées ===
         const sourceStats = await sourceDb.stats();
@@ -296,6 +295,10 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
             }
         }
 
+        // Mesurer la durée totale
+        const durationMs = Date.now() - startTime;
+        console.log(`⏱️ Durée: ${(durationMs / 1000).toFixed(2)}s`);
+
         return {
             archived: processed,
             sourceSize: sourceStats.dataSize,
@@ -306,30 +309,49 @@ export async function archiveClipsMinimal(options: { dryRun?: boolean } = {}) {
             associatedTrendingArchived: totalRelatedTrending
         };
 
-    } catch (err) {
-        console.error('❌ Erreur d\'archivage :', err);
-        throw err;
+    } catch (error) {
+        if (error instanceof DatabaseError) {
+            console.error(`❌ Erreur d'archivage (formatée): ${error.message}`);
+            throw error;
+        }
+
+        console.error('❌ Erreur d\'archivage :', error);
+        handleMongoError('archiveSongsMinimal', 'batch-operation', error);
     }
 }
 
 // Fonction utilitaire pour convertir les documents en enregistrements de trending
 function toTrendingRecord(doc: any): TrendingRecord {
+    if (!doc) {
+        return {
+            songId: doc._id,
+            list: '',
+            position: 0,
+            timeSpan: '',
+            firstSeen: new Date(),
+            lastSeen: new Date(),
+            peakPosition: 0,
+            totalDays: 0,
+            consecutiveDays: 0
+        };
+    }
+
     return {
-        clipId: doc.clipId,
+        songId: doc.songId,
         list: doc.list || '',
-        position: doc.position || 0,
+        position: typeof doc.position === 'number' ? doc.position : 0,
         timeSpan: doc.timeSpan || '',
         firstSeen: doc.firstSeen ? new Date(doc.firstSeen) : new Date(),
         lastSeen: doc.lastSeen ? new Date(doc.lastSeen) : new Date(),
-        peakPosition: doc.peakPosition || 0,
-        totalDays: doc.totalDays || 0,
+        peakPosition: typeof doc.peakPosition === 'number' ? doc.peakPosition : 0,
+        totalDays: typeof doc.totalDays === 'number' ? doc.totalDays : 0,
         consecutiveDays: doc.consecutiveDays
     };
 }
 
 // Exécuter le script si appelé directement (version ES modules)
 if (import.meta.url === fileURLToPath(import.meta.url)) {
-    archiveClipsMinimal().catch(err => {
+    archiveSongsMinimal().catch(err => {
         console.error('❌ Erreur d\'archivage :', err);
         process.exit(1);
     });

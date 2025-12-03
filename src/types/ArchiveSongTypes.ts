@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb'; // Import ObjectId from mongodb
 
-// Statistiques de tendance pour un clip
+// Statistiques de tendance pour une song
 export interface TrendingRecord {
-    clipId: ObjectId;           // ID du clip
+    songId: ObjectId;           // ID de la song
     list: string;               // ID ou nom de la liste de trending (ex: "daily", "weekly")
     position: number;           // Position dans la liste
     timeSpan: string;           // Période (daily, weekly, monthly)

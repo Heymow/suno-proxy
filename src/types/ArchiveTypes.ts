@@ -1,4 +1,12 @@
-import { ObjectId, Document as MongoDocument } from 'mongodb';
+import { Document as MongoDocument } from 'mongodb';
+
+export interface ArchiveOptions {
+    dryRun?: boolean;
+    threshold?: number; // Jours
+    batchSize?: number;
+    includeChanges?: boolean;
+    includeTrending?: boolean;
+}
 
 // Interface pour les documents de playlist
 export interface PlaylistDocument extends MongoDocument {
