@@ -6,8 +6,8 @@ import { z } from "zod";
 extendZodWithOpenApi(z);
 
 const ClipMetadataSchema = z.object({
-    tags: z.string(),
-    prompt: z.string(),
+    tags: z.string().optional(),
+    prompt: z.string().optional(),
     concat_history: z.array(z.object({
         id: z.string(),
         type: z.string().optional(),
@@ -24,16 +24,16 @@ const ClipMetadataSchema = z.object({
         infill_context_start_s: z.number().optional(),
     })).optional(),
     edited_clip_id: z.string().optional(),
-    type: z.string(),
-    duration: z.number(),
+    type: z.string().optional(),
+    duration: z.number().optional(),
     refund_credits: z.boolean().optional(),
     stream: z.boolean().optional(),
     upsample_clip_id: z.string().optional(),
     task: z.string().optional(),
     persona_id: z.string().optional(),
     edit_session_id: z.string().optional(),
-    can_remix: z.boolean(),
-    is_remix: z.boolean(),
+    can_remix: z.boolean().optional(),
+    is_remix: z.boolean().optional(),
     priority: z.number().optional(),
 });
 
@@ -46,7 +46,7 @@ export const SongResponseSchema = z.object({
     image_large_url: z.string(),
     major_model_version: z.string(),
     model_name: z.string(),
-    metadata: ClipMetadataSchema,
+    metadata: ClipMetadataSchema.optional(),
     caption: z.string().optional(),
     is_liked: z.boolean(),
     user_id: z.string(),
@@ -68,7 +68,7 @@ export const SongResponseSchema = z.object({
     allow_comments: z.boolean()
 }).openapi({
     description: "Response schema for song",
-    required: ["id", "entity_type", "video_url", "audio_url", "image_url", "image_large_url", "major_model_version", "model_name", "metadata", "is_liked", "user_id", "display_name", "handle", "is_handle_updated", "avatar_image_url", "is_trashed", "comment_count", "flag_count", "created_at", "status", "title", "play_count", "upvote_count", "is_public"],
+    required: ["id", "entity_type", "video_url", "audio_url", "image_url", "image_large_url", "major_model_version", "model_name", "metadata", "is_liked", "user_id", "display_name", "handle", "is_handle_updated", "avatar_image_url", "is_trashed", "comment_count", "flag_count", "created_at", "status", "title", "play_count", "upvote_count", "is_public", "allow_comments"],
     example: {
         id: "2619926b-bbb6-449d-9072-bded6177f3a0",
         entity_type: "song_schema",
