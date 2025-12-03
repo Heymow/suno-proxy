@@ -1,6 +1,5 @@
 import { AxiosResponse } from 'axios';
 import { getRedisClient } from '../redisClient.js';
-import { normalizeUrl } from '../utils/normalizeUrl.js';
 import crypto from 'crypto';
 
 interface CacheEntry<T> {
@@ -16,8 +15,10 @@ export interface HttpCacheService {
 
 export class RedisHttpCacheService implements HttpCacheService {
     private getCacheKey(url: string, body?: any): string {
-        const normalizedUrl = normalizeUrl(url);
-        let cacheKey = `http_cache:${normalizedUrl}`;
+        // Use the full URL to ensure unique cache keys for different resources
+        // Previously used normalizeUrl(url) which replaced IDs with patterns like :uuid,
+        // causing all songs to share the same cache key
+        let cacheKey = `http_cache:${url}`;
 
         // Add a hash of the body for POST requests
         if (body) {
