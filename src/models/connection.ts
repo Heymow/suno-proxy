@@ -24,7 +24,7 @@ export async function connectMongo(maxRetries = 3): Promise<MongoClient> {
             client = new MongoClient(uri, {
                 serverApi: {
                     version: ServerApiVersion.v1,
-                    strict: true,
+                    strict: false,
                     deprecationErrors: true,
                 },
                 connectTimeoutMS: 5000,  // Timeout de connexion
