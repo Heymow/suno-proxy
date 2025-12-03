@@ -4,6 +4,7 @@ import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { isValidSongId, isSharedSongId } from '../utils/regex.js';
 import { z } from 'zod';
 import { findSongById, saveSong } from '../models/songModel.js';
+import { getCachedItem, setCachedItem } from '../services/cacheService.js';
 
 const clip_url = process.env.CLIP_URL || 'https://studio-api.prod.suno.com/api/clip/';
 const gen_url = process.env.GEN_URL || 'https://studio-api.prod.suno.com/api/gen/';
@@ -59,12 +60,31 @@ export const getClipInfo = async (
         return res.status(400).json({ error: 'Invalid songId' });
     }
 
-    // Chercher d'abord en base de données si on ne force pas le rafraîchissement
+    // 1. Chercher d'abord dans le cache applicatif (Redis)
+    if (!forceRefresh) {
+        try {
+            const cachedSong = await getCachedItem<Song>('song', songId);
+            if (cachedSong) {
+                console.log(`🚀 Song found in cache: ${songId}`);
+                return res.json(cachedSong);
+            }
+        } catch (cacheError) {
+            console.error('Error accessing cache:', cacheError);
+        }
+    }
+
+    // 2. Chercher ensuite en base de données
     if (!forceRefresh) {
         try {
             const dbSong = await findSongById(songId);
             if (dbSong) {
                 console.log(`📦 Song found in database: ${songId}`);
+                // Populate cache for next time (Read-Through)
+                try {
+                    await setCachedItem('song', songId, dbSong);
+                } catch (e) {
+                    console.error('Failed to populate cache from DB:', e);
+                }
                 return res.json(dbSong);
             }
         } catch (dbError) {
