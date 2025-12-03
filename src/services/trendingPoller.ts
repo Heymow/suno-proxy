@@ -126,7 +126,7 @@ async function processList(list: TrackedList): Promise<void> {
 
     if (!currentSongs || currentSongs.length === 0) {
         console.log(`No songs found for list ${list.id}`);
-        return;
+        // Do not return, continue to process exits
     }
 
     const currentSongIds = new Set(currentSongs.map(s => s.id));
