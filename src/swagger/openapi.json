@@ -1,12 +1,12 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Suno Proxy API",
-    "version": "1.0.02"
+    "title": "New Suno API",
+    "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://api.suno-proxy.click",
+      "url": "http://localhost:3000",
       "description": "Suno API"
     }
   ],
@@ -292,7 +292,7 @@
                 "explicit": false,
                 "comment_count": 10,
                 "flag_count": 0,
-                "created_at": "2025-05-04T12:35:51.746Z",
+                "created_at": "2025-12-03T08:47:28.489Z",
                 "status": "active",
                 "title": "Song Title",
                 "play_count": 1000,
@@ -488,6 +488,9 @@
           "flag_count": {
             "type": "number"
           },
+          "display_tags": {
+            "type": "string"
+          },
           "created_at": {
             "type": "string"
           },
@@ -580,6 +583,7 @@
           "is_trashed": false,
           "comment_count": 10,
           "flag_count": 0,
+          "display_tags": "pop, rock, electronic",
           "created_at": "2024-04-16T18:11:01.938Z",
           "status": "complete",
           "title": "Song Title",
@@ -1273,7 +1277,6 @@
                 "id",
                 "name",
                 "description",
-                "image_s3_id",
                 "root_clip_id",
                 "clip",
                 "user_display_name",
@@ -3328,6 +3331,351 @@
           "page_size": 2,
           "start_index": 0
         }
+      },
+      "NewSongs": {
+        "type": "object",
+        "properties": {
+          "entity_type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "playlist_clips": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "clip": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "entity_type": {
+                      "type": "string"
+                    },
+                    "video_url": {
+                      "type": "string"
+                    },
+                    "audio_url": {
+                      "type": "string"
+                    },
+                    "image_url": {
+                      "type": "string"
+                    },
+                    "image_large_url": {
+                      "type": "string"
+                    },
+                    "major_model_version": {
+                      "type": "string"
+                    },
+                    "model_name": {
+                      "type": "string"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "tags": {
+                          "type": "string"
+                        },
+                        "prompt": {
+                          "type": "string"
+                        },
+                        "concat_history": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "infill": {
+                                "type": "boolean"
+                              },
+                              "source": {
+                                "type": "string"
+                              },
+                              "continue_at": {
+                                "type": "number"
+                              },
+                              "infill_dur_s": {
+                                "type": "number"
+                              },
+                              "infill_end_s": {
+                                "type": "number"
+                              },
+                              "infill_lyrics": {
+                                "type": "string"
+                              },
+                              "infill_start_s": {
+                                "type": "number"
+                              },
+                              "include_future_s": {
+                                "type": "number"
+                              },
+                              "include_history_s": {
+                                "type": "number"
+                              },
+                              "infill_context_end_s": {
+                                "type": "number"
+                              },
+                              "infill_context_start_s": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "id"
+                            ]
+                          }
+                        },
+                        "edited_clip_id": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "duration": {
+                          "type": "number"
+                        },
+                        "refund_credits": {
+                          "type": "boolean"
+                        },
+                        "stream": {
+                          "type": "boolean"
+                        },
+                        "upsample_clip_id": {
+                          "type": "string"
+                        },
+                        "task": {
+                          "type": "string"
+                        },
+                        "persona_id": {
+                          "type": "string"
+                        },
+                        "edit_session_id": {
+                          "type": "string"
+                        },
+                        "can_remix": {
+                          "type": "boolean"
+                        },
+                        "is_remix": {
+                          "type": "boolean"
+                        },
+                        "priority": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "tags",
+                        "prompt",
+                        "type",
+                        "duration",
+                        "can_remix",
+                        "is_remix"
+                      ]
+                    },
+                    "caption": {
+                      "type": "string"
+                    },
+                    "is_liked": {
+                      "type": "boolean"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "display_name": {
+                      "type": "string"
+                    },
+                    "handle": {
+                      "type": "string"
+                    },
+                    "is_handle_updated": {
+                      "type": "boolean"
+                    },
+                    "avatar_image_url": {
+                      "type": "string"
+                    },
+                    "is_trashed": {
+                      "type": "boolean"
+                    },
+                    "explicit": {
+                      "type": "boolean"
+                    },
+                    "comment_count": {
+                      "type": "number"
+                    },
+                    "flag_count": {
+                      "type": "number"
+                    },
+                    "display_tags": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "play_count": {
+                      "type": "number"
+                    },
+                    "upvote_count": {
+                      "type": "number"
+                    },
+                    "is_public": {
+                      "type": "boolean"
+                    },
+                    "allow_comments": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "entity_type",
+                    "video_url",
+                    "audio_url",
+                    "image_url",
+                    "image_large_url",
+                    "major_model_version",
+                    "model_name",
+                    "metadata",
+                    "is_liked",
+                    "user_id",
+                    "display_name",
+                    "handle",
+                    "is_handle_updated",
+                    "avatar_image_url",
+                    "is_trashed",
+                    "comment_count",
+                    "flag_count",
+                    "created_at",
+                    "status",
+                    "title",
+                    "play_count",
+                    "upvote_count",
+                    "is_public"
+                  ],
+                  "description": "Response schema for song",
+                  "example": {
+                    "id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+                    "entity_type": "song_schema",
+                    "video_url": "https://example.com/video.mp4",
+                    "audio_url": "https://example.com/audio.mp3",
+                    "image_url": "https://example.com/image.jpg",
+                    "image_large_url": "https://example.com/image_large.jpg",
+                    "major_model_version": "v4",
+                    "model_name": "chirp-v4",
+                    "metadata": {
+                      "tags": "pop, rock, electronic",
+                      "prompt": "Generate a clip about nature",
+                      "concat_history": [
+                        {
+                          "id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+                          "type": "edit_crop",
+                          "infill": true,
+                          "source": "web",
+                          "infill_dur_s": 22.6,
+                          "infill_end_s": 244.16,
+                          "infill_lyrics": "[outro]\nyou are not the only one[End]",
+                          "infill_start_s": 221.56,
+                          "include_future_s": 2,
+                          "include_history_s": 2,
+                          "infill_context_end_s": 244.16,
+                          "infill_context_start_s": 191.56
+                        }
+                      ],
+                      "type": "concat_infilling",
+                      "duration": 244.84,
+                      "edit_session_id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+                      "can_remix": true,
+                      "is_remix": false
+                    },
+                    "is_liked": true,
+                    "user_id": "f7f434fd-0605-4721-8485-b0c4f1e5a2d3",
+                    "display_name": "John Doe",
+                    "handle": "johndoe",
+                    "is_handle_updated": false,
+                    "avatar_image_url": "https://example.com/avatar.jpg",
+                    "is_trashed": false,
+                    "comment_count": 10,
+                    "flag_count": 0,
+                    "display_tags": "pop, rock, electronic",
+                    "created_at": "2024-04-16T18:11:01.938Z",
+                    "status": "complete",
+                    "title": "Song Title",
+                    "play_count": 1000,
+                    "upvote_count": 100,
+                    "is_public": true,
+                    "allow_comments": true
+                  }
+                }
+              },
+              "required": [
+                "clip"
+              ]
+            }
+          }
+        },
+        "required": [
+          "entity_type",
+          "id",
+          "name",
+          "playlist_clips"
+        ],
+        "description": "Response schema for new songs playlist",
+        "example": {
+          "entity_type": "playlist_schema",
+          "id": "new_songs",
+          "name": "New Songs",
+          "playlist_clips": [
+            {
+              "clip": {
+                "id": "2619926b-bbb6-449d-9072-bded6177f3a0",
+                "entity_type": "song_schema",
+                "video_url": "https://example.com/video.mp4",
+                "audio_url": "https://example.com/audio.mp3",
+                "image_url": "https://example.com/image.jpg",
+                "image_large_url": "https://example.com/image_large.jpg",
+                "major_model_version": "v4",
+                "model_name": "chirp-v4",
+                "metadata": {
+                  "tags": "pop, rock, electronic",
+                  "prompt": "Generate a clip about nature",
+                  "type": "concat_infilling",
+                  "duration": 244.84,
+                  "can_remix": true,
+                  "is_remix": false
+                },
+                "is_liked": true,
+                "user_id": "f7f434fd-0605-4721-8485-b0c4f1e5a2d3",
+                "display_name": "John Doe",
+                "handle": "johndoe",
+                "is_handle_updated": false,
+                "avatar_image_url": "https://example.com/avatar.jpg",
+                "is_trashed": false,
+                "comment_count": 10,
+                "flag_count": 0,
+                "created_at": "2024-04-16T18:11:01.938Z",
+                "status": "complete",
+                "title": "Song Title",
+                "play_count": 1000,
+                "upvote_count": 100,
+                "is_public": true,
+                "allow_comments": true
+              }
+            }
+          ]
+        }
       }
     },
     "parameters": {}
@@ -3394,6 +3742,82 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Playlist"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/song/new_songs": {
+      "get": {
+        "summary": "Get new songs playlist",
+        "tags": [
+          "Songs"
+        ],
+        "responses": {
+          "200": {
+            "description": "A new songs playlist response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewSongs"
+                },
+                "example": {
+                  "entity_type": "playlist_schema",
+                  "id": "new_songs",
+                  "name": "New Songs",
+                  "playlist_clips": [
+                    {
+                      "clip": {
+                        "status": "complete",
+                        "title": "Walrus Rider",
+                        "play_count": 40,
+                        "upvote_count": 23,
+                        "allow_comments": true,
+                        "id": "e8fe6c48-e4b6-4be0-958c-b5daf8a2ab68",
+                        "entity_type": "song_schema",
+                        "video_url": "https://cdn1.suno.ai/e8fe6c48-e4b6-4be0-958c-b5daf8a2ab68.mp4",
+                        "audio_url": "https://cdn1.suno.ai/e8fe6c48-e4b6-4be0-958c-b5daf8a2ab68.mp3",
+                        "image_url": "https://cdn2.suno.ai/535778a0-5cd7-4a44-a2d8-95077f5c5c85.jpeg",
+                        "image_large_url": "https://cdn2.suno.ai/535778a0-5cd7-4a44-a2d8-95077f5c5c85.jpeg",
+                        "major_model_version": "",
+                        "model_name": "chirp-chirp",
+                        "metadata": {
+                          "tags": "",
+                          "negative_tags": "",
+                          "prompt": "Ohhhh!!\nWALRUS!\n...",
+                          "type": "studio_export",
+                          "duration": 261.91858333333334,
+                          "has_vocal": false,
+                          "can_publish_with_vocal": true,
+                          "can_remix": true,
+                          "is_remix": false,
+                          "has_stem": false,
+                          "video_is_stale": true,
+                          "uses_latest_model": false
+                        },
+                        "caption": "Art gifted by Pegasus",
+                        "is_liked": false,
+                        "user_id": "ef1f2354-9a3d-4ba6-ba88-ef9be6fd56ab",
+                        "display_name": "Stei Camel 🐪",
+                        "handle": "steicamel",
+                        "is_handle_updated": true,
+                        "avatar_image_url": "https://cdn2.suno.ai/7f227e21-0600-4142-9566-f727d10d1ada.jpeg",
+                        "is_trashed": false,
+                        "created_at": "2025-12-03T07:30:16.644Z",
+                        "is_public": true,
+                        "explicit": false,
+                        "comment_count": 4,
+                        "flag_count": 0,
+                        "display_tags": "Power Metal, Death Metal, Aggressive, Pagan Metal",
+                        "is_contest_clip": false,
+                        "has_hook": false,
+                        "batch_index": 0
+                      },
+                      "relative_index": 0
+                    }
+                  ]
                 }
               }
             }

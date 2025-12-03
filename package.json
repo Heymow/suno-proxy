@@ -10,7 +10,8 @@
     "copy:public": "npx cpx2 \"src/public/**/*\" dist/public --clean",
     "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"nodemon dist/server.js --ignore dist/public/**\" --noClear",
     "test": "vitest --run",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "generate:swagger": "tsx src/swagger/openApi.ts"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.3.0",
