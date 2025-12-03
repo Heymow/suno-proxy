@@ -1,5 +1,5 @@
 export const options = {
-    customCss: `
+  customCss: `
       .swagger-ui .topbar-wrapper {
         display: flex;
         align-items: center;
@@ -42,6 +42,13 @@ export const options = {
         min-height: 60px;
       }
     `,
-    customSiteTitle: 'Suno Proxy',
-    customfavIcon: '/public/favicon.ico',
+  customSiteTitle: 'Suno Proxy',
+  customfavIcon: '/public/favicon.ico',
+  swaggerOptions: {
+    supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+    tryItOutEnabled: true,
+    requestInterceptor: (req: any) => {
+      return req;
+    }
+  }
 };

@@ -8,6 +8,8 @@ import { SunoStatusResponseSchema } from '../schemas/sunoStatusSchema.js';
 import { TrendingResponseSchema } from '../schemas/trendingSchema.js';
 import { NewSongsResponseSchema } from '../schemas/newSongsSchema.js';
 import { get_new_songs_example } from './example_responses/get_new_songs.js';
+import { UserInfoResponseSchema } from '../schemas/userInfoSchema.js';
+import { get_user_info_example } from './example_responses/get_user_info.js';
 
 const registry = new OpenAPIRegistry();
 registry.register('Playlist', PlaylistResponseSchema);
@@ -18,6 +20,7 @@ registry.register('UserRecent', UserRecentPageResponseSchema);
 registry.register('Status', SunoStatusResponseSchema);
 registry.register('Trending', TrendingResponseSchema);
 registry.register('NewSongs', NewSongsResponseSchema);
+registry.register('UserInfo', UserInfoResponseSchema);
 
 
 const generator = new OpenApiGeneratorV3(registry.definitions);
@@ -26,7 +29,7 @@ const openApiDoc = generator.generateDocument({
     info: { title: 'New Suno API', version: '1.0.0' },
     servers: [
         {
-            url: 'http://localhost:3000',
+            url: 'http://localhost:8000',
             description: 'Suno API'
         }
     ]
@@ -158,6 +161,33 @@ openApiDoc.paths = {
                             schema: {
                                 $ref: "#/components/schemas/Comment"
                             }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/user/info/{userId}": {
+        get: {
+            summary: "Get user profile info",
+            tags: ["Users"],
+            parameters: [
+                {
+                    name: "userId",
+                    in: "path",
+                    required: true,
+                    schema: { type: "string" }
+                }
+            ],
+            responses: {
+                "200": {
+                    description: "A user profile info response",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/UserInfo"
+                            },
+                            example: get_user_info_example
                         }
                     }
                 }

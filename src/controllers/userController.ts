@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { User, UserRecent, UserRecentPageResponseSchema, UserPageResponseSchema } from '../schemas/userSchema.js';
+import { UserInfo, UserInfoResponseSchema } from '../schemas/userInfoSchema.js';
 import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { getCachedItem, setCachedItem } from '../services/cacheService.js';
 import { isValidPageNumber } from '../utils/regex.js';
@@ -131,7 +132,7 @@ export const getAllClipsFromUser = async (
             cacheType: 'user_page',
             id: `${handle}_page_1`,
             forceRefresh,
-            url: `${profileUrl}${handle}?page=1&playlists_sort_by=created_at&clips_sort_by=created_at`,
+            url: `${profileUrl}${handle}?page=1&playlists_sort_by=upvote_count&clips_sort_by=created_at`,
             schema: UserPageResponseSchema,
             notFoundMessage: 'User not found',
             logPrefix: 'user'
@@ -210,6 +211,53 @@ export const getRecentClips = async (req: Request, res: Response): Promise<void>
         return;
     } catch (err) {
         console.error('Error fetching user recent clips:', err);
+        res.status(500).json({ error: 'Internal error' });
+        return;
+    } finally {
+        console.timeEnd('API Call Time');
+    }
+};
+
+export const getUserInfo = async (req: Request, res: Response): Promise<void> => {
+    if (!profileUrl) {
+        res.status(500).json({ error: 'Server configuration error' });
+        return;
+    }
+    const { handle } = req.params;
+    const forceRefresh = req.query.forceRefresh === 'true' || req.query.refresh === 'true';
+
+    if (!handle) {
+        res.status(400).json({ error: 'Missing handle' });
+        return;
+    }
+
+    const url = `${profileUrl}${handle}/info`;
+
+    console.time('API Call Time');
+    try {
+        const result = await fetchAndCache<UserInfo>({
+            cacheType: 'user_info',
+            id: handle,
+            forceRefresh,
+            url,
+            schema: UserInfoResponseSchema,
+            notFoundMessage: 'User info not found',
+            logPrefix: 'user_info',
+            httpCacheOptions: {
+                ttl: 3600 // 1 hour cache for profile info
+            }
+        });
+
+        if ('error' in result) {
+            const statusCode = result.statusCode ?? 502;
+            res.status(statusCode).json({ error: result.error });
+            return;
+        }
+
+        res.json(result);
+        return;
+    } catch (err) {
+        console.error('Error fetching user info:', err);
         res.status(500).json({ error: 'Internal error' });
         return;
     } finally {
