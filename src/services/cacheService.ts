@@ -1,7 +1,7 @@
 import { getSafeRedisClient } from '../redisClient.js';
 
-function redis() {
-    const client = getSafeRedisClient();
+async function redis() {
+    const client = await getSafeRedisClient();
     if (!client?.isOpen) throw new Error('Redis client is closed');
     return client;
 }
@@ -12,7 +12,8 @@ export async function getCachedItem<T>(type: string, id: string, forceRefresh = 
     if (!id) return null;
     if (forceRefresh) return null;
     const key = `${type}:${id}`;
-    const cached = await redis().get(key);
+    const client = await redis();
+    const cached = await client.get(key);
     if (!cached) return null;
     try {
         return JSON.parse(cached) as T;
@@ -24,7 +25,8 @@ export async function getCachedItem<T>(type: string, id: string, forceRefresh = 
 export async function setCachedItem<T>(type: string, id: string, data: T, expiry: number = DEFAULT_EXPIRY): Promise<void> {
     if (!id || !data) return;
     const key = `${type}:${id}`;
-    await redis().set(key, JSON.stringify(data), { EX: expiry });
+    const client = await redis();
+    await client.set(key, JSON.stringify(data), { EX: expiry });
 }
 
 export async function getCachedPlaylistInfo(id: string, forceRefresh = false) {
