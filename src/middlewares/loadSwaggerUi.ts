@@ -28,11 +28,13 @@ export default function loadSwaggerUi(app: express.Application) {
         });
     }
 
-    // 3. Localhost (toujours utile en dev)
-    servers.push({
-        url: 'http://localhost:8000',
-        description: 'Serveur Local'
-    });
+    // 3. Localhost (utile uniquement en dev)
+    if (process.env.NODE_ENV === 'development') {
+        servers.push({
+            url: 'http://localhost:8000',
+            description: 'Serveur Local'
+        });
+    }
 
     openApiDoc.servers = servers;
 
