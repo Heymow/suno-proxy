@@ -6,6 +6,8 @@ import { UserPageResponseSchema } from '../schemas/userSchema.js';
 import { UserRecentPageResponseSchema } from '../schemas/userSchema.js';
 import { SunoStatusResponseSchema } from '../schemas/sunoStatusSchema.js';
 import { TrendingResponseSchema } from '../schemas/trendingSchema.js';
+import { NewSongsResponseSchema } from '../schemas/newSongsSchema.js';
+import { get_new_songs_example } from './example_responses/get_new_songs.js';
 
 const registry = new OpenAPIRegistry();
 registry.register('Playlist', PlaylistResponseSchema);
@@ -15,6 +17,7 @@ registry.register('User', UserPageResponseSchema);
 registry.register('UserRecent', UserRecentPageResponseSchema);
 registry.register('Status', SunoStatusResponseSchema);
 registry.register('Trending', TrendingResponseSchema);
+registry.register('NewSongs', NewSongsResponseSchema);
 
 
 const generator = new OpenApiGeneratorV3(registry.definitions);
@@ -84,6 +87,25 @@ openApiDoc.paths = {
                             schema: {
                                 $ref: "#/components/schemas/Playlist"
                             }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/song/new_songs": {
+        get: {
+            summary: "Get new songs playlist",
+            tags: ["Songs"],
+            responses: {
+                "200": {
+                    description: "A new songs playlist response",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/NewSongs"
+                            },
+                            example: get_new_songs_example
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { SongResponseSchema, Song, CommentsResponseSchema, CommentsResponse } from '../schemas/songSchema.js';
+import { NewSongsResponseSchema, NewSongsResponse } from '../schemas/newSongsSchema.js';
 import { fetchAndCache } from '../utils/fetchAndCache.js';
 import { isValidSongId, isSharedSongId } from '../utils/regex.js';
 import { z } from 'zod';
@@ -159,5 +160,32 @@ export const getClipComments = async (req: Request, res: Response): Promise<Resp
         return res.status(statusCode).json({ error: result.error, details: result.details });
     }
     console.timeEnd('API Call Time');
+    return res.json(result);
+};
+
+export const getNewSongs = async (req: Request, res: Response): Promise<Response | void> => {
+    const forceRefresh = req.query.refresh === 'true' || req.query.forceRefresh === 'true';
+    const new_songs_url = 'https://studio-api.prod.suno.com/api/playlist/new_songs';
+
+    console.time('New Songs API Call Time');
+
+    const result = await fetchAndCache<NewSongsResponse>({
+        cacheType: 'playlist',
+        id: 'new_songs',
+        forceRefresh,
+        url: new_songs_url,
+        schema: NewSongsResponseSchema,
+        notFoundMessage: 'New songs playlist not found',
+        logPrefix: 'new_songs',
+        httpCacheOptions: {
+            ttl: 600 // 10 minutes
+        }
+    });
+
+    if ('error' in result) {
+        const statusCode = result.statusCode ?? (result.details ? 502 : 404);
+        return res.status(statusCode).json({ error: result.error, details: result.details });
+    }
+    console.timeEnd('New Songs API Call Time');
     return res.json(result);
 };
