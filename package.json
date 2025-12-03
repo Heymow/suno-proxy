@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node dist/server.js",
     "staging": "cross-env NODE_ENV=staging node dist/server.js",
-    "build": "tsc && npm run copy:public",
+    "build": "npm run generate:swagger && tsc && npm run copy:public",
     "copy:public": "npx cpx2 \"src/public/**/*\" dist/public --clean",
     "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"nodemon dist/server.js --ignore dist/public/**\" --noClear",
     "test": "vitest --run",
