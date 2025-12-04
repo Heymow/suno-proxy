@@ -22,14 +22,13 @@ registry.register('Trending', TrendingResponseSchema);
 registry.register('NewSongs', NewSongsResponseSchema);
 registry.register('UserInfo', UserInfoResponseSchema);
 
-
 const generator = new OpenApiGeneratorV3(registry.definitions);
 const openApiDoc = generator.generateDocument({
     openapi: '3.0.0',
     info: { title: 'New Suno API', version: '1.0.0' },
     servers: [
         {
-            url: 'http://localhost:8000',
+            url: '/',
             description: 'Suno API'
         }
     ]

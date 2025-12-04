@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8000",
+      "url": "/",
       "description": "Suno API"
     }
   ],
@@ -292,7 +292,7 @@
                 "explicit": false,
                 "comment_count": 10,
                 "flag_count": 0,
-                "created_at": "2025-12-03T13:51:38.135Z",
+                "created_at": "2025-12-04T08:55:48.479Z",
                 "status": "active",
                 "title": "Song Title",
                 "play_count": 1000,
