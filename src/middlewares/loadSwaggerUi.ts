@@ -34,6 +34,22 @@ export default function loadSwaggerUi(app: express.Application) {
     openApiDoc.servers = servers;
     console.log('🚀 Swagger Servers configured:', JSON.stringify(servers, null, 2));
 
-    app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDoc, options));
+    // In development, reload the file on every request to support hot updates
+    if (process.env.NODE_ENV === 'development') {
+        app.use('/docs', (req, res, next) => {
+            try {
+                const reloadedDoc = JSON.parse(fs.readFileSync('./src/swagger/openapi.json', 'utf8'));
+                reloadedDoc.servers = servers;
+                (swaggerUi.setup(reloadedDoc, options))(req, res, next);
+            } catch (err) {
+                next(err);
+            }
+        });
+        app.get('/docs', swaggerUi.serve); // Serve the UI assets
+    } else {
+        // In production, use the cached version
+        app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiDoc, options));
+    }
+
     app.use('/public', express.static(path.join(__dirname, '../../public')));
 }
