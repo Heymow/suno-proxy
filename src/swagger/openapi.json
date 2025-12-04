@@ -292,7 +292,7 @@
                 "explicit": false,
                 "comment_count": 10,
                 "flag_count": 0,
-                "created_at": "2025-12-04T11:42:58.089Z",
+                "created_at": "2025-12-04T14:23:56.067Z",
                 "status": "active",
                 "title": "Song Title",
                 "play_count": 1000,
@@ -4165,15 +4165,23 @@
           {
             "name": "window",
             "in": "query",
+            "description": "Time window for trends (default: 24h)",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "24h",
+                "7d"
+              ],
+              "default": "24h"
             }
           },
           {
             "name": "limit",
             "in": "query",
+            "description": "Number of top tags to return (default: 10)",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "default": 10
             }
           }
         ],
@@ -4221,8 +4229,15 @@
             "name": "listId",
             "in": "path",
             "required": true,
+            "description": "ID of the trending list to retrieve stats for",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "new_songs",
+                "global_now",
+                "global_weekly",
+                "english_now"
+              ]
             }
           }
         ],
