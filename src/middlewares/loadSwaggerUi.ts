@@ -17,25 +17,17 @@ export default function loadSwaggerUi(app: express.Application) {
     // Configuration dynamique des serveurs
     const servers = [];
 
-    // 1. URL relative (fonctionne toujours si sur le même domaine)
+    // 1. Relative URL (works for same-domain requests)
     servers.push({
         url: '/',
-        description: 'Serveur Courant (Relatif)'
+        description: 'Current Server'
     });
 
-    // 2. URL de production si définie
-    if (process.env.HOST_) {
-        servers.push({
-            url: `https://${process.env.HOST_}`,
-            description: 'Serveur de Production'
-        });
-    }
-
-    // 3. Localhost (utile uniquement en local sans domaine configuré)
+    // 2. Localhost (only in dev and if HOST_ is not set)
     if (process.env.NODE_ENV === 'development' && !process.env.HOST_) {
         servers.push({
             url: 'http://localhost:8000',
-            description: 'Serveur Local'
+            description: 'Local Server'
         });
     }
 
