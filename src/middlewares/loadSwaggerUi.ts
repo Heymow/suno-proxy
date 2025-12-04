@@ -12,7 +12,8 @@ export default function loadSwaggerUi(app: express.Application) {
     console.log('🔧 Loading Swagger UI...');
     console.log('🌍 Environment:', process.env.NODE_ENV);
 
-    const openApiDoc = JSON.parse(fs.readFileSync('./src/swagger/openapi.json', 'utf8'));
+    const openApiPath = path.join(__dirname, '../swagger/openapi.json');
+    const openApiDoc = JSON.parse(fs.readFileSync(openApiPath, 'utf8'));
 
     // Configuration dynamique des serveurs
     const servers: { url: string; description: string; }[] = [];
@@ -38,7 +39,7 @@ export default function loadSwaggerUi(app: express.Application) {
     if (process.env.NODE_ENV === 'development') {
         app.use('/docs', (req, res, next) => {
             try {
-                const reloadedDoc = JSON.parse(fs.readFileSync('./src/swagger/openapi.json', 'utf8'));
+                const reloadedDoc = JSON.parse(fs.readFileSync(openApiPath, 'utf8'));
                 reloadedDoc.servers = servers;
                 (swaggerUi.setup(reloadedDoc, options))(req, res, next);
             } catch (err) {

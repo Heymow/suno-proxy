@@ -6,8 +6,9 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node dist/server.js",
     "staging": "cross-env NODE_ENV=staging node dist/server.js",
-    "build": "npm run generate:swagger && tsc && npm run copy:public",
+    "build": "npm run generate:swagger && tsc && npm run copy:public && npm run copy:swagger",
     "copy:public": "npx cpx2 \"src/public/**/*\" dist/public --clean",
+    "copy:swagger": "npx cpx2 \"src/swagger/openapi.json\" dist/swagger",
     "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"nodemon dist/server.js --ignore dist/public/**\" --noClear",
     "test": "vitest --run",
     "test:ui": "vitest --ui",
