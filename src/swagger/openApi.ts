@@ -372,12 +372,21 @@ openApiDoc.paths = {
                 {
                     name: "window",
                     in: "query",
-                    schema: { type: "string" }
+                    description: "Time window for trends (default: 24h)",
+                    schema: {
+                        type: "string",
+                        enum: ["24h", "7d"],
+                        default: "24h"
+                    }
                 },
                 {
                     name: "limit",
                     in: "query",
-                    schema: { type: "integer" }
+                    description: "Number of top tags to return (default: 10)",
+                    schema: {
+                        type: "integer",
+                        default: 10
+                    }
                 }
             ],
             responses: {
@@ -416,7 +425,11 @@ openApiDoc.paths = {
                     name: "listId",
                     in: "path",
                     required: true,
-                    schema: { type: "string" }
+                    description: "ID of the trending list to retrieve stats for",
+                    schema: {
+                        type: "string",
+                        enum: ["new_songs", "global_now", "global_weekly", "english_now"]
+                    }
                 }
             ],
             responses: {

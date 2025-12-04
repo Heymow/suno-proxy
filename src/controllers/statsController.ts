@@ -41,6 +41,8 @@ export const getTrends = async (req: Request, res: Response): Promise<void> => {
         const collection = db.collection<SongDocument>('songs');
         const window = req.query.window === '7d' ? 7 : 1; // Default 24h
 
+        const limit = parseInt(req.query.limit as string) || 10;
+
         const dateLimit = new Date();
         dateLimit.setDate(dateLimit.getDate() - window);
 
@@ -68,7 +70,7 @@ export const getTrends = async (req: Request, res: Response): Promise<void> => {
                 }
             },
             { $sort: { count: -1 } },
-            { $limit: 10 }
+            { $limit: limit }
         ]).toArray();
 
         res.json({
