@@ -9,7 +9,7 @@ import {
 } from '../models/statsModel.js';
 import { TrendingStats } from '../types/statsTypes.js';
 
-const TRENDING_URL = 'https://studio-api.prod.suno.com/api/playlist/trending';
+
 const NEW_SONGS_URL = 'https://studio-api.prod.suno.com/api/playlist/new_songs';
 const DISCOVER_URL = 'https://studio-api.prod.suno.com/api/discover';
 
@@ -22,11 +22,7 @@ interface TrackedList {
 }
 
 const LISTS_TO_TRACK: TrackedList[] = [
-    {
-        id: 'trending',
-        url: TRENDING_URL,
-        schema: NewSongsResponseSchema
-    },
+
     {
         id: 'new_songs',
         url: NEW_SONGS_URL,
@@ -122,6 +118,14 @@ async function processList(list: TrackedList): Promise<void> {
         currentSongs = result.playlist_clips.map((item: any) => item.clip);
     } else if (result.trending_songs) {
         currentSongs = result.trending_songs;
+    } else if (result.sections) {
+        // Extract songs from sections
+        // Usually the songs are in the first section's items
+        for (const section of result.sections) {
+            if (section.items && section.items.length > 0) {
+                currentSongs = [...currentSongs, ...section.items];
+            }
+        }
     }
 
     if (!currentSongs || currentSongs.length === 0) {

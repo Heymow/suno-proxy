@@ -155,8 +155,8 @@ describe('Trending Poller', () => {
         await pollTrendingLists();
 
         // Should record entry for both songs
-        expect(statsModel.recordTrendingEntry).toHaveBeenCalledTimes(10); // 5 lists * 2 songs
-        expect(statsModel.saveSongSnapshot).toHaveBeenCalledTimes(10);
+        expect(statsModel.recordTrendingEntry).toHaveBeenCalledTimes(8); // 4 lists * 2 songs
+        expect(statsModel.saveSongSnapshot).toHaveBeenCalledTimes(8);
     });
 
     it('should detect exits', async () => {
@@ -171,6 +171,6 @@ describe('Trending Poller', () => {
         await pollTrendingLists();
 
         // Should record exit for song1
-        expect(statsModel.recordTrendingExit).toHaveBeenCalledTimes(5); // 5 lists * 1 song
+        expect(statsModel.recordTrendingExit).toHaveBeenCalledTimes(4); // 4 lists * 1 song
     });
 });
