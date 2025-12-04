@@ -15,7 +15,7 @@ export default function loadSwaggerUi(app: express.Application) {
     const openApiDoc = JSON.parse(fs.readFileSync('./src/swagger/openapi.json', 'utf8'));
 
     // Configuration dynamique des serveurs
-    const servers = [];
+    const servers: { url: string; description: string; }[] = [];
 
     // 1. Relative URL (works for same-domain requests)
     servers.push({
