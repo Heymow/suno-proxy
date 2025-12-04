@@ -120,6 +120,23 @@ describe('Stats Controller', () => {
             }));
         });
     });
+
+    describe('getTopUsers', () => {
+        it('should return top users', async () => {
+            mockCollection.aggregate.mockReturnThis();
+            mockCollection.toArray.mockResolvedValue([
+                { _id: 'user1', total_plays: 1000, total_upvotes: 500, song_count: 5 },
+                { _id: 'user2', total_plays: 800, total_upvotes: 300, song_count: 3 }
+            ]);
+
+            await getTopUsers(req as Request, res as Response);
+
+            expect(jsonMock).toHaveBeenCalledWith([
+                { _id: 'user1', total_plays: 1000, total_upvotes: 500, song_count: 5 },
+                { _id: 'user2', total_plays: 800, total_upvotes: 300, song_count: 3 }
+            ]);
+        });
+    });
 });
 
 describe('Trending Poller', () => {

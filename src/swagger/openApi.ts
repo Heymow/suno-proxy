@@ -339,6 +339,120 @@ openApiDoc.paths = {
                 }
             }
         }
+    },
+    "/stats/global": {
+        get: {
+            summary: "Get global stats",
+            tags: ["Stats"],
+            responses: {
+                "200": {
+                    description: "Global stats response",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    total_songs: { type: "integer" },
+                                    total_plays: { type: "integer" },
+                                    total_upvotes: { type: "integer" },
+                                    avg_duration: { type: "number" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/stats/trends": {
+        get: {
+            summary: "Get trends",
+            tags: ["Stats"],
+            parameters: [
+                {
+                    name: "window",
+                    in: "query",
+                    schema: { type: "string" }
+                },
+                {
+                    name: "limit",
+                    in: "query",
+                    schema: { type: "integer" }
+                }
+            ],
+            responses: {
+                "200": {
+                    description: "Trends response",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    window: { type: "string" },
+                                    top_tags: {
+                                        type: "array",
+                                        items: {
+                                            type: "object",
+                                            properties: {
+                                                tag: { type: "string" },
+                                                count: { type: "integer" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/stats/trending-lists/{listId}": {
+        get: {
+            summary: "Get trending list stats",
+            tags: ["Stats"],
+            parameters: [
+                {
+                    name: "listId",
+                    in: "path",
+                    required: true,
+                    schema: { type: "string" }
+                }
+            ],
+            responses: {
+                "200": {
+                    description: "Trending list stats response",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "/stats/users/top": {
+        get: {
+            summary: "Get top users",
+            tags: ["Stats"],
+            responses: {
+                "200": {
+                    description: "Top users response",
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "array",
+                                items: {
+                                    type: "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 };
 
